@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+}
+
+@theme {
+  /*
+   * Palette — the Arun coast (PLAN §11.1).
+   * Usage discipline: ~80% neutrals, ~15% harbour teals, ~5% amber.
+   * Every pair listed in scripts/check-contrast.mjs must pass WCAG AA —
+   * the check runs as part of `npm run build`.
+   */
+  --color-chalk: #faf7f2; /* Downs chalk — page background */
+  --color-foam: #edf2f2; /* sea foam — alternate section washes, chips */
+  --color-shingle: #e8e1d5; /* Climping beach — occasional warm surface */
+  --color-gull: #b7c2c7; /* gull-wing grey — hairlines, borders, dividers */
+  --color-flint: #55646b; /* Arundel flint — secondary text */
+  --color-ink: #1e2c31; /* body text */
+  --color-channel: #122e36; /* the Channel at dusk — headings, footer bg */
+  --color-harbour: #2c7a86; /* Littlehampton harbour — brand, primary buttons */
+  --color-harbour-deep: #1f5763; /* link text on light, hover/pressed */
+  --color-beak: #d9a441; /* herring-gull beak — "New" badge, tiny highlights only */
+  --color-beak-deep: #b67f1e; /* focus rings (raw beak misses 3:1 on chalk) */
+  --color-rust: #a94438; /* groyne iron — form errors */
+
+  /* Fluid type scale */
+  --text-display: clamp(2.75rem, 1.9rem + 3.6vw, 4.25rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.015em;
+  --text-h1: clamp(2.25rem, 1.75rem + 2.1vw, 3.25rem);
+  --text-h1--line-height: 1.08;
+  --text-h1--letter-spacing: -0.01em;
+  --text-h2: clamp(1.7rem, 1.45rem + 1.1vw, 2.25rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: clamp(1.3rem, 1.2rem + 0.45vw, 1.5rem);
+  --text-h3--line-height: 1.25;
+  --text-lead: clamp(1.15rem, 1.08rem + 0.35vw, 1.3rem);
+  --text-lead--line-height: 1.55;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-fine: 0.9375rem;
+  --text-fine--line-height: 1.55;
+
+  --shadow-haze: 0 8px 30px rgb(18 46 54 / 0.07);
+  --radius-card: 14px;
+  --radius-btn: 10px;
+}
+
+@layer base {
+  body {
+    @apply bg-chalk font-sans text-ink antialiased;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-channel;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-harbour) 22%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-beak-deep);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Eyebrow kicker over sections, e.g. TEACH IN TAIWAN (PLAN §11.2) */
+@utility kicker {
+  @apply font-sans text-[0.8125rem] font-semibold uppercase text-harbour;
+  letter-spacing: 0.09em;
+}
+
+/* Tabular figures wherever salary numbers appear (PLAN §11.2) */
+@utility tnum {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums lining-nums;
+}
