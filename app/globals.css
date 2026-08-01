@@ -19,7 +19,13 @@
   --color-flint: #55646b; /* Arundel flint — secondary text */
   --color-ink: #1e2c31; /* body text */
   --color-channel: #122e36; /* the Channel at dusk — headings, footer bg */
-  --color-harbour: #2c7a86; /* Littlehampton harbour — brand, primary buttons */
+  --color-brand-teal: #8cc1c7; /* THE brand accent — the logo's teal gull (sampled
+                                   from the artwork; old site header band). Too light
+                                   for text on light surfaces (1.9:1 on chalk) — use as
+                                   washes, tide line, chips/fills with ink or channel
+                                   text, and accents on dark. harbour is its deepened,
+                                   AA-passing counterpart for buttons and links. */
+  --color-harbour: #2c7a86; /* Littlehampton harbour — brand-teal deepened for AA; primary buttons */
   --color-harbour-deep: #1f5763; /* link text on light, hover/pressed */
   --color-beak: #d9a441; /* herring-gull beak — "New" badge, tiny highlights only */
   --color-beak-deep: #b67f1e; /* focus rings (raw beak misses 3:1 on chalk) */
@@ -63,7 +69,7 @@
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--color-harbour) 22%, transparent);
+    background: color-mix(in srgb, var(--color-brand-teal) 45%, transparent);
   }
 
   :focus-visible {

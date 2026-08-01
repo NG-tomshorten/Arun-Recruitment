@@ -1,8 +1,9 @@
 import { useId } from "react";
 
 /**
- * The tide line — a 1px, low-amplitude wave rule in gull (PLAN §11.3).
- * Section divider and kicker underline. The only wave on the site.
+ * The tide line — a 1px, low-amplitude wave rule (PLAN §11.3), drawn in the
+ * brand teal (the water gets the brand colour). Section divider and kicker
+ * underline. The only wave on the site.
  */
 export function TideLine({ className }: { className?: string }) {
   const id = useId();
@@ -10,7 +11,7 @@ export function TideLine({ className }: { className?: string }) {
     <svg
       height="10"
       aria-hidden="true"
-      className={`w-full text-gull ${className ?? ""}`}
+      className={`w-full text-brand-teal ${className ?? ""}`}
     >
       <defs>
         <pattern

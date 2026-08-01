@@ -21,7 +21,13 @@ const TOKENS = [
   { name: "flint", hex: "#55646B", use: "Secondary text" },
   { name: "ink", hex: "#1E2C31", use: "Body text" },
   { name: "channel", hex: "#122E36", use: "Headings, footer background" },
-  { name: "harbour", hex: "#2C7A86", use: "Brand, primary buttons, active states" },
+  {
+    name: "brand-teal",
+    hex: "#8CC1C7",
+    use: "THE brand accent — the logo teal. Washes, tide line, fills with dark text; never text on light",
+    light: true,
+  },
+  { name: "harbour", hex: "#2C7A86", use: "Brand-teal deepened for AA — primary buttons, active states" },
   { name: "harbour-deep", hex: "#1F5763", use: "Links on light, hover/pressed" },
   { name: "beak", hex: "#D9A441", use: "“New” badge, tiny highlights only", light: true },
   { name: "beak-deep", hex: "#B67F1E", use: "Focus rings" },
@@ -62,7 +68,7 @@ function SampleJobCard() {
       </p>
       <p className="mt-1 flex flex-wrap items-center gap-2 text-fine text-flint">
         <span className="tnum">{approxGBPRange(21000, 23000, "RMB")}</span>
-        <span className="rounded-full bg-foam px-2.5 py-0.5 text-[0.8125rem] font-medium text-channel">
+        <span className="rounded-full bg-brand-teal/45 px-2.5 py-0.5 text-[0.8125rem] font-medium text-channel">
           after tax
         </span>
       </p>
@@ -109,12 +115,17 @@ export default function Styleguide() {
           ))}
         </div>
         <p className="mt-6 max-w-[68ch] text-fine text-flint">
-          Usage discipline: ~80% neutrals, ~15% harbour teals, ~5% amber.
-          Contrast pairs are asserted by <code>scripts/check-contrast.mjs</code>{" "}
-          on every build. Two deviations from the plan&rsquo;s draft hexes, both
-          forced by that gate: harbour deepened from #2E7D8A to #2C7A86 (chalk
-          text on it was 4.45:1, just under AA), and beak-deep added because raw
-          beak misses the 3:1 non-text minimum for focus rings on chalk.
+          Usage discipline: ~80% neutrals, ~15% teals (brand-teal + harbour),
+          ~5% amber. brand-teal #8CC1C7 is the confirmed main brand accent,
+          sampled exactly from the logo&rsquo;s teal gull — it appears as the
+          tide line, selection highlight, light fills (the &ldquo;after
+          tax&rdquo; pill) and the footer gull; harbour is its AA-passing deep
+          form for buttons, links and kickers. Contrast pairs are asserted by{" "}
+          <code>scripts/check-contrast.mjs</code> on every build. Two
+          deviations from the plan&rsquo;s draft hexes, both forced by that
+          gate: harbour deepened from #2E7D8A to #2C7A86 (chalk text on it was
+          4.45:1, just under AA), and beak-deep added because raw beak misses
+          the 3:1 non-text minimum for focus rings on chalk.
         </p>
       </Section>
 
@@ -140,9 +151,10 @@ export default function Styleguide() {
           </div>
         </div>
         <p className="mt-4 max-w-[68ch] text-fine text-flint">
-          The original mark (media pack from Barry, Aug 2026): one teal gull,
-          two charcoal — the teal sits close to harbour, the charcoal close to
-          channel. Used in the header, favicon, and later the JSON-LD
+          The original mark (media pack from Barry, Aug 2026): one gull in
+          brand-teal #8CC1C7 — the main brand accent, sampled from this
+          artwork — and two in charcoal, close to channel. Used in the header,
+          favicon, and later the JSON-LD
           organisation logo and OG images. Originals (PSDs + Futura Light TTF)
           live in <code>brand/</code> — the Futura TTF is desktop-licensed
           only and must never be web-embedded; site type stays Fraunces +

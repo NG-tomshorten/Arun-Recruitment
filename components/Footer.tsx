@@ -21,7 +21,7 @@ export function Footer() {
         {/* The gull on its horizon rule (PLAN §11.4) */}
         <div className="flex items-end" aria-hidden="true">
           <span className="mb-[4.5px] flex-1 border-t border-chalk/25" />
-          <Gull withHorizon={false} className="h-6 w-12 text-chalk/80" />
+          <Gull withHorizon={false} className="h-6 w-12 text-brand-teal" />
           <span className="mb-[4.5px] flex-1 border-t border-chalk/25" />
         </div>
 

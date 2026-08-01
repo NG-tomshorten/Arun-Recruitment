@@ -26,6 +26,8 @@ const PAIRS = [
   ["channel", "foam", 4.5, "chip text"],
   ["ink", "beak", 4.5, "'New' badge text"],
   ["ink", "shingle", 4.5, "text on warm surface"],
+  ["ink", "brand-teal", 4.5, "text on brand-teal fills"],
+  ["channel", "brand-teal", 4.5, "text on brand-teal chips/pills"],
   ["beak-deep", "chalk", 3.0, "focus ring (non-text, WCAG 1.4.11)"],
 ];
 
