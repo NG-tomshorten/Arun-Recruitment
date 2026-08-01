@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Button } from "@/components/Button";
 import { ChartMotif } from "@/components/ChartMotif";
 import { Gull } from "@/components/Gull";
@@ -117,6 +118,38 @@ export default function Styleguide() {
         </p>
       </Section>
 
+      <Section title="Brand mark">
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="flex items-center justify-center rounded-card border border-gull/60 bg-chalk p-8 sm:col-span-2">
+            <Image
+              src="/images/logo.png"
+              alt="Arun Language Training & Recruitment mark — three gulls"
+              width={720}
+              height={366}
+              className="h-auto w-full max-w-72"
+            />
+          </div>
+          <div className="flex items-center justify-center rounded-card border border-gull/60 bg-white p-8">
+            <Image
+              src="/images/logo-square.png"
+              alt="Square lockup with company name"
+              width={512}
+              height={512}
+              className="h-auto w-full max-w-40"
+            />
+          </div>
+        </div>
+        <p className="mt-4 max-w-[68ch] text-fine text-flint">
+          The original mark (media pack from Barry, Aug 2026): one teal gull,
+          two charcoal — the teal sits close to harbour, the charcoal close to
+          channel. Used in the header, favicon, and later the JSON-LD
+          organisation logo and OG images. Originals (PSDs + Futura Light TTF)
+          live in <code>brand/</code> — the Futura TTF is desktop-licensed
+          only and must never be web-embedded; site type stays Fraunces +
+          Inter.
+        </p>
+      </Section>
+
       <Section title="Type">
         <div className="space-y-8">
           <div>
@@ -177,7 +210,8 @@ export default function Styleguide() {
         <div className="space-y-6">
           <div>
             <p className="mb-2 text-fine text-flint">
-              The gull — wordmark, favicon, footer horizon, 404. Nowhere else.
+              The single-gull glyph — footer horizon and 404 only (the header
+              and favicon carry the real brand mark). Nowhere else.
             </p>
             <Gull className="h-12 w-24 text-harbour" />
           </div>

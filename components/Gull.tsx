@@ -1,7 +1,9 @@
 /**
  * The gull — one minimal two-stroke glyph: a distant gull over a horizon line.
- * Permitted placements (PLAN §11.3): wordmark, favicon, footer horizon rule, 404.
- * Never repeated, patterned, or animated.
+ * Permitted placements: footer horizon rule and 404 only. (The wordmark and
+ * favicon carry the real three-gull brand mark from brand/ — see PLAN §11.3,
+ * amended when Barry's media pack arrived.) Never repeated, patterned, or
+ * animated.
  */
 export function Gull({
   withHorizon = true,

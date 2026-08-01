@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Gull } from "./Gull";
 import { MobileNav } from "./MobileNav";
 import { NAV_LINKS } from "./nav";
 
@@ -8,7 +8,15 @@ export function Header() {
     <header className="relative border-b border-gull/60 bg-chalk">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <Link href="/" className="flex items-center gap-3">
-          <Gull className="h-7 w-14 shrink-0 text-harbour" />
+          {/* The brand mark — three gulls, from brand/Logo.png */}
+          <Image
+            src="/images/logo.png"
+            alt=""
+            width={720}
+            height={366}
+            priority
+            className="h-10 w-auto shrink-0"
+          />
           <span className="flex flex-col">
             <span className="font-display text-[1.4rem] font-semibold leading-none text-channel">
               Arun
