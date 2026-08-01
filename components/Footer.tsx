@@ -99,8 +99,7 @@ export function Footer() {
         </div>
 
         <p className="mt-12 border-t border-chalk/15 pt-6 text-[0.8125rem] text-chalk/60">
-          © {new Date().getFullYear()} Arun Language Training &amp; Recruitment
-          Ltd. Registered in England &amp; Wales, company no. 9744912.
+          {`© ${new Date().getFullYear()} Arun Language Training & Recruitment Ltd. Registered in England & Wales, company no. 9744912.`}
         </p>
       </div>
     </footer>
