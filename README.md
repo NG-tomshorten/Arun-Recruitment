@@ -4,6 +4,7 @@ Static site rebuild for [arunlanguagetraining.com](https://arunlanguagetraining.
 
 - **[PLAN.md](PLAN.md)** — the implementation plan (architecture, security, design, build order). Read this first.
 - **[site-capture.md](site-capture.md)** — full capture of the live site (1 Aug 2026); source of truth for all copy and data.
+- **[CLAUDE.md](CLAUDE.md)** — how to work in this repo: conventions, guardrails, and where the build has got to.
 
 ## Stack
 

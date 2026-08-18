@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# claude code — shared settings are committed, per-machine ones are not
+.claude/settings.local.json
+
 # vercel
 .vercel
 
