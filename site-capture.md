@@ -2,6 +2,14 @@
 
 Captured 1 August 2026 by crawling the live site (all 12 resolving URLs downloaded and transcribed; HTML comments inspected to separate live content from retired content). This file is the source of truth for all copy and data in the rebuild. Section numbers are referenced from `PLAN.md` — do not renumber.
 
+**Re-verified 18 August 2026** — live site unchanged since capture. All 12 URLs still resolve 200;
+`/gdpr-consent` still 404s. Page copy, all ten listings, salary figures, company details, the four
+social URLs and the TEFL affiliate code (`LNMSR2017C`, $249, 15%, 120 hours) all match this file.
+The "accredited by the Australian government" claim was re-confirmed as sitting **inside an HTML
+comment** — retired, not live (§2.3/§1). Note for future re-crawls: a markdown-converting fetcher
+reads that comment back as visible page text and will report it as a live claim. It is not. Check
+the raw HTML before believing any tool that says otherwise.
+
 ---
 
 ## §1 Page inventory
