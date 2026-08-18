@@ -56,7 +56,9 @@ Every decision resolves against these. Where they conflict, **Barry wins**.
 - **Tabular figures** (`tabular-nums`) wherever salary numbers appear.
 - Components in `components/`, one export per file, named export, no default exports.
 - `@/` path alias for imports. Comments cite the spec section they implement (`// PLAN §11.3`).
-- Motion: CSS-only, 150–200ms ease-out, always behind `prefers-reduced-motion`.
+- Motion: CSS-only, 150–200ms ease-out, always behind `prefers-reduced-motion`. The one ambient
+  exception is the home page's sea scene — shore drift (`components/Shore.tsx`) and the shoal
+  (`components/Shoal.tsx`) — don't add others.
 - Accessibility is not optional: semantic landmarks, visible focus, alt text, AA contrast.
 
 ## Guardrails — do not do these without stopping and asking first

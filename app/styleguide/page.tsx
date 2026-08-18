@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/Button";
 import { ChartMotif } from "@/components/ChartMotif";
 import { Gull } from "@/components/Gull";
+import { Shore } from "@/components/Shore";
 import { TideLine } from "@/components/TideLine";
 import { approxGBPRange } from "@/lib/rates";
 
@@ -25,6 +26,12 @@ const TOKENS = [
     name: "brand-teal",
     hex: "#8CC1C7",
     use: "THE brand accent — the logo teal. Washes, tide line, fills with dark text; never text on light",
+    light: true,
+  },
+  {
+    name: "shallows",
+    hex: "#ADCED0",
+    use: "Shallow water — teal section wash below the shore; ink text only",
     light: true,
   },
   { name: "harbour", hex: "#2C7A86", use: "Brand-teal deepened for AA — primary buttons, active states" },
@@ -236,16 +243,19 @@ export default function Styleguide() {
           </div>
           <div>
             <p className="mb-2 text-fine text-flint">
-              The chart — Arun mouth at 5% on chalk (hero), 6–7% on channel
-              (footer). Never behind body text.
+              The shore — the same wave, alive: three brand-teal swells
+              drifting and rising out of phase, foam breaking on the front
+              crest. Home hero only. Stills under prefers-reduced-motion.
             </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="relative h-56 overflow-hidden rounded-card border border-gull/60 bg-chalk">
-                <ChartMotif className="text-channel opacity-[0.05]" />
-              </div>
-              <div className="relative h-56 overflow-hidden rounded-card bg-channel">
-                <ChartMotif className="text-chalk opacity-[0.07]" />
-              </div>
+            <Shore />
+          </div>
+          <div>
+            <p className="mb-2 text-fine text-flint">
+              The chart — Arun mouth at 5% on chalk. Hero only; never behind
+              body text.
+            </p>
+            <div className="relative h-56 overflow-hidden rounded-card border border-gull/60 bg-chalk">
+              <ChartMotif className="text-channel opacity-[0.05]" />
             </div>
           </div>
         </div>

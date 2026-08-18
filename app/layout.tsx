@@ -46,10 +46,15 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
+        {/* Header + main together fill exactly one viewport, so the footer's
+            top edge sits on the fold; a page's hero grows into the spare
+            height via flex-1 */}
+        <div className="flex min-h-svh flex-1 flex-col">
+          <Header />
+          <main id="main" className="flex flex-1 flex-col">
+            {children}
+          </main>
+        </div>
         <Footer />
       </body>
     </html>

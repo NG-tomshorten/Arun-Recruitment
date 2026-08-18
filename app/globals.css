@@ -25,6 +25,9 @@
                                    washes, tide line, chips/fills with ink or channel
                                    text, and accents on dark. harbour is its deepened,
                                    AA-passing counterpart for buttons and links. */
+  --color-shallows: #adced0; /* shallow water off the beach — teal section wash
+                                below the shore. Use ink (not flint — 3.7:1) for
+                                text on it. */
   --color-harbour: #2c7a86; /* Littlehampton harbour — brand-teal deepened for AA; primary buttons */
   --color-harbour-deep: #1f5763; /* link text on light, hover/pressed */
   --color-beak: #d9a441; /* herring-gull beak — "New" badge, tiny highlights only */
@@ -87,6 +90,99 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+/* The shore (components/Shore.tsx) — deliberately ambient, outside the
+   150–200ms interaction rule; the reduced-motion block above stills both.
+   drift: exactly one 112px wave repeat per loop, seamless at any width.
+   swell: the rise and fall, run alternate with per-layer delays. */
+@keyframes shore-drift {
+  to {
+    transform: translateX(-112px);
+  }
+}
+
+@keyframes shore-swell {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-9px);
+  }
+}
+
+/* The shoal (components/Shoal.tsx) — same ambient licence as the shore.
+   swim: one full crossing of the viewport (the fish starts 6rem off-screen
+   left and exits off-screen right). bob: the vertical waver, run alternate. */
+@keyframes fish-swim {
+  to {
+    transform: translateX(calc(100vw + 10rem));
+  }
+}
+
+/* The shark: crosses during the first 15% of a long cycle, then waits
+   off-screen — one slow pass every couple of minutes. */
+@keyframes shark-swim {
+  0% {
+    transform: translateX(0);
+  }
+  15%,
+  100% {
+    transform: translateX(calc(100vw + 16rem));
+  }
+}
+
+/* The shark's catch: a fish on the shark's own 140s timeline. It swims in
+   from the right; at ~9% the shark's nose reaches it and it vanishes
+   (eaten), staying gone until the cycle restarts off-screen. */
+@keyframes fish-victim {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  8.8% {
+    opacity: 1;
+  }
+  9.4% {
+    opacity: 0;
+  }
+  15% {
+    transform: translateX(-40vw);
+  }
+  100% {
+    transform: translateX(-40vw);
+    opacity: 0;
+  }
+}
+
+@keyframes fish-bob {
+  from {
+    transform: translateY(-9px) rotate(-4deg);
+  }
+  to {
+    transform: translateY(9px) rotate(4deg);
+  }
+}
+
+/* Shallows → channel descent (home page, below the shore). Eased stops in
+   oklab: a plain two-stop gradient banded visibly and greyed out in the
+   middle. Text on it must sit above ~45% (ink) or on the deep end (chalk). */
+@utility sea-fade {
+  /* stops follow a smootherstep curve from 20% to 96% — dense enough that
+     no segment's colour jump is visible as a band */
+  background: linear-gradient(
+    to bottom in oklab,
+    var(--color-shallows) 0%,
+    var(--color-shallows) 20%,
+    color-mix(in oklab, var(--color-shallows) 98%, var(--color-channel)) 30%,
+    color-mix(in oklab, var(--color-shallows) 88%, var(--color-channel)) 40%,
+    color-mix(in oklab, var(--color-shallows) 69%, var(--color-channel)) 50%,
+    color-mix(in oklab, var(--color-shallows) 45%, var(--color-channel)) 60%,
+    color-mix(in oklab, var(--color-shallows) 22%, var(--color-channel)) 70%,
+    color-mix(in oklab, var(--color-shallows) 7%, var(--color-channel)) 80%,
+    color-mix(in oklab, var(--color-shallows) 1%, var(--color-channel)) 88%,
+    var(--color-channel) 96%
+  );
 }
 
 /* Eyebrow kicker over sections, e.g. TEACH IN TAIWAN (PLAN §11.2) */

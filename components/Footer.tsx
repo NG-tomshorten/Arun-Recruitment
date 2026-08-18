@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ChartMotif } from "./ChartMotif";
 import { Gull } from "./Gull";
 import { NAV_LINKS } from "./nav";
 
@@ -15,9 +14,8 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-channel text-chalk">
-      <ChartMotif className="text-chalk opacity-[0.06]" />
-      <div className="relative mx-auto max-w-6xl px-4 pb-10 pt-12 sm:px-6">
+    <footer className="bg-channel text-chalk">
+      <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:px-6">
         {/* The gull on its horizon rule (PLAN §11.4) */}
         <div className="flex items-end" aria-hidden="true">
           <span className="mb-[4.5px] flex-1 border-t border-chalk/25" />
