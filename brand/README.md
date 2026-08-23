@@ -26,5 +26,6 @@ by the site. Web-ready derivatives live in `public/images/` and `app/icon.png`.
 `Futura (Light).ttf` is a commercial typeface (© 1987 Adobe Systems). The TTF
 is a **desktop** font — it is almost certainly not licensed for web embedding.
 **Do not add it via `@font-face` or `next/font/local`.** Site typography stays
-Fraunces + Inter (PLAN §11.2). The logo rasters have Futura baked into the
+Montserrat + Inter (PLAN §11.2) — Montserrat was chosen partly because it
+echoes this Futura legally. The logo rasters have Futura baked into the
 artwork, which is fine — that's normal logo usage, not font redistribution.

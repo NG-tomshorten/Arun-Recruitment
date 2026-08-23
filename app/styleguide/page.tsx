@@ -164,34 +164,41 @@ export default function Styleguide() {
           favicon, and later the JSON-LD
           organisation logo and OG images. Originals (PSDs + Futura Light TTF)
           live in <code>brand/</code> — the Futura TTF is desktop-licensed
-          only and must never be web-embedded; site type stays Fraunces +
+          only and must never be web-embedded; site type is Montserrat +
           Inter.
         </p>
       </Section>
 
       <Section title="Type">
+        <p className="mb-8 max-w-[68ch] text-fine text-flint">
+          Display face: Montserrat, semibold — chosen by Barry at Checkpoint A
+          (Aug 2026) from an eleven-candidate comparison, replacing the
+          plan&rsquo;s original Fraunces. It echoes the geometric Futura Light
+          of the logo lockup, which itself is desktop-licensed and can&rsquo;t
+          be web-embedded.
+        </p>
         <div className="space-y-8">
           <div>
-            <p className="text-[0.8125rem] text-flint">display — Fraunces</p>
-            <p className="font-display text-display text-channel">
+            <p className="text-[0.8125rem] text-flint">display — Montserrat</p>
+            <p className="font-display text-display font-semibold text-channel">
               Where the Arun meets the sea
             </p>
           </div>
           <div>
             <p className="text-[0.8125rem] text-flint">h1</p>
-            <p className="font-display text-h1 text-channel">
+            <p className="font-display text-h1 font-semibold text-channel">
               Teaching jobs in Taiwan and China
             </p>
           </div>
           <div>
             <p className="text-[0.8125rem] text-flint">h2</p>
-            <p className="font-display text-h2 text-channel">
+            <p className="font-display text-h2 font-semibold text-channel">
               Salary, hours and what&rsquo;s included
             </p>
           </div>
           <div>
             <p className="text-[0.8125rem] text-flint">h3</p>
-            <p className="font-display text-h3 text-channel">
+            <p className="font-display text-h3 font-semibold text-channel">
               Requirements at a glance
             </p>
           </div>

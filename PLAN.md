@@ -304,7 +304,7 @@ Define as CSS custom properties + Tailwind theme tokens. Contrast is a build gat
 
 ### 11.2 Type
 
-- **Display: Fraunces** (variable; optical size on, softness/wonk at 0) — a serif with warmth and spine; headings feel like a well-set book, not a SaaS dashboard. If it reads too warm at Checkpoint A, the one-line swap is Newsreader.
+- **Display: Montserrat** (variable), semibold for headings — chosen by Barry at Checkpoint A (Aug 2026) from an eleven-candidate comparison, replacing the original Fraunces (he found it too warm). A geometric sans that echoes the Futura Light of the logo lockup without touching the desktop-only Futura licence.
 - **Text & UI: Inter** — body 17–18px, line-height ~1.65, max ~68ch prose. `font-feature-settings: "tnum"` wherever salary figures appear so numbers align.
 - Both self-hosted via `next/font`, subset. Real hierarchy: fluid `clamp()` scale, generous margins above headings.
 - Eyebrow kickers over sections: Inter semibold ~13px, letterspaced caps, `harbour` — e.g. `TEACH IN TAIWAN`.
@@ -342,7 +342,7 @@ Layout: generous whitespace, max-width prose, mobile-first — a large share of 
 
 **Step 0 — done (1 Aug 2026):** full site crawl → `site-capture.md`; this plan. Remaining step-0 work at build start: `git init`, `.gitignore` (including `.env*`), first commit, private GitHub repo under Tom's account.
 
-1. **Scaffold + design system.** create-next-app (TS, App Router), Tailwind, `output: 'export'`, design tokens, `next/font` (Fraunces + Inter), layout shell (header/nav/footer), the gull SVG, chart motif, tide-line divider, and a dev-only `/styleguide` page showing tokens, type scale, buttons, a sample job card.
+1. **Scaffold + design system.** create-next-app (TS, App Router), Tailwind, `output: 'export'`, design tokens, `next/font` (Montserrat + Inter), layout shell (header/nav/footer), the gull SVG, chart motif, tide-line divider, and a dev-only `/styleguide` page showing tokens, type scale, buttons, a sample job card.
    **⛔ CHECKPOINT A — stop and show the styleguide and shell, so the visual direction can be corrected before ten pages are built on it.**
 2. **Tina schema + content.** `tina/config.ts` with full field UX (§5), all ten listings transcribed from capture §3, running in local mode.
    **⛔ CHECKPOINT B — stop and show the schema labels/hints and one job open in the admin form. This is the screen Barry lives in; it's much cheaper to fix now than to migrate later.**
@@ -362,7 +362,7 @@ Layout: generous whitespace, max-width prose, mobile-first — a large share of 
 
 1. **Legacy UK-courses URLs 301 → `/`** (the line looks retired: de-linked years ago, pre-Brexit copy). Confirm with Barry; if it ever revives, those are new pages.
 2. **Turnstile on the contact form** — one third-party script, on one page, for a real spam problem. If its no-cookie claim fails verification, drop it and keep honeypot + time-trap + rate limit.
-3. **Fraunces** for display type (Newsreader is the ready alternative at Checkpoint A).
+3. ~~**Fraunces** for display type~~ — **resolved at Checkpoint A (Aug 2026): Barry chose Montserrat** from a comparison of eleven candidates.
 4. **Private repo**, Tom's GitHub account.
 5. **DMARC starts at `p=none`** (monitor only) — nothing that could touch Barry's existing `info@` mail flow until reports are clean.
 6. **No dark mode; no photography at launch** — slots documented for later.

@@ -79,7 +79,7 @@ Every decision resolves against these. Where they conflict, **Barry wins**.
    handlers, middleware, or runtime image optimization. The one exception is the Cloudflare Worker
    contact route (PLAN §8.3), which is separate from the site build.
 8. **Job slugs are permanent once created.** Renaming one breaks Google Jobs and inbound links.
-9. **Never `@font-face` the Futura TTF** — desktop licence only (`brand/README.md`). Fraunces + Inter.
+9. **Never `@font-face` the Futura TTF** — desktop licence only (`brand/README.md`). Montserrat + Inter.
 10. **Retire jobs with the `active` toggle, never by deleting.** Inactive jobs keep their URL and
     render a "role has been filled" state.
 

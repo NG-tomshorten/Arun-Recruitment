@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import "./globals.css";
 
-// Self-hosted via next/font (PLAN §11.2). Fraunces: optical size on,
-// SOFT/WONK left at their 0 defaults.
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+// Self-hosted via next/font (PLAN §11.2). Montserrat chosen by Barry at
+// Checkpoint A (Aug 2026) from the font-lab comparison, replacing Fraunces.
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
-  axes: ["opsz"],
   display: "swap",
 });
 
@@ -37,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${fraunces.variable} ${inter.variable} h-full`}
+      className={`${montserrat.variable} ${inter.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">
         <a
