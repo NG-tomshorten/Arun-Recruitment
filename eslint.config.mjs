@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Tina build artefacts (PLAN §10). `tinacms build` emits the admin SPA bundle into
+    // public/admin and codegen output into tina/__generated__ — neither is ours to lint.
+    "public/admin/**",
+    "tina/__generated__/**",
   ]),
 ]);
 

@@ -39,6 +39,13 @@ yarn-error.log*
 # vercel
 .vercel
 
+# tinacms (PLAN §10). The admin bundle and the codegen output are both rebuilt by
+# `tinacms build` on every deploy, and in local mode the generated client hardcodes
+# http://localhost:4001/graphql — committing it would poison a Cloudflare build.
+# tina/tina-lock.json is NOT ignored: it is the schema lock TinaCloud reads.
+/public/admin/
+/tina/__generated__/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

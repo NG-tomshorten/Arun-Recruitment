@@ -1,0 +1,30 @@
+# Cloudflare redirects (PLAN §4).
+#
+# The ten 301s below are transcribed exactly from the table in PLAN §4 —
+# the four renamed pages, then the six retired "English courses in the UK"
+# pages (capture §6), de-linked from the old nav years ago but still
+# resolving and possibly indexed. Sending those six to / consolidates any
+# residual link equity. No catch-all: anything unlisted falls through to the
+# custom 404 (app/not-found.tsx).
+#
+# /privacy keeps the old path, so it needs no redirect.
+#
+# /gdpr-consent is deliberately left dead. It already 404s on the live site;
+# PLAN §4 says leave it dead and keep it out of the sitemap, and the custom
+# 404 page handles it. Do not add a line for it.
+
+/recruitment                          /for-employers   301
+/teaching-jobs                        /jobs            301
+/contact-alt                          /contact         301
+/tefl-tesol-courses                   /tefl-course     301
+/accommodation                        /                301
+/agents                               /                301
+/english-language-courses-in-the-uk   /                301
+/faq                                  /                301
+/language-course-pricing              /                301
+/things-to-do-in-littlehampton        /                301
+
+# TinaCMS admin directory index (PLAN §10). Tina builds the admin to
+# /admin/index.html; Cloudflare usually serves the directory index itself,
+# and this 200 rewrite guarantees /admin resolves rather than 404ing.
+/admin  /admin/index.html  200
