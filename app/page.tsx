@@ -15,9 +15,9 @@ export default function Home() {
       <section className="relative flex flex-1 flex-col justify-center overflow-hidden">
         <ChartMotif className="text-channel opacity-[0.05]" />
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
-          <p className="kicker">Teacher recruitment · Taiwan &amp; China</p>
+          <p className="kicker">Teacher recruitment</p>
           <h1 className="mt-4 max-w-[22ch] text-display">
-            English-teaching careers abroad, arranged by a real person
+            English teaching jobs in Taiwan and China
           </h1>
           <p className="mt-6 max-w-[52ch] text-lead text-flint">
             We place British and Commonwealth graduates into teaching jobs in

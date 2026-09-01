@@ -15,14 +15,20 @@ Don't read all of PLAN.md every time — `grep -n '^#' PLAN.md` and read the rel
 
 ## Where the build is
 
-**Steps 1–2 of PLAN §13 are done.** Step 1: scaffold, design tokens, layout shell, gull, chart
+**Steps 1–3 of PLAN §13 are done.** Step 1: scaffold, design tokens, layout shell, gull, chart
 motif, tide line, `/styleguide`, plus Barry's brand media pack. Checkpoint A closed — Barry chose
 Montserrat (PLAN §11.2). Step 2: `tina/config.ts` schema, the ten listings in `content/jobs/`,
-running in local mode (`npm run dev` = `tinacms dev`). Also landed out of order because they carry
-no dependency on the content model: `/privacy` (verbatim + TODOs), `app/not-found.tsx`,
-`public/_redirects`.
-**⛔ Checkpoint B is the live question — the Tina form is built and needs sign-off before job
-pages are built on the schema. Next after that: Step 3 — `/jobs` index and `/jobs/[slug]`.**
+local mode (`npm run dev` = `tinacms dev`); `/privacy`, `app/not-found.tsx` and
+`public/_redirects` landed alongside. Checkpoint B closed (1 Sep 2026) — full Barry walkthrough
+in the admin: create, slug lock, no delete/rename, edit round-trip all verified. Step 3: `/jobs`
+index (filters/sort/URL params) and `/jobs/[slug]` (apply panel, JobPosting JSON-LD, filled
+state, TEFL cross-link), consuming Tina's generated client/types. Hard-won build knowledge, do
+not undo: the `build` script must force `NODE_ENV=production` on the inner `next build` (the
+tinacms CLI exports `development`, which crashes prerendering) and must clear `.next` and
+`tina/__generated__/.cache` + pass `--no-client-build-cache` (two cache layers otherwise serve
+stale job content into a fresh build — a Barry edit that never ships).
+**Next: Step 4 — home page content (role cards, credibility block, TEFL nudge), `/for-employers`,
+`/tefl-course`. No checkpoint between 3 and 4.**
 
 Update this section in the same commit that finishes a step. It is the only state in this file
 that goes stale.

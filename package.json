@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
     "dev:next": "next dev",
-    "build": "npm run check:contrast && tinacms build --local --skip-cloud-checks && next build",
+    "build": "npm run check:contrast && rm -rf .next tina/__generated__/.cache && tinacms build --local --skip-cloud-checks --no-client-build-cache -c \"NODE_ENV=production next build\"",
     "check:contrast": "node scripts/check-contrast.mjs",
     "start": "next start",
     "lint": "eslint",

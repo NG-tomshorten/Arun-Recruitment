@@ -13,9 +13,12 @@ export const GBP_RATES = {
 
 export type SalaryCurrency = keyof typeof GBP_RATES;
 
-/** Convert to GBP, rounded to the nearest £10. */
+/** Convert to GBP — rounded to the nearest £10, except small amounts
+ *  (hourly rates) which keep £1 precision or the range would collapse. */
 export function approxGBP(amount: number, currency: SalaryCurrency): number {
-  return Math.round(amount / GBP_RATES[currency] / 10) * 10;
+  const gbp = amount / GBP_RATES[currency];
+  if (gbp < 100) return Math.round(gbp);
+  return Math.round(gbp / 10) * 10;
 }
 
 const gbp = new Intl.NumberFormat("en-GB", {
@@ -30,7 +33,9 @@ export function approxGBPRange(
   max: number | undefined,
   currency: SalaryCurrency,
 ): string {
-  const lo = gbp.format(approxGBP(min, currency));
-  if (max == null || max === min) return `approx. ${lo}`;
-  return `approx. ${lo}–${gbp.format(approxGBP(max, currency))}`;
+  const lo = approxGBP(min, currency);
+  const hi = max == null ? lo : approxGBP(max, currency);
+  // Single figure when the two ends round to the same amount ("£20–£20").
+  if (hi === lo) return `approx. ${gbp.format(lo)}`;
+  return `approx. ${gbp.format(lo)}–${gbp.format(hi)}`;
 }
