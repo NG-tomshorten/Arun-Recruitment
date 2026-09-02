@@ -52,8 +52,14 @@ mailto. Tina schema: collection relabelled Placements, `closingDate` field dropp
 used it), `postedDate` relabelled as the fill date. The home page was then reverted to the
 minimal Checkpoint-A shape (hero fork + sea only, no content fetch) — Barry and Tom both prefer
 the near-empty landing; don't re-add sections to it without being asked.
-**Next: Step 6 — redirects, `sitemap.ts`, `robots.ts`, per-page metadata, OG build script,
-favicons/manifest, analytics beacon.**
+Step 6: `sitemap.ts` (excludes hidden placements, /styleguide, /admin), `robots.ts`
+(disallows /admin), root-layout metadata (metadataBase, OG defaults, twitter card), ONE static
+OG card for all pages — `public/images/og.png`, regenerated from `scripts/og-card.html`
+(deliberate simplification: no satori/sharp, no per-placement images), apple-icon + manifest
+icons via sips from `app/icon.png`, and the Cloudflare beacon in the layout (dormant until
+`NEXT_PUBLIC_CF_BEACON_TOKEN` is set at deploy). Redirects were already done in Step 2.
+**Next: Step 7 — security + quality pass: `_headers` + CSP hash generator, `security.txt`,
+axe run, Lighthouse 95+ on all four categories, `npm audit` clean-or-justified.**
 
 Update this section in the same commit that finishes a step. It is the only state in this file
 that goes stale.

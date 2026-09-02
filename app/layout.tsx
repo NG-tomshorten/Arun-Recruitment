@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 // Self-hosted via next/font (PLAN §11.2). Montserrat chosen by Barry at
@@ -19,13 +20,30 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default:
-      "Arun Language Training & Recruitment — English teaching jobs in Taiwan and China",
+      "Arun Language Training & Recruitment — English teacher recruitment for Taiwan and China",
     template: "%s — Arun Language Training & Recruitment",
   },
   description:
     "Teacher recruitment from West Sussex: English-teaching placements in Taiwan and mainland China for British and Commonwealth graduates, and recruitment services for schools and employers.",
+  // One static OG card for every page (PLAN §9, simplified by choice —
+  // no per-placement image generation). public/images/og.png.
+  openGraph: {
+    siteName: "Arun Language Training & Recruitment",
+    type: "website",
+    locale: "en_GB",
+    images: [
+      {
+        url: "/images/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Arun Language Training & Recruitment — English teacher recruitment for Taiwan and China",
+      },
+    ],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
@@ -55,6 +73,18 @@ export default function RootLayout({
           </main>
         </div>
         <Footer />
+        {/* Cloudflare Web Analytics (PLAN §9) — cookieless, the one
+            permitted analytics script. The token is set in the deploy
+            environment (PLAN §13 step 8); without it, no script ships. */}
+        {process.env.NEXT_PUBLIC_CF_BEACON_TOKEN && (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={JSON.stringify({
+              token: process.env.NEXT_PUBLIC_CF_BEACON_TOKEN,
+            })}
+          />
+        )}
       </body>
     </html>
   );

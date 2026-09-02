@@ -1,0 +1,64 @@
+<!doctype html>
+<!--
+  Source of public/images/og.png (PLAN §9, simplified by choice: one static
+  1200×630 card for every page, no satori/sharp dependency). To regenerate:
+  put public/images/logo.png next to this file, open it in Chrome, capture
+  the top-left 1200×630 region, and `sips -z 630 1200 -s format png` the
+  capture into public/images/og.png. Colours are the globals.css tokens.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { background: #666; }
+  .card {
+    position: absolute; top: 0; left: 0;
+    width: 1200px; height: 630px;
+    background: #FAF7F2; /* chalk */
+    overflow: hidden;
+    font-family: Inter, sans-serif;
+  }
+  .inner { position: absolute; top: 96px; left: 96px; right: 96px; }
+  .mark { height: 96px; display: block; }
+  h1 {
+    margin-top: 44px;
+    font-family: Montserrat, sans-serif;
+    font-weight: 600;
+    font-size: 58px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #1E2C31; /* ink */
+    max-width: 21ch;
+  }
+  p {
+    margin-top: 26px;
+    font-size: 30px;
+    line-height: 1.4;
+    color: #55646B; /* flint */
+  }
+  /* the sea: shallows fading to the channel along the bottom edge */
+  .sea {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 110px;
+    background: linear-gradient(to bottom, #ADCED0, #2C7A86 55%, #122E36);
+  }
+  /* the distant gull over the horizon, as on the site footer */
+  .gull { position: absolute; right: 108px; bottom: 134px; width: 120px; color: #55646B; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="inner">
+      <img class="mark" src="logo.png" alt="">
+      <h1>Arun Language Training &amp; Recruitment</h1>
+      <p>English teacher recruitment for Taiwan and China</p>
+    </div>
+    <svg class="gull" viewBox="0 0 48 24" fill="none">
+      <path d="M19 11.5Q23 6.5 26.5 10.5Q30 6.5 34 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div class="sea"></div>
+  </div>
+</body>
+</html>

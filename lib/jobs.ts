@@ -100,7 +100,9 @@ type RichTextNode = {
 
 function nodeText(node: RichTextNode): string {
   if (node.text != null) return node.text;
-  return (node.children ?? []).map(nodeText).join("");
+  // List items run together without a separator otherwise ("…developmentBachelor's…")
+  const joiner = node.type === "ul" || node.type === "ol" ? "; " : "";
+  return (node.children ?? []).map(nodeText).join(joiner);
 }
 
 /** Flatten the Tina rich-text AST to plain text (meta descriptions). */
