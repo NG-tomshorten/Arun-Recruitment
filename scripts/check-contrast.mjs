@@ -18,6 +18,8 @@ const PAIRS = [
   ["ink", "chalk", 4.5, "body text"],
   ["flint", "chalk", 4.5, "secondary text"],
   ["harbour-deep", "chalk", 4.5, "links on light"],
+  ["harbour-deep", "foam", 4.5, "links + kickers on foam sections"],
+  ["flint", "foam", 4.5, "secondary text on foam sections"],
   ["harbour", "chalk", 4.5, "kickers, brand text"],
   ["rust", "chalk", 4.5, "form errors"],
   ["chalk", "harbour", 4.5, "primary button text"],

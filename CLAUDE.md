@@ -27,8 +27,11 @@ not undo: the `build` script must force `NODE_ENV=production` on the inner `next
 tinacms CLI exports `development`, which crashes prerendering) and must clear `.next` and
 `tina/__generated__/.cache` + pass `--no-client-build-cache` (two cache layers otherwise serve
 stale job content into a fresh build — a Barry edit that never ships).
-**Next: Step 4 — home page content (role cards, credibility block, TEFL nudge), `/for-employers`,
-`/tefl-course`. No checkpoint between 3 and 4.**
+Step 4: home content (three newest role cards, credibility block from capture §2.1, TEFL nudge
+on the channel deep-end), `/for-employers` (seven services + fresh one-liners, Barry's email
+CTA), `/tefl-course` (ITTT affiliate link, `rel="sponsored"`, no Australian-government claim).
+**Next: Step 5 — `/contact` form + the Worker contact route (PLAN §8.3 hardening). The Worker is
+the one piece that lives outside the static build.**
 
 Update this section in the same commit that finishes a step. It is the only state in this file
 that goes stale.
