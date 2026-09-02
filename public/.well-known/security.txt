@@ -1,0 +1,6 @@
+# Security contact for arunlanguagetraining.com (RFC 9116, PLAN §8.2)
+Contact: mailto:dpo@arunlanguagetraining.com
+Contact: mailto:tom.shorten@nascentgroup.ai
+Expires: 2027-09-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://www.arunlanguagetraining.com/.well-known/security.txt

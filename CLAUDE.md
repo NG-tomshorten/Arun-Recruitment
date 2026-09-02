@@ -58,8 +58,18 @@ OG card for all pages — `public/images/og.png`, regenerated from `scripts/og-c
 (deliberate simplification: no satori/sharp, no per-placement images), apple-icon + manifest
 icons via sips from `app/icon.png`, and the Cloudflare beacon in the layout (dormant until
 `NEXT_PUBLIC_CF_BEACON_TOKEN` is set at deploy). Redirects were already done in Step 2.
-**Next: Step 7 — security + quality pass: `_headers` + CSP hash generator, `security.txt`,
-axe run, Lighthouse 95+ on all four categories, `npm audit` clean-or-justified.**
+Step 7: `public/_headers` (full §8.2 suite; CSP script-src is 'unsafe-inline' by the plan's own
+fallback — 139 unique inline scripts vs Cloudflare's 2,000-char header cap make hashing
+unviable; /admin gets its own CSP with the TinaCloud hosts from tina.io/docs/guides/
+csp-configuration), `security.txt`, deps: next bumped to 16.3.4 (cleared 6 high in bundled
+postcss/sharp), qs pinned via package.json overrides; the 5 remaining moderates are
+react-router inside Tina's admin SPA (authenticated, noindexed, no SSR) — accepted, the only
+fix is a breaking tinacms downgrade; put this in MAINTENANCE.md at step 10. Lighthouse
+(compressing server, not python http.server — uncompressed serving costs ~17 perf points):
+/ 96/100/100/100, /jobs 99/100/100/100, placement page 97/100/100/100; the a11y category is
+axe-powered. Card headings became a `headingLevel` prop (h2 on /jobs, h3 under home's h2).
+**Next: Step 8 — deploy (Cloudflare, custom domain, TLS/zone settings, Turnstile + Resend keys,
+DMARC p=none, rate-limit rule, beacon token, CI + Dependabot). Needs Tom's accounts.**
 
 Update this section in the same commit that finishes a step. It is the only state in this file
 that goes stale.

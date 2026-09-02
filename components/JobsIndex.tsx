@@ -196,7 +196,7 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
         <ul className="mt-6 grid list-none grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {visible.map((job) => (
             <li key={job.slug} className="flex">
-              <JobCard job={job} />
+              <JobCard job={job} headingLevel="h2" />
             </li>
           ))}
         </ul>

@@ -8,7 +8,15 @@ import { EMPLOYER_TYPE_LABELS, type JobCardData } from "@/lib/format";
  * strongest benefits, and the month of the placement. Rendered inside the
  * /jobs index (a client component) and on the server-rendered home page.
  */
-export function JobCard({ job }: { job: JobCardData }) {
+export function JobCard({
+  job,
+  // h3 fits under the home page's h2 section heading; the /jobs index has
+  // no intermediate heading, so it passes h2 to keep heading order valid.
+  headingLevel: Heading = "h3",
+}: {
+  job: JobCardData;
+  headingLevel?: "h2" | "h3";
+}) {
   const cityList =
     job.cities.length > 2
       ? `${job.cities.slice(0, 2).join(" · ")} +${job.cities.length - 2}`
@@ -24,7 +32,7 @@ export function JobCard({ job }: { job: JobCardData }) {
   return (
     <article className="relative flex w-full flex-col rounded-card border border-gull bg-chalk p-6 shadow-haze transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
       <div>
-        <h3 className="text-h3">
+        <Heading className="text-h3">
           {/* The whole card is clickable via the stretched overlay below;
               the heading link is what screen readers and keyboards see. */}
           <Link
@@ -33,7 +41,7 @@ export function JobCard({ job }: { job: JobCardData }) {
           >
             {location}
           </Link>
-        </h3>
+        </Heading>
         <p className="mt-1 text-fine text-flint">{meta}</p>
       </div>
 
