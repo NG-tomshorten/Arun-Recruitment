@@ -1,35 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
-import { ApplyPanel, applyHref } from "@/components/ApplyPanel";
-import { Button } from "@/components/Button";
 import { TideLine } from "@/components/TideLine";
 import {
   DEGREE_LABELS,
   EMPLOYER_TYPE_LABELS,
-  formatDate,
+  formatMonthYear,
   formatSalaryRange,
   periodLabel,
 } from "@/lib/format";
 import {
-  buildJobPostingJsonLd,
   fetchAllJobs,
   fetchJob,
   richTextToPlainText,
   type JobWithSlug,
 } from "@/lib/jobs";
 import { approxGBPRange, type SalaryCurrency } from "@/lib/rates";
-import { SITE_URL } from "@/lib/site";
+import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 
 /**
- * /jobs/[slug] — the full listing (PLAN §6): structured facts, rich-text
- * body, sticky apply panel (desktop right rail, mobile bottom bar),
- * JobPosting JSON-LD on every active job (PLAN §9 — the highest-value item
- * in the build), TEFL cross-link where a certificate is required, and the
- * filled state for retired listings (inbound links never 404).
+ * /jobs/[slug] — one placement record (PLAN §6, amended 2 Sep 2026: these
+ * are roles we have already filled, so there is no apply flow and no
+ * JobPosting JSON-LD — structured job-posting markup on a filled role would
+ * misrepresent it to Google). The page keeps the full detail of the role as
+ * it was listed — salary, hours, requirements, benefits — as a showcase of
+ * the placements we make, with a "roles like this" email CTA in the rail.
  */
 
-// Every job page is prerendered; the slug list is closed at build time.
+// Every placement page is prerendered; the slug list is closed at build time.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
@@ -43,12 +41,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const job = await fetchJob(slug);
   const description = richTextToPlainText(job.body).slice(0, 155);
   return {
-    title: job.title,
+    title: `${job.title} (filled)`,
     description:
       description ||
-      `${job.title} — teaching vacancy in ${job.cities.join(", ")}, ${job.country}.`,
+      `${job.title} — a teaching placement we made in ${job.cities.join(", ")}, ${job.country}.`,
     alternates: { canonical: `${SITE_URL}/jobs/${slug}` },
-    // A retired job keeps its URL but leaves the search index (PLAN §5).
+    // A hidden placement keeps its URL but leaves the search index (PLAN §5).
     ...(job.active === false ? { robots: { index: false } } : {}),
   };
 }
@@ -91,10 +89,33 @@ function JobBody({ body }: { body: JobWithSlug["body"] }) {
   );
 }
 
+/** The rail card: this role is filled; we recruit for ones like it. */
+function SimilarRolesCard({ title }: { title: string }) {
+  const subject = encodeURIComponent(`Roles like: ${title}`);
+  return (
+    <div className="rounded-card border border-gull bg-chalk p-6 shadow-haze">
+      <h2 className="text-h3">This position has been filled</h2>
+      <p className="mt-3 text-fine text-flint">
+        The page stays here as a record of the placement. We recruit for
+        similar roles — email us your CV, your nationality and your teaching
+        qualifications, and we will be in touch when one comes up.
+      </p>
+      <a
+        href={`mailto:${APPLY_EMAIL}?subject=${subject}`}
+        className="mt-5 inline-flex w-full items-center justify-center rounded-btn bg-harbour px-5 py-3 font-medium text-chalk transition-colors duration-150 ease-out hover:bg-harbour-deep"
+      >
+        Email us your CV
+      </a>
+      <p className="mt-4 text-[0.8125rem] text-flint">
+        Or write to <span className="select-all">{APPLY_EMAIL}</span>.
+      </p>
+    </div>
+  );
+}
+
 export default async function JobPage({ params }: Props) {
   const { slug } = await params;
   const job = await fetchJob(slug);
-  const filled = job.active === false;
   const salary = job.salary;
   const requirements = job.requirements;
   const benefits = (job.benefits ?? []).filter((b): b is string => !!b);
@@ -103,31 +124,13 @@ export default async function JobPage({ params }: Props) {
   );
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-16 pb-28 sm:px-6 lg:pb-16">
-      {!filled && (
-        <script
-          type="application/ld+json"
-          // JobPosting JSON-LD (PLAN §9). The one sanctioned use of
-          // dangerouslySetInnerHTML on the site: React escapes plain text
-          // children of <script>, which corrupts JSON, so Next's documented
-          // JSON-LD pattern is required. The payload is JSON.stringify of
-          // build-time data with `<` escaped — nothing user-supplied at
-          // request time, no injection surface.
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(buildJobPostingJsonLd(job)).replace(
-              /</g,
-              "\\u003c",
-            ),
-          }}
-        />
-      )}
-
+    <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
       <nav aria-label="Breadcrumb" className="text-fine">
         <Link
           href="/jobs"
           className="text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
         >
-          ← All teaching jobs
+          ← All placements
         </Link>
       </nav>
 
@@ -140,24 +143,9 @@ export default async function JobPage({ params }: Props) {
           <h1 className="mt-4 max-w-[24ch] text-h1">{job.title}</h1>
           <TideLine className="mt-4 max-w-40" />
           <p className="mt-5 text-flint">
-            {job.cities.join(" · ")} — posted {formatDate(job.postedDate)}
-            {job.closingDate
-              ? `, closes ${formatDate(job.closingDate)}`
-              : null}
+            {job.cities.join(" · ")} · {formatMonthYear(job.postedDate)} ·
+            position filled
           </p>
-
-          {filled && (
-            <div className="mt-8 rounded-card border border-gull bg-foam p-8">
-              <h2 className="text-h3">This role has been filled</h2>
-              <p className="mt-3 max-w-[52ch] text-flint">
-                The listing stays here for reference, but the employer is no
-                longer taking applications. Similar roles come up regularly.
-              </p>
-              <div className="mt-5">
-                <Button href="/jobs">See our open roles</Button>
-              </div>
-            </div>
-          )}
 
           {salary && (
             <div className="mt-8 rounded-card border border-gull bg-chalk p-6 shadow-haze">
@@ -192,7 +180,7 @@ export default async function JobPage({ params }: Props) {
             <Fact label="Age of students" value={job.studentAges} />
             <Fact label="Class size" value={job.classSize} />
             <Fact
-              label="Vacancies"
+              label="Positions"
               value={job.vacancies != null ? String(job.vacancies) : null}
             />
             <Fact label="Start dates" value={job.startDates} />
@@ -201,7 +189,7 @@ export default async function JobPage({ params }: Props) {
 
           {requirements && (
             <section className="mt-10">
-              <h2 className="text-h3">Requirements</h2>
+              <h2 className="text-h3">What the role asked for</h2>
               <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                 <Fact
                   label="Minimum qualification"
@@ -235,22 +223,6 @@ export default async function JobPage({ params }: Props) {
             </section>
           )}
 
-          {requirements?.tefl && !filled && (
-            // The natural conversion moment (PLAN §6): the candidate has just
-            // discovered they need a certificate they don't have.
-            <div className="mt-8 rounded-card border border-gull bg-foam p-6">
-              <p className="text-ink">
-                No TEFL certificate yet?{" "}
-                <Link
-                  href="/tefl-course"
-                  className="font-medium text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
-                >
-                  Get 15% off the 120-hour online course →
-                </Link>
-              </p>
-            </div>
-          )}
-
           {benefits.length > 0 && (
             <section className="mt-10">
               <h2 className="text-h3">Salary &amp; benefits</h2>
@@ -270,26 +242,12 @@ export default async function JobPage({ params }: Props) {
           )}
         </article>
 
-        {!filled && (
-          <aside className="mt-12 hidden lg:mt-0 lg:block">
-            <div className="lg:sticky lg:top-8">
-              <ApplyPanel title={job.title} />
-            </div>
-          </aside>
-        )}
+        <aside className="mt-12 lg:mt-0">
+          <div className="lg:sticky lg:top-8">
+            <SimilarRolesCard title={job.title} />
+          </div>
+        </aside>
       </div>
-
-      {/* Mobile apply bar — the most prominent element on the page (§11.4) */}
-      {!filled && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-gull bg-chalk/95 p-3 backdrop-blur-sm lg:hidden">
-          <a
-            href={applyHref(job.title)}
-            className="flex w-full items-center justify-center rounded-btn bg-harbour px-5 py-3 font-medium text-chalk transition-colors duration-150 ease-out hover:bg-harbour-deep"
-          >
-            Apply by email
-          </a>
-        </div>
-      )}
     </div>
   );
 }

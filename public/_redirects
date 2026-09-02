@@ -1,11 +1,11 @@
 # Cloudflare redirects (PLAN §4).
 #
-# The ten 301s below are transcribed exactly from the table in PLAN §4 —
-# the four renamed pages, then the six retired "English courses in the UK"
-# pages (capture §6), de-linked from the old nav years ago but still
-# resolving and possibly indexed. Sending those six to / consolidates any
-# residual link equity. No catch-all: anything unlisted falls through to the
-# custom 404 (app/not-found.tsx).
+# The ten 301s below follow the table in PLAN §4, amended 2 Sep 2026: the
+# TEFL affiliate page was dropped entirely (stale — Barry), so its legacy
+# path now joins the six retired "English courses in the UK" pages
+# (capture §6) in pointing at /. Sending retired pages to / consolidates
+# any residual link equity. No catch-all: anything unlisted falls through
+# to the custom 404 (app/not-found.tsx).
 #
 # /privacy keeps the old path, so it needs no redirect.
 #
@@ -16,7 +16,7 @@
 /recruitment                          /for-employers   301
 /teaching-jobs                        /jobs            301
 /contact-alt                          /contact         301
-/tefl-tesol-courses                   /tefl-course     301
+/tefl-tesol-courses                   /                301
 /accommodation                        /                301
 /agents                               /                301
 /english-language-courses-in-the-uk   /                301

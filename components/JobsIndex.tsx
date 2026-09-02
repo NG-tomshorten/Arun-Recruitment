@@ -10,10 +10,11 @@ import {
 import { APPLY_EMAIL } from "@/lib/site";
 
 /**
- * The /jobs index body (PLAN §6): card grid filtered client-side by country,
- * city, employer type and whether a TEFL certificate is required; sortable
- * by salary or newest. Filter state syncs to URL params (?country=taiwan)
- * so filtered views are shareable.
+ * The /jobs index body (PLAN §6 — amended 2 Sep 2026: a showcase of the
+ * placements we have made, not a job board): card grid filtered client-side
+ * by country, city and employer type; sortable by salary or newest. Filter
+ * state syncs to URL params (?country=taiwan) so filtered views are
+ * shareable.
  *
  * Progressive enhancement: the full, newest-first list is server-rendered;
  * the filter controls stay `hidden` until hydration reveals them, so with
@@ -26,7 +27,6 @@ type Filters = {
   country: string;
   city: string;
   type: string;
-  tefl: string;
   sort: string;
 };
 
@@ -34,7 +34,6 @@ const NO_FILTERS: Filters = {
   country: "",
   city: "",
   type: "",
-  tefl: "",
   sort: "newest",
 };
 
@@ -44,7 +43,6 @@ function readFilters(search: string): Filters {
     country: params.get("country") ?? "",
     city: params.get("city") ?? "",
     type: params.get("type") ?? "",
-    tefl: params.get("tefl") ?? "",
     sort: params.get("sort") === "salary" ? "salary" : "newest",
   };
 }
@@ -71,7 +69,6 @@ function writeFilters(filters: Filters) {
   if (filters.country) params.set("country", filters.country);
   if (filters.city) params.set("city", filters.city);
   if (filters.type) params.set("type", filters.type);
-  if (filters.tefl) params.set("tefl", filters.tefl);
   if (filters.sort !== "newest") params.set("sort", filters.sort);
   const query = params.toString();
   // replaceState, not the router — filtering is a view of this page, not a
@@ -115,24 +112,21 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
         (!filters.country || filterParam(job.country) === filters.country) &&
         (!filters.city ||
           job.cities.some((city) => filterParam(city) === filters.city)) &&
-        (!filters.type || job.employerType === filters.type) &&
-        (!filters.tefl ||
-          (filters.tefl === "required") === job.teflRequired),
+        (!filters.type || job.employerType === filters.type),
     );
     if (filters.sort === "salary")
       return [...matches].sort((a, b) => b.salarySortKey - a.salarySortKey);
     return matches; // server order is already newest first
   }, [jobs, filters]);
 
-  const active =
-    filters.country || filters.city || filters.type || filters.tefl;
+  const active = filters.country || filters.city || filters.type;
 
   return (
     <>
       {/* hidden until hydration — no dead controls without JS */}
       <form
         hidden={!mounted}
-        aria-label="Filter and sort the job list"
+        aria-label="Filter and sort the placements"
         className="mt-10 flex flex-wrap items-end gap-3"
         onSubmit={(event) => event.preventDefault()}
       >
@@ -178,18 +172,6 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
             ))}
           </select>
         </label>
-        <label className="flex flex-1 flex-col items-start text-fine text-flint sm:flex-none">
-          TEFL certificate
-          <select
-            className={`mt-1 ${selectClass()}`}
-            value={filters.tefl}
-            onChange={(event) => set({ tefl: event.target.value })}
-          >
-            <option value="">All roles</option>
-            <option value="not-required">Not required</option>
-            <option value="required">Required</option>
-          </select>
-        </label>
         <label className="flex flex-1 flex-col items-start text-fine text-flint sm:ml-auto sm:flex-none">
           Sort by
           <select
@@ -206,8 +188,8 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
       {/* Results count announced to screen readers on every filter change */}
       <p aria-live="polite" className="mt-6 text-fine text-flint">
         {visible.length === 1
-          ? `1 role${active ? " matches your filters" : " open now"}`
-          : `${visible.length} roles${active ? " match your filters" : " open now"}`}
+          ? `1 placement${active ? " matches your filters" : ""}`
+          : `${visible.length} placements${active ? " match your filters" : ""}`}
       </p>
 
       {visible.length > 0 ? (
@@ -220,16 +202,16 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
         </ul>
       ) : (
         <div className="mt-10 max-w-[52ch] rounded-card border border-gull bg-foam p-8">
-          <h2 className="text-h3">No roles match</h2>
+          <h2 className="text-h3">No placements match</h2>
           <p className="mt-3 text-flint">
-            Clear the filters, or{" "}
+            Clear the filters to see the full list, or{" "}
             <a
               href={`mailto:${APPLY_EMAIL}`}
               className="text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
             >
               email us
             </a>{" "}
-            — new roles arrive often.
+            about the kind of role you are looking for.
           </p>
           <button
             type="button"

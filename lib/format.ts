@@ -10,10 +10,11 @@ import type { Job } from "@/tina/__generated__/types";
 export type JobSalary = NonNullable<Job["salary"]>;
 
 /**
- * The serialisable projection of a job that crosses the server → client
- * boundary for the /jobs index. Display strings are precomputed server-side
- * (PLAN §6: card leads with location, then salary with approx-GBP and an
- * after-tax pill, then the two strongest benefits).
+ * The serialisable projection of a placement that crosses the server →
+ * client boundary for the /jobs index (PLAN §6 as amended 2 Sep 2026: the
+ * page is a record of filled placements, not a job board). Display strings
+ * are precomputed server-side: card leads with location, then salary with
+ * approx-GBP and an after-tax pill, then the two strongest benefits.
  */
 export type JobCardData = {
   slug: string;
@@ -27,10 +28,10 @@ export type JobCardData = {
   approxGbp: string | null; // "approx. £2,150–£2,690"
   afterTax: boolean;
   benefits: string[]; // the first two — Barry orders them strongest-first
-  postedLabel: string; // "1 August 2026"
+  postedLabel: string; // "August 2026" — month + year only: the stored
+  // dates are the old listing dates, close to but not exactly when each
+  // placement was made, so cards commit to no more than the month.
   postedDate: string; // raw ISO, drives the newest-first sort
-  isNew: boolean;
-  teflRequired: boolean;
   salarySortKey: number; // approx GBP/month, ordering only
 };
 
@@ -73,6 +74,15 @@ export function periodLabel(period: string): string {
 export function formatDate(iso: string): string {
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(iso));
+}
+
+/** "August 2026" — the precision placements are dated to (see JobCardData). */
+export function formatMonthYear(iso: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
     month: "long",
     year: "numeric",
     timeZone: "UTC",

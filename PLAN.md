@@ -4,6 +4,27 @@
 
 Three review checkpoints are built into the build order. Stop at each one.
 
+> **Amendment — 2 Sep 2026 (from Barry, via Tom; overrides anything below that
+> contradicts it):**
+>
+> 1. **The ten listings were never open vacancies** — they are roles that had
+>    already been filled. The old site presented them as live; that was wrong.
+>    `/jobs` is therefore a **record of placements** (a showcase of the work),
+>    not a job board: no apply flows, no apply panel or mobile apply bar, no
+>    "New" badges, no closing dates, and **no JobPosting JSON-LD** — structured
+>    job-posting markup on filled roles would misrepresent them to Google, so
+>    the whole of §9's JobPosting section is void. Placement dates are shown as
+>    month + year only (the stored dates are the old listing dates, not
+>    verified fill dates). Teachers are still recruited — by emailing a CV to
+>    info@ — so the teacher CTAs point at `/contact` and mailto, and job pages
+>    carry a "we recruit for similar roles" card instead of an apply panel.
+>    The `active` toggle now simply hides a placement from the lists (its URL
+>    stays live, noindexed).
+> 2. **`/tefl-course` is deleted entirely** — the ITTT affiliate arrangement is
+>    stale. No TEFL page, no TEFL cross-links or filter, no affiliate link
+>    anywhere; the legacy `/tefl-tesol-courses` path 301s to `/`. The TEFL
+>    *requirement* still appears as a fact on placement records.
+
 ---
 
 ## 1. Architecture (decisions locked)

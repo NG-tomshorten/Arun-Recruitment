@@ -36,6 +36,14 @@ validation + CRLF strip, Turnstile, Resend relay; unit harness `node worker/test
 covers every branch — keep it green). The Worker deploys separately (`worker/README.md`);
 Turnstile runs on Cloudflare's published test keys until real keys land at deploy. `/privacy`
 and 404 were already done in Step 2.
+**Pivot (2 Sep 2026, from Barry — recorded as the amendment block at the top of PLAN.md, which
+overrides the sections it contradicts):** the ten listings were already-filled roles, so `/jobs`
+is now a record of placements, not a job board — no apply flows, no JobPosting JSON-LD (which
+also removed the site's only `dangerouslySetInnerHTML`), dates shown as month + year only,
+`active` now just hides a placement from the lists; and `/tefl-course` is deleted entirely
+(stale affiliate) with its legacy redirect re-pointed at `/`. Teacher CTAs go to `/contact` /
+mailto. Tina schema: collection relabelled Placements, `closingDate` field dropped (no content
+used it), `postedDate` relabelled as the fill date.
 **Next: Step 6 — redirects, `sitemap.ts`, `robots.ts`, per-page metadata, OG build script,
 favicons/manifest, analytics beacon.**
 
@@ -98,10 +106,10 @@ Every decision resolves against these. Where they conflict, **Barry wins**.
 7. **No server runtime.** `output: 'export'` stays. Nothing that needs `next start`, ISR, route
    handlers, middleware, or runtime image optimization. The one exception is the Cloudflare Worker
    contact route (PLAN §8.3), which is separate from the site build.
-8. **Job slugs are permanent once created.** Renaming one breaks Google Jobs and inbound links.
+8. **Job slugs are permanent once created.** Renaming one breaks inbound links.
 9. **Never `@font-face` the Futura TTF** — desktop licence only (`brand/README.md`). Montserrat + Inter.
-10. **Retire jobs with the `active` toggle, never by deleting.** Inactive jobs keep their URL and
-    render a "role has been filled" state.
+10. **Hide placements with the `active` toggle, never by deleting.** Inactive placements keep
+    their URL (noindexed) but leave the index and home page.
 
 ## Where things live
 

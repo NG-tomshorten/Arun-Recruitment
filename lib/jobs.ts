@@ -2,15 +2,17 @@ import { client } from "@/tina/__generated__/client";
 import type { Job } from "@/tina/__generated__/types";
 import { approxGBP, approxGBPRange, type SalaryCurrency } from "@/lib/rates";
 import {
-  formatDate,
+  formatMonthYear,
   formatSalaryRange,
   periodLabel,
   type JobCardData,
 } from "@/lib/format";
-import { SITE_URL } from "@/lib/site";
 
 /**
- * Server-side job data access + JSON-LD (PLAN §5, §6, §9).
+ * Server-side placement data access (PLAN §5, §6 — amended 2 Sep 2026: the
+ * listings are a record of placements we have made, not open vacancies, so
+ * there is no apply flow and no JobPosting JSON-LD; structured job-posting
+ * markup on filled roles would misrepresent them to Google).
  *
  * Everything consumes the types Tina generates — no hand-written Job type
  * (PLAN §5). Queries run against the local GraphQL server that `tinacms dev`
@@ -38,20 +40,16 @@ export async function fetchAllJobs(): Promise<JobWithSlug[]> {
   );
 }
 
-export async function fetchActiveJobs(): Promise<JobWithSlug[]> {
-  // `active` retires a listing (CLAUDE.md guardrail 10) — inactive jobs keep
-  // their page (filled state) but leave the index, home page and JSON-LD.
+export async function fetchShownJobs(): Promise<JobWithSlug[]> {
+  // The `active` toggle hides a placement from the index and home page
+  // (CLAUDE.md guardrail 10) — its page stays live at the same URL but
+  // leaves the search index (noindex).
   return (await fetchAllJobs()).filter((job) => job.active !== false);
 }
 
 export async function fetchJob(slug: string): Promise<JobWithSlug> {
   const result = await client.queries.job({ relativePath: `${slug}.mdx` });
   return { ...(result.data.job as Job), slug };
-}
-
-/** Posted within the last 28 days — drives the beak "New" badge. */
-function isNew(postedDate: string): boolean {
-  return Date.now() - Date.parse(postedDate) < 28 * 24 * 60 * 60 * 1000;
 }
 
 /**
@@ -65,7 +63,7 @@ function monthlyGBPSortKey(salary: Job["salary"]): number {
   return approxGBP(monthly, salary.currency as SalaryCurrency);
 }
 
-/** Project a job into the serialisable card shape the /jobs index needs. */
+/** Project a placement into the serialisable card shape the index needs. */
 export function toCardData(job: JobWithSlug): JobCardData {
   const salary = job.salary ?? null;
   return {
@@ -86,15 +84,13 @@ export function toCardData(job: JobWithSlug): JobCardData {
       : null,
     afterTax: salary?.afterTax === true,
     benefits: (job.benefits ?? []).filter((b): b is string => !!b).slice(0, 2),
-    postedLabel: formatDate(job.postedDate),
+    postedLabel: formatMonthYear(job.postedDate),
     postedDate: job.postedDate,
-    isNew: isNew(job.postedDate),
-    teflRequired: job.requirements?.tefl === true,
     salarySortKey: monthlyGBPSortKey(job.salary),
   };
 }
 
-/* ── Rich-text serialisation (JSON-LD + meta descriptions only) ─────────── */
+/* ── Rich-text serialisation (meta descriptions only) ───────────────────── */
 
 type RichTextNode = {
   type?: string;
@@ -116,99 +112,4 @@ export function richTextToPlainText(body: unknown): string {
     .filter(Boolean)
     .join(" ")
     .replace(/\s+/g, " ");
-}
-
-/**
- * Plain-ish HTML for the JSON-LD `description` (PLAN §9) — paragraphs and
- * lists only. This string lives inside a JSON script tag; the page body
- * itself renders through Tina's <TinaMarkdown> (CLAUDE.md guardrail 5).
- */
-export function richTextToSimpleHTML(body: unknown): string {
-  const root = body as RichTextNode | null;
-  if (!root?.children) return "";
-  const escape = (s: string) =>
-    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const block = (node: RichTextNode): string => {
-    switch (node.type) {
-      case "h1":
-      case "h2":
-      case "h3":
-      case "h4":
-      case "h5":
-      case "h6": {
-        const text = escape(nodeText(node).trim());
-        return text ? `<p><strong>${text}</strong></p>` : "";
-      }
-      case "ul":
-      case "ol": {
-        const items = (node.children ?? [])
-          .map((li) => escape(nodeText(li).trim()))
-          .filter(Boolean)
-          .map((text) => `<li>${text}</li>`)
-          .join("");
-        return items ? `<ul>${items}</ul>` : "";
-      }
-      default: {
-        const text = escape(nodeText(node).trim());
-        return text ? `<p>${text}</p>` : "";
-      }
-    }
-  };
-  return root.children.map(block).filter(Boolean).join("");
-}
-
-/* ── JobPosting JSON-LD (PLAN §9 — the highest-value item) ──────────────── */
-
-/** ISO 4217 for JSON-LD (PLAN §5): display RMB → CNY; TWD stays TWD. */
-const ISO_CURRENCY: Record<SalaryCurrency, string> = {
-  RMB: "CNY",
-  TWD: "TWD",
-};
-
-export function buildJobPostingJsonLd(job: JobWithSlug): object {
-  const salary = job.salary;
-  return {
-    "@context": "https://schema.org",
-    "@type": "JobPosting",
-    title: job.title,
-    description: richTextToSimpleHTML(job.body) || `<p>${job.title}</p>`,
-    datePosted: new Date(job.postedDate).toISOString().slice(0, 10),
-    // validThrough ONLY from an explicit closing date (PLAN §9, §14.7) —
-    // these are evergreen listings; a derived expiry would silently drop
-    // still-open roles from Google's index.
-    ...(job.closingDate
-      ? { validThrough: new Date(job.closingDate).toISOString().slice(0, 10) }
-      : {}),
-    employmentType: "FULL_TIME",
-    hiringOrganization: {
-      "@type": "Organization",
-      name: "Arun Language Training & Recruitment Ltd",
-      url: SITE_URL,
-      logo: `${SITE_URL}/images/logo-square.png`,
-    },
-    jobLocation: job.cities.map((city) => ({
-      "@type": "Place",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: city,
-        addressCountry: job.country === "Taiwan" ? "TW" : "CN",
-      },
-    })),
-    ...(salary
-      ? {
-          baseSalary: {
-            "@type": "MonetaryAmount",
-            currency: ISO_CURRENCY[salary.currency as SalaryCurrency],
-            value: {
-              "@type": "QuantitativeValue",
-              minValue: salary.min,
-              ...(salary.max != null ? { maxValue: salary.max } : {}),
-              unitText: salary.period === "hour" ? "HOUR" : "MONTH",
-            },
-          },
-        }
-      : {}),
-    directApply: false,
-    url: `${SITE_URL}/jobs/${job.slug}`,
-  };
 }

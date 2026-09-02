@@ -23,14 +23,15 @@ import { defineConfig } from 'tinacms'
  *   `defaultItem`, IS typed but is marked @deprecated. Kept `ui.defaultItem` as
  *   the plan asks and widened the type locally — see `jobCollectionUI` below.
  *
- * CHECKPOINT B NOTE 2 — the spec calls postedDate/closingDate "string, with
+ * CHECKPOINT B NOTE 2 — the spec calls postedDate "string, with
  *   ui.dateFormat". In 3.12 `ui.dateFormat` exists only on `type: 'datetime'`;
  *   a string field with it would neither typecheck nor render a date picker.
  *   Used `datetime`, which still stores a plain string in the frontmatter, so the
  *   existing `postedDate: "2026-08-01"` values in content/jobs keep working.
  *   Consumers beware: the picker writes a full ISO timestamp
- *   ("2026-08-23T00:00:00.000Z"), so job pages and JSON-LD must format the value
- *   through `Date`, not assume the shorthand form.
+ *   ("2026-08-23T00:00:00.000Z"), so pages must format the value through
+ *   `Date`, not assume the shorthand form. (closingDate was dropped in the
+ *   2 Sep 2026 pivot — no content file ever used it.)
  *
  * CHECKPOINT B NOTE 3 — `ui.filename.readonly` makes the filename read-only
  *   always, not only after creation; 3.12 has no "lock it once saved" option.
@@ -110,10 +111,10 @@ const jobCollectionUI: CollectionUI & {
     description:
       'This is the web address of the job page. It is made from the job title as you type it, and it stays the same forever so that links and Google listings keep working.',
   },
-  // CLAUDE.md guardrail 10 — jobs are retired with the "Show this job on the
-  // website" toggle, never deleted. Turning off `delete` also removes the Rename
-  // option from the job list (in tinacms 3.12 both menu items are gated on the same
-  // flag), which is the second half of guardrail 8.
+  // CLAUDE.md guardrail 10 — placements are hidden with the "Show this
+  // placement on the website" toggle, never deleted. Turning off `delete` also
+  // removes the Rename option from the list (in tinacms 3.12 both menu items
+  // are gated on the same flag), which is the second half of guardrail 8.
   allowedActions: {
     create: true,
     delete: false,
@@ -160,7 +161,7 @@ export default defineConfig({
     collections: [
       {
         name: 'job',
-        label: 'Job listings',
+        label: 'Placements',
         path: 'content/jobs',
         format: 'mdx',
         ui: jobCollectionUI,
@@ -177,37 +178,26 @@ export default defineConfig({
           {
             type: 'boolean',
             name: 'active',
-            label: 'Show this job on the website',
+            label: 'Show this placement on the website',
             description:
-              "Turn this off when the role is filled. The page stays live with a 'This role has been filled' message — never delete a job.",
+              'Turn this off to take a placement off the website lists. Its page stays reachable at the same address — never delete a placement.',
           },
           {
-            // PLAN §5 — drives the JSON-LD datePosted (§9) and the "newest" sort on /jobs.
+            // Amended 2 Sep 2026: the listings are a record of filled
+            // placements, so this date is when the placement was (roughly)
+            // made. The site shows only the month and year and sorts newest
+            // first. The frontmatter key stays `postedDate` — renaming it
+            // would mean migrating all ten content files for no visitor-
+            // visible gain.
             type: 'datetime',
             name: 'postedDate',
-            label: 'Date posted',
+            label: 'When was the role filled?',
             description:
-              'Leave this as today when you add a new role. Candidates and Google both use it to see how fresh the listing is.',
+              'Roughly is fine — the website only shows the month and year, and lists the newest placements first.',
             required: true,
             ui: {
               dateFormat: 'D MMMM YYYY',
               timeFormat: false, // a date is enough; no need to make him pick a time
-            },
-          },
-          {
-            // PLAN §5 — optional; drives JSON-LD validThrough when present.
-            type: 'datetime',
-            name: 'closingDate',
-            label: 'Closing date (optional)',
-            description:
-              'Only fill this in if the employer has given a firm deadline. Leave blank for open-ended roles.',
-            // `required: false` is deliberate and load-bearing, not decoration: the
-            // date picker only allows an empty value when required is explicitly
-            // false — omitting it would silently stamp today's date on every job.
-            required: false,
-            ui: {
-              dateFormat: 'D MMMM YYYY',
-              timeFormat: false,
             },
           },
           {

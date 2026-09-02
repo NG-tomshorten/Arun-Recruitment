@@ -5,13 +5,15 @@ import { JobCard } from "@/components/JobCard";
 import { Shoal } from "@/components/Shoal";
 import { Shore } from "@/components/Shore";
 import { TideLine } from "@/components/TideLine";
-import { fetchActiveJobs, toCardData } from "@/lib/jobs";
+import { fetchShownJobs, toCardData } from "@/lib/jobs";
 
 /**
- * Home (PLAN §6): the teacher/employer fork up top, then three live roles,
- * the credibility block (capture §2.1, lightly modernised), and the TEFL
- * nudge — placed on the channel deep-end after the sea, the sanctioned
- * "chalk on the deep end" text placement (globals.css sea-fade note).
+ * Home (PLAN §6, amended 2 Sep 2026): the teacher/employer fork up top,
+ * then the three newest placements (the /jobs listings are a record of
+ * roles we filled, not open vacancies), the credibility block (capture
+ * §2.1, lightly modernised), and the teacher CV call — placed on the
+ * channel deep-end after the sea, the sanctioned "chalk on the deep end"
+ * text placement (globals.css sea-fade note).
  */
 
 /** Kicker for foam sections — same treatment as the `kicker` utility but in
@@ -25,7 +27,7 @@ function FoamKicker({ children }: { children: string }) {
 }
 
 export default async function Home() {
-  const jobs = await fetchActiveJobs();
+  const jobs = await fetchShownJobs();
   const cards = jobs.map(toCardData).slice(0, 3);
 
   return (
@@ -35,15 +37,15 @@ export default async function Home() {
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
           <p className="kicker">Teacher recruitment</p>
           <h1 className="mt-4 max-w-[22ch] text-display">
-            English teaching jobs in Taiwan and China
+            We place English teachers in Taiwan and China
           </h1>
           <p className="mt-6 max-w-[52ch] text-lead text-flint">
-            We place British and Commonwealth graduates into teaching jobs in
-            Taiwan and mainland China — and help schools, colleges and
-            companies find reliable instructors.
+            We find teaching posts in Taiwan and mainland China for British
+            and Commonwealth graduates — and reliable instructors for the
+            schools, colleges and companies that need them.
           </p>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Button href="/jobs">I&rsquo;m a teacher looking for work</Button>
+            <Button href="/contact">I&rsquo;m a teacher looking for work</Button>
             <Button href="/for-employers" variant="secondary">
               I&rsquo;m hiring teachers
             </Button>
@@ -51,11 +53,11 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Live roles (PLAN §6) — newest three, straight from the listings */}
+      {/* Recent placements (PLAN §6, amended) — newest three */}
       <section className="bg-foam">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-          <FoamKicker>Open now</FoamKicker>
-          <h2 className="mt-4 text-h2">Latest teaching jobs</h2>
+          <FoamKicker>Placements</FoamKicker>
+          <h2 className="mt-4 text-h2">Teaching jobs we&rsquo;ve filled</h2>
           <ul className="mt-8 grid list-none grid-cols-1 gap-6 md:grid-cols-3">
             {cards.map((job) => (
               <li key={job.slug} className="flex">
@@ -68,7 +70,7 @@ export default async function Home() {
               href="/jobs"
               className="font-medium text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
             >
-              See all {jobs.length} open roles →
+              See all {jobs.length} placements →
             </Link>
           </p>
         </div>
@@ -114,29 +116,29 @@ export default async function Home() {
 
       <Shore />
       {/* Shallows deepening into the channel (sea-fade, globals.css), the
-          shoal cruising through; the fade lands on channel so the TEFL band
-          below and the footer continue the same water. */}
+          shoal cruising through; the fade lands on channel so the teacher
+          band below and the footer continue the same water. */}
       <section className="sea-fade relative h-80 overflow-hidden">
         <Shoal />
       </section>
 
-      {/* TEFL nudge (PLAN §6) — chalk text on the deep end */}
+      {/* Teacher CV call (PLAN §6, amended) — chalk text on the deep end */}
       <section className="bg-channel">
         <div className="mx-auto max-w-6xl px-4 pb-20 pt-4 sm:px-6">
           <h2 className="max-w-[26ch] text-h3 text-chalk">
-            Need a TEFL certificate first?
+            Looking to teach abroad?
           </h2>
           <p className="mt-4 max-w-[52ch] text-chalk/85">
-            Many of our roles ask for one. Our candidates get 15% off
-            ITTT&rsquo;s 120-hour online TEFL/TESOL course — recognised by
-            schools worldwide, taken at your own pace.
+            Email us your CV with your nationality and teaching
+            qualifications, and we will be in touch when a suitable role
+            comes up.
           </p>
           <p className="mt-6">
             <Link
-              href="/tefl-course"
+              href="/contact"
               className="font-medium text-chalk underline underline-offset-4 transition-colors duration-150 hover:text-brand-teal"
             >
-              About the course and the discount →
+              Get in touch →
             </Link>
           </p>
         </div>

@@ -36,7 +36,7 @@ const TOKENS = [
   },
   { name: "harbour", hex: "#2C7A86", use: "Brand-teal deepened for AA — primary buttons, active states" },
   { name: "harbour-deep", hex: "#1F5763", use: "Links on light, hover/pressed" },
-  { name: "beak", hex: "#D9A441", use: "“New” badge, tiny highlights only", light: true },
+  { name: "beak", hex: "#D9A441", use: "Tiny highlights only", light: true },
   { name: "beak-deep", hex: "#B67F1E", use: "Focus rings" },
   { name: "rust", hex: "#A94438", use: "Form errors" },
 ];
@@ -60,14 +60,9 @@ function Section({
 function SampleJobCard() {
   return (
     <article className="max-w-sm rounded-card border border-gull bg-chalk p-6 shadow-haze transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className="text-h3">Chengdu, China</h3>
-          <p className="mt-1 text-fine text-flint">Kindergarten · 3–6 year olds</p>
-        </div>
-        <span className="rounded-full bg-beak px-2.5 py-0.5 text-[0.8125rem] font-semibold text-ink">
-          New
-        </span>
+      <div>
+        <h3 className="text-h3">Chengdu, China</h3>
+        <p className="mt-1 text-fine text-flint">Kindergarten · 3–6 year olds</p>
       </div>
       <p className="tnum mt-5 text-[1.55rem] font-semibold leading-tight text-channel">
         RMB 21,000–23,000
@@ -84,7 +79,7 @@ function SampleJobCard() {
         <li>Medical insurance provided</li>
       </ul>
       <p className="mt-5 border-t border-gull/50 pt-4 text-[0.8125rem] text-flint">
-        Posted July 2026
+        July 2026
       </p>
     </article>
   );
@@ -299,16 +294,16 @@ export default function Styleguide() {
         </p>
       </Section>
 
-      <Section title="Job card">
+      <Section title="Placement card">
         <div className="rounded-card bg-foam p-8">
           <SampleJobCard />
         </div>
         <p className="mt-4 max-w-[68ch] text-fine text-flint">
           Chalk card on a foam section: location first, salary large in tabular
           figures with the approx-£ beneath in flint, &ldquo;after tax&rdquo;
-          pill where true, two strongest benefits, posted date. Hover lifts 2px
-          and shifts the border to harbour. GBP figure computed from{" "}
-          <code>lib/rates.ts</code> at build time.
+          pill where true, two strongest benefits, the month of the placement.
+          Hover lifts 2px and shifts the border to harbour. GBP figure computed
+          from <code>lib/rates.ts</code> at build time.
         </p>
       </Section>
 

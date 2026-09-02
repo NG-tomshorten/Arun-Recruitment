@@ -1,6 +1,5 @@
 export const NAV_LINKS = [
-  { href: "/jobs", label: "Teaching jobs" },
+  { href: "/jobs", label: "Jobs we've filled" },
   { href: "/for-employers", label: "For employers" },
-  { href: "/tefl-course", label: "TEFL course" },
   { href: "/contact", label: "Contact" },
 ] as const;
