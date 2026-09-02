@@ -26,7 +26,13 @@ state, TEFL cross-link), consuming Tina's generated client/types. Hard-won build
 not undo: the `build` script must force `NODE_ENV=production` on the inner `next build` (the
 tinacms CLI exports `development`, which crashes prerendering) and must clear `.next` and
 `tina/__generated__/.cache` + pass `--no-client-build-cache` (two cache layers otherwise serve
-stale job content into a fresh build — a Barry edit that never ships).
+stale job content into a fresh build — a Barry edit that never ships). While Tom's `npm run dev`
+is running, NEVER run `npm run build` (or any `.next`/`tina/__generated__` mutation) in the
+working tree — it deletes manifests out from under the dev server and rewrites the generated
+Tina client onto the build's port, 500ing the site until a restart. Run verification builds in
+a disposable `git worktree` on ports 4002/9002, with `node_modules` cloned in via
+`cp -Rc` (APFS copy-on-write, ~15s) — NOT symlinked; Turbopack refuses a node_modules
+symlink that points outside its root.
 Step 4: home content (three newest role cards, credibility block from capture §2.1, TEFL nudge
 on the channel deep-end), `/for-employers` (seven services + fresh one-liners, Barry's email
 CTA), `/tefl-course` (ITTT affiliate link, `rel="sponsored"`, no Australian-government claim).
@@ -43,7 +49,9 @@ also removed the site's only `dangerouslySetInnerHTML`), dates shown as month + 
 `active` now just hides a placement from the lists; and `/tefl-course` is deleted entirely
 (stale affiliate) with its legacy redirect re-pointed at `/`. Teacher CTAs go to `/contact` /
 mailto. Tina schema: collection relabelled Placements, `closingDate` field dropped (no content
-used it), `postedDate` relabelled as the fill date.
+used it), `postedDate` relabelled as the fill date. The home page was then reverted to the
+minimal Checkpoint-A shape (hero fork + sea only, no content fetch) — Barry and Tom both prefer
+the near-empty landing; don't re-add sections to it without being asked.
 **Next: Step 6 — redirects, `sitemap.ts`, `robots.ts`, per-page metadata, OG build script,
 favicons/manifest, analytics beacon.**
 
