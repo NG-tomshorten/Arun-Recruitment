@@ -68,6 +68,23 @@ fix is a breaking tinacms downgrade; put this in MAINTENANCE.md at step 10. Ligh
 (compressing server, not python http.server — uncompressed serving costs ~17 perf points):
 / 96/100/100/100, /jobs 99/100/100/100, placement page 97/100/100/100; the a11y category is
 axe-powered. Card headings became a `headingLevel` prop (h2 on /jobs, h3 under home's h2).
+**Teacher Profile (2 Sep 2026, Barry + Tom — recorded as the second amendment block in
+PLAN.md, including its same-day addendum):** `/profile` is a client-side wizard in
+`components/ProfileWizard.tsx` that **forks on a destination question** (Mainland China /
+Taiwan / either): china + either run start → destination → six questions → contact + CV →
+completion; **the Taiwan question set is still being written**, so the taiwan route is a
+skeleton (placeholder step → contact + CV) — extension points are marked TODO(Taiwan) in
+the wizard and Worker. Job types are multi-select via `components/Dropdown.tsx`, a reusable
+ARIA-listbox dropdown (single mode used on the passport step). Relayed by `POST /api/profile`
+in the same Worker — full §8.3 stack plus CV checks (5 MB, .pdf/.doc/.docx, filename
+sanitised) with the CV sent as a Resend attachment, never stored; taiwan submissions skip
+the China field validation. Background-check question is a flag only (no offence details
+transit email, by design). The Worker grew path routing (`/api/contact` unchanged);
+`worker/test-worker.mjs` covers both routes and both wizard forks — keep it green.
+Nav + sitemap have `/profile`; the privacy TODO comments and guardrail 4 record the CV
+exception. At deploy: second Worker route, rate-limit rule now `POST /api/*`, and confirm
+Resend-plan attachment support (worker/README.md).
+
 **Next: Step 8 — deploy (Cloudflare, custom domain, TLS/zone settings, Turnstile + Resend keys,
 DMARC p=none, rate-limit rule, beacon token, CI + Dependabot). Needs Tom's accounts.**
 
@@ -123,8 +140,10 @@ Every decision resolves against these. Where they conflict, **Barry wins**.
 3. **No invented copy.** Page text comes from `site-capture.md` or is written fresh only where the
    plan says so (§6). Never carry over the "Accredited by the Australian Government" claim.
    Fix the live "Servcices" typo; port `/privacy` verbatim.
-4. **Nothing that stores personal data.** No CV uploads, no file inputs, no database, no cookies,
-   no analytics beyond the Cloudflare beacon, no cookie banner, no third-party asset hosts.
+4. **Nothing that stores personal data.** No database, no cookies, no analytics beyond the
+   Cloudflare beacon, no cookie banner, no third-party asset hosts. The one sanctioned file
+   input is the `/profile` CV (PLAN amendment 2 Sep 2026 (profile)), which the Worker relays
+   to Barry's inbox as an email attachment and never stores; no other file inputs, ever.
 5. **No `dangerouslySetInnerHTML`.** Rich text renders through Tina's renderer.
 6. **No secrets in the repo.** `.env*` is gitignored. Keys live in Cloudflare/TinaCloud env only.
 7. **No server runtime.** `output: 'export'` stays. Nothing that needs `next start`, ISR, route

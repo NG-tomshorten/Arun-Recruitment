@@ -6,10 +6,12 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { APPLY_EMAIL } from "@/lib/site";
 
 /**
- * The general enquiry form (PLAN §7) — the only form on the site. Name,
- * email, message; posts to the Worker at /api/contact (worker/index.ts,
- * PLAN §8.3). Nothing is stored anywhere: the Worker relays the message to
- * Barry's inbox and forgets it (CLAUDE.md guardrail 4).
+ * The general enquiry form (PLAN §7; the Teacher Profile wizard at
+ * /profile is the site's one other form — PLAN amendment 2 Sep 2026
+ * (profile)). Name, email, message; posts to the Worker at /api/contact
+ * (worker/index.ts, PLAN §8.3). Nothing is stored anywhere: the Worker
+ * relays the message to Barry's inbox and forgets it (CLAUDE.md
+ * guardrail 4).
  *
  * Progressive enhancement mirrors JobsIndex: the form is hidden until
  * hydration (Turnstile needs JS, so without JS it could never submit), and
@@ -27,9 +29,16 @@ const TURNSTILE_SITE_KEY =
 
 const CONTACT_ENDPOINT = "/api/contact";
 
+// Shared with ProfileWizard (global declarations merge project-wide).
+// render() is Turnstile's explicit-mode API — the wizard needs it because
+// its widget container only mounts on the final step, after the script's
+// implicit scan has already run.
 declare global {
   interface Window {
-    turnstile?: { reset: () => void };
+    turnstile?: {
+      reset: () => void;
+      render: (el: HTMLElement, opts: { sitekey: string }) => string;
+    };
   }
 }
 

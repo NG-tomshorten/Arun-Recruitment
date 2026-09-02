@@ -1,14 +1,18 @@
-# Cloudflare Worker config for the contact relay (PLAN §8.3).
+# Cloudflare Worker config for the form relays (PLAN §8.3; the profile
+# route was added by PLAN amendment 2 Sep 2026 (profile)).
 # Deployed separately from the static site — see worker/README.md.
 
+# The name predates the /api/profile route; renaming a deployed Worker is
+# churn, so it stays even though the Worker now serves both relays.
 name = "arun-contact"
 main = "index.ts"
 compatibility_date = "2026-09-01"
 
-# Route is attached at deploy time (PLAN §13 step 8), once the zone exists
+# Routes are attached at deploy time (PLAN §13 step 8), once the zone exists
 # in this Cloudflare account:
 # routes = [
-#   { pattern = "www.arunlanguagetraining.com/api/contact", zone_name = "arunlanguagetraining.com" }
+#   { pattern = "www.arunlanguagetraining.com/api/contact", zone_name = "arunlanguagetraining.com" },
+#   { pattern = "www.arunlanguagetraining.com/api/profile", zone_name = "arunlanguagetraining.com" }
 # ]
 
 [vars]

@@ -25,6 +25,39 @@ Three review checkpoints are built into the build order. Stop at each one.
 >    anywhere; the legacy `/tefl-tesol-courses` path 301s to `/`. The TEFL
 >    *requirement* still appears as a fact on placement records.
 
+> **Amendment — 2 Sep 2026 (Teacher Profile, from Barry and Tom; overrides
+> anything below that contradicts it, including §7's "only form on the site"
+> and "no CV uploads" clauses — for this one flow only):**
+>
+> 3. **A Teacher Profile wizard at `/profile`.** A client-side multi-step
+>    form (one static route; screens switched in React state) where a
+>    candidate answers six questions — preferred locations, job type, salary
+>    expectation (RMB/month), document readiness, passport country and
+>    expiry, background-check status — then gives name, email and a CV
+>    (PDF/DOC/DOCX, 5 MB), and the Worker relays the lot to Barry's inbox
+>    via Resend with the CV as an email attachment. **Relay only, exactly as
+>    the contact form: nothing is stored anywhere** — no KV, no queue, no
+>    localStorage, no answer content in logs; the Worker forgets the file
+>    the moment Resend accepts it. The background-check question is a
+>    **flag only** ("clean" / "something to disclose") with deliberately no
+>    free-text detail field — criminal-offence data must never transit
+>    email; Barry follows up privately. The route reuses the full §8.3
+>    hardening stack (origin check, honeypot, time-trap, validation + CRLF
+>    strip, Turnstile, plain-text-only email body) at `POST /api/profile`
+>    in the same Worker, with its own additions: file size/extension checks
+>    and filename sanitising. §7's mailto path stays the no-JS fallback.
+>    Cite this block in code comments as "PLAN amendment 2 Sep 2026
+>    (profile)".
+>
+>    *Addendum, same day:* the wizard now opens with a destination question
+>    — Mainland China / Taiwan / open to either — and **forks**: China and
+>    "either" run the six questions above (job type became **multi-select**
+>    via a custom dropdown, `components/Dropdown.tsx`, also used on the
+>    passport step); Barry's **Taiwan question set is still being written**,
+>    so the Taiwan route is a placeholder step that collects contact details
+>    + CV only, keeping the lead flowing until the real questions land
+>    (marked TODO(Taiwan) in `ProfileWizard.tsx` and `worker/index.ts`).
+
 ---
 
 ## 1. Architecture (decisions locked)

@@ -163,11 +163,15 @@ export default function Privacy() {
 
         {/*
           TODO(PLAN §6): the stated legal basis is consent, under the EU GDPR.
-          The only personal data the rebuilt site itself handles is the /contact
-          enquiry — name, email, message — which is relayed to info@ and never
-          stored (PLAN §7). Both the basis and the regulation cited need a
-          lawyer's eye. Also note "Your consent will be cover use of data" is
-          mis-typed in the original; left exactly as printed.
+          The rebuilt site itself handles personal data in two relayed flows:
+          the /contact enquiry (name, email, message) and the /profile teacher
+          wizard (its placement answers, name, email, CV attachment — PLAN
+          amendment 2 Sep 2026 (profile)). Both are relayed to info@ and never
+          stored. The profile flow's background-check question is a yes/no
+          flag only — deliberately no offence detail is collected. Both the
+          basis and the regulation cited need a lawyer's eye. Also note "Your
+          consent will be cover use of data" is mis-typed in the original;
+          left exactly as printed.
         */}
         <Section title="2. Our legal basis for collecting and using your personal information">
           <p className="mt-5">
@@ -212,10 +216,12 @@ export default function Privacy() {
 
         {/*
           TODO(PLAN §6): check this against what the rebuilt site actually does.
-          The only automated third-party handling is the /contact enquiry relay
-          — Cloudflare Worker → Resend → info@ (PLAN §8.3) — which transmits the
-          message and stores nothing. Sharing candidate details with schools
-          still happens by email, off-site, exactly as before.
+          The only automated third-party handling is the two form relays —
+          the /contact enquiry and the /profile teacher wizard (CV attachment
+          included), both Cloudflare Worker → Resend → info@ (PLAN §8.3 and
+          PLAN amendment 2 Sep 2026 (profile)) — which transmit and store
+          nothing. Sharing candidate details with schools still happens by
+          email, off-site, exactly as before.
         */}
         <Section title="3. Personal information that we share with third parties">
           <p className="mt-5">
@@ -241,11 +247,13 @@ export default function Privacy() {
         </Section>
 
         {/*
-          TODO(PLAN §6): four things in this section describe features the
+          TODO(PLAN §6): several things in this section describe features the
           rebuilt site does not have — there is no identity authentication, no
-          personalisation, no user account and no registration process, and no
-          on-site job application. Candidates apply by plain email with a
-          pre-filled subject line (PLAN §7); there is no CV upload anywhere.
+          personalisation, no user account and no registration process. The
+          /profile teacher wizard (PLAN amendment 2 Sep 2026 (profile)) does
+          accept a CV, which is emailed to info@ as an attachment and never
+          stored on the site; candidates can also still apply by plain email
+          (PLAN §7).
         */}
         <Section title="4. How we use your personal information">
           <p className="mt-5">

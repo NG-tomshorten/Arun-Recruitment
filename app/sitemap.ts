@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = [
     "",
     "/jobs",
+    "/profile",
     "/for-employers",
     "/contact",
     "/privacy",
