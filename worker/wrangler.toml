@@ -1,0 +1,21 @@
+# Cloudflare Worker config for the contact relay (PLAN §8.3).
+# Deployed separately from the static site — see worker/README.md.
+
+name = "arun-contact"
+main = "index.ts"
+compatibility_date = "2026-09-01"
+
+# Route is attached at deploy time (PLAN §13 step 8), once the zone exists
+# in this Cloudflare account:
+# routes = [
+#   { pattern = "www.arunlanguagetraining.com/api/contact", zone_name = "arunlanguagetraining.com" }
+# ]
+
+[vars]
+ALLOWED_ORIGINS = "https://www.arunlanguagetraining.com,https://arunlanguagetraining.com"
+TO_EMAIL = "info@arunlanguagetraining.com"
+FROM_EMAIL = "enquiries@send.arunlanguagetraining.com"
+
+# Secrets — never in this file or anywhere in the repo (CLAUDE.md guardrail 6):
+#   wrangler secret put TURNSTILE_SECRET_KEY
+#   wrangler secret put RESEND_API_KEY

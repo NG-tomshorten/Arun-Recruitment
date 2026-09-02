@@ -33,6 +33,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# cloudflare worker (PLAN §8.3) — local secrets and wrangler's build cache
+worker/.dev.vars
+worker/.wrangler/
+
 # claude code — shared settings are committed, per-machine ones are not
 .claude/settings.local.json
 

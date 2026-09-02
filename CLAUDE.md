@@ -30,8 +30,14 @@ stale job content into a fresh build — a Barry edit that never ships).
 Step 4: home content (three newest role cards, credibility block from capture §2.1, TEFL nudge
 on the channel deep-end), `/for-employers` (seven services + fresh one-liners, Barry's email
 CTA), `/tefl-course` (ITTT affiliate link, `rel="sponsored"`, no Australian-government claim).
-**Next: Step 5 — `/contact` form + the Worker contact route (PLAN §8.3 hardening). The Worker is
-the one piece that lives outside the static build.**
+Step 5: `/contact` (form + plain details; form hidden until hydration, `<noscript>` mailto) and
+the Worker contact route in `worker/` (full §8.3 stack: origin check, honeypot, time-trap,
+validation + CRLF strip, Turnstile, Resend relay; unit harness `node worker/test-worker.mjs`
+covers every branch — keep it green). The Worker deploys separately (`worker/README.md`);
+Turnstile runs on Cloudflare's published test keys until real keys land at deploy. `/privacy`
+and 404 were already done in Step 2.
+**Next: Step 6 — redirects, `sitemap.ts`, `robots.ts`, per-page metadata, OG build script,
+favicons/manifest, analytics beacon.**
 
 Update this section in the same commit that finishes a step. It is the only state in this file
 that goes stale.
