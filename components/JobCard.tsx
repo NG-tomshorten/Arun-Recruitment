@@ -49,12 +49,12 @@ export function JobCard({
         <>
           <p className="tnum mt-5 text-[1.55rem] font-semibold leading-tight text-channel">
             {job.salaryText}
-            <span className="text-fine font-normal text-flint">
-              {" "}
-              / {job.salaryPeriod === "per hour" ? "hour" : "month"}
-            </span>
           </p>
-          <p className="mt-1 flex flex-wrap items-center gap-2 text-fine text-flint">
+          {/* Period and conversion share one quiet line — the amount never
+              wraps against a dangling "/ month" suffix. */}
+          <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-fine text-flint">
+            <span className="whitespace-nowrap">{job.salaryPeriod}</span>
+            <span aria-hidden="true">·</span>
             <span className="tnum">{job.approxGbp}</span>
             {job.afterTax && (
               <span className="rounded-full bg-brand-teal/45 px-2.5 py-0.5 text-[0.8125rem] font-medium text-channel">

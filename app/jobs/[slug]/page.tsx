@@ -151,12 +151,14 @@ export default async function JobPage({ params }: Props) {
             <div className="mt-8 rounded-card border border-gull bg-chalk p-6 shadow-haze">
               <p className="tnum text-[1.9rem] font-semibold leading-tight text-channel">
                 {formatSalaryRange(salary)}
-                <span className="text-fine font-normal text-flint">
-                  {" "}
+              </p>
+              {/* Period and conversion share one quiet line, matching the
+                  cards — the amount never wraps against its suffix. */}
+              <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-fine text-flint">
+                <span className="whitespace-nowrap">
                   {periodLabel(salary.period)}
                 </span>
-              </p>
-              <p className="mt-2 flex flex-wrap items-center gap-2 text-fine text-flint">
+                <span aria-hidden="true">·</span>
                 <span className="tnum">
                   {approxGBPRange(
                     salary.min,

@@ -21,9 +21,9 @@ export default function Home() {
             We place English teachers in Taiwan and China
           </h1>
           <p className="mt-6 max-w-[52ch] text-lead text-flint">
-            We find teaching posts in Taiwan and mainland China for British
-            and Commonwealth graduates — and reliable instructors for the
-            schools, colleges and companies that need them.
+            We find teaching posts for British and Commonwealth graduates,
+            and reliable instructors for the schools, colleges and companies
+            that need them.
           </p>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <Button href="/contact">I&rsquo;m a teacher looking for work</Button>

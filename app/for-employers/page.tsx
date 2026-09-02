@@ -3,7 +3,7 @@ import { TideLine } from "@/components/TideLine";
 import { SITE_URL } from "@/lib/site";
 
 /**
- * /for-employers (PLAN §6): the seven-service menu as a clean grid with
+ * /for-employers (PLAN §6): the seven-service menu as a numbered list with
  * one-line descriptions written fresh (the old site has none — capture
  * §2.2), and Barry's direct email as the CTA. Intro copy from capture §2.2,
  * lightly modernised; the live "Servcices" typo is not carried over
@@ -41,7 +41,7 @@ const SERVICES: { name: string; description: string }[] = [
       "New teachers briefed on the role, the school and the country before they start.",
   },
   {
-    name: "Visa Support",
+    name: "Visa support",
     description:
       "The work-permit and visa paperwork guided through, for you and the teacher.",
   },
@@ -72,30 +72,40 @@ export default function ForEmployers() {
         high-calibre candidates with a high level of reliability.
       </p>
 
-      <ul className="mt-12 grid list-none grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map((service) => (
+      {/* The seven services as a numbered menu — hairline rules, not a card
+          grid, so the one card below (the CTA) is the page's loud element. */}
+      <ol className="mt-12 max-w-[44rem] list-none border-b border-gull/60">
+        {SERVICES.map((service, index) => (
           <li
             key={service.name}
-            className="rounded-card border border-gull bg-chalk p-6 shadow-haze"
+            className="flex gap-5 border-t border-gull/60 py-5 sm:gap-8"
           >
-            <h2 className="text-h3">{service.name}</h2>
-            <p className="mt-2 text-fine text-flint">{service.description}</p>
+            <span className="kicker tnum pt-0.5">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <h2 className="font-display text-lg font-semibold text-channel">
+                {service.name}
+              </h2>
+              <p className="mt-1 text-fine text-flint">{service.description}</p>
+            </div>
           </li>
         ))}
-        {/* The CTA takes the grid's last cell — the menu leads straight to Barry */}
-        <li className="rounded-card border border-harbour bg-foam p-6 shadow-haze">
-          <h2 className="text-h3">Start a conversation</h2>
-          <p className="mt-2 text-fine text-flint">
-            Take the full menu or just the parts you need.
-          </p>
-          <a
-            href={`mailto:${EMPLOYER_EMAIL}`}
-            className="mt-4 inline-block font-medium text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
-          >
-            Email Barry Shorten
-          </a>
-        </li>
-      </ul>
+      </ol>
+
+      {/* The menu leads straight to Barry */}
+      <div className="mt-10 max-w-[44rem] rounded-card border border-harbour bg-foam p-8 shadow-haze">
+        <h2 className="text-h3">Start a conversation</h2>
+        <p className="mt-2 text-flint">
+          Take the full menu or just the parts you need.
+        </p>
+        <a
+          href={`mailto:${EMPLOYER_EMAIL}`}
+          className="mt-4 inline-block font-medium text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
+        >
+          Email Barry Shorten
+        </a>
+      </div>
 
       <p className="mt-10 max-w-[62ch] text-flint">
         If you are interested in recruiting English language instructors, EFL

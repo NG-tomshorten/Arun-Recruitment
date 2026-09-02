@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/Button";
 import { Dropdown } from "@/components/Dropdown";
+import { Gull } from "@/components/Gull";
 import { APPLY_EMAIL } from "@/lib/site";
 
 /**
@@ -483,7 +484,8 @@ export function ProfileWizard() {
         role="status"
         className="rounded-card border border-harbour bg-foam p-8"
       >
-        <h2 className="text-h3">Profile sent</h2>
+        <Gull withHorizon={false} className="h-6 w-12 text-harbour" />
+        <h2 className="mt-2 text-h3">Profile sent</h2>
         <p className="mt-3 text-flint">
           Thank you — Barry reads every profile himself and will reply to the
           email address you gave. If you don&rsquo;t hear back within a few

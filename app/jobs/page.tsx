@@ -28,13 +28,11 @@ export default async function JobsPage() {
       <h1 className="mt-4 text-h1">Teaching jobs we&rsquo;ve filled</h1>
       <TideLine className="mt-4 max-w-40" />
       <p className="mt-6 max-w-[56ch] text-lead text-flint">
-        A record of placements we have made in Taiwan and mainland China. Each
-        one shows the salary and benefits as the employer gave them, with an
-        approximate pound conversion.
+        A record of the placements we have made in Taiwan and mainland China,
+        with the salary and benefits as each employer gave them.
       </p>
       <p className="mt-4 max-w-[56ch] text-flint">
-        These positions have been filled. If you are looking for a role like
-        one of them, email your CV to{" "}
+        If you are looking for a role like one of these, email your CV to{" "}
         <a
           href={`mailto:${APPLY_EMAIL}`}
           className="select-all text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
