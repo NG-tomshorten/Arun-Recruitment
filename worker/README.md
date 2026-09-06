@@ -6,10 +6,12 @@ amendment 2 Sep 2026 (profile)):
 - `POST /api/contact` — relays the `/contact` enquiry form.
 - `POST /api/profile` — relays the `/profile` Teacher Profile wizard,
   with the candidate's CV as an email attachment. The wizard forks on a
-  China/Taiwan destination question: china/either submissions carry the
-  full question set, taiwan submissions carry contact details + CV only
-  until the Taiwan question set is written (`destination=taiwan` skips
-  the China field validation).
+  China/Taiwan destination question, and validation follows three blocks:
+  every route (passport, `doc_background_check` + `check_recent`,
+  `background_check`), the China set (`destination=china` or `either`:
+  locations, job types, salary, apostille, teaching certificate) and the
+  Taiwan set (`destination=taiwan` or `either`: `degree_on_campus`,
+  `age_groups`). Fields from the other set are ignored, not rejected.
 
 Both deliver to `info@arunlanguagetraining.com` via Resend. Stores nothing;
 logs outcome and timestamp only — the CV is forgotten the moment Resend
@@ -67,6 +69,29 @@ curl -i -X POST http://localhost:8787/api/profile \
   -F "passport_country=uk" \
   -F "passport_expiry_month=06" \
   -F "passport_expiry_year=2029" \
+  -F "background_check=clean" \
+  -F "check_recent=" \
+  -F "name=Test Person" \
+  -F "email=test@example.com" \
+  -F "cv=@cv.pdf" \
+  -F "form_started_at=$(( $(date +%s) * 1000 - 10000 ))" \
+  -F "cf-turnstile-response=test"
+```
+
+A Taiwan submission (`check_recent` is required only when the check is
+`done`, and must be empty otherwise):
+
+```sh
+curl -i -X POST http://localhost:8787/api/profile \
+  -H "Origin: https://www.arunlanguagetraining.com" \
+  -F "destination=taiwan" \
+  -F "degree_on_campus=yes" \
+  -F "age_groups=any_3_16" \
+  -F "passport_country=uk" \
+  -F "passport_expiry_month=06" \
+  -F "passport_expiry_year=2029" \
+  -F "doc_background_check=done" \
+  -F "check_recent=yes" \
   -F "background_check=clean" \
   -F "name=Test Person" \
   -F "email=test@example.com" \

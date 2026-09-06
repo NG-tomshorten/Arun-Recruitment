@@ -5,8 +5,9 @@ import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 
 /**
  * /profile — the Teacher Profile wizard (PLAN amendment 2 Sep 2026
- * (profile)): six questions plus contact details and a CV, relayed to
- * Barry's inbox by the Worker (worker/index.ts) and never stored. The
+ * (profile), with its Taiwan addendum): a few questions — the set depends
+ * on the China/Taiwan destination — plus contact details and a CV, relayed
+ * to Barry's inbox by the Worker (worker/index.ts) and never stored. The
  * <noscript> block is the no-JS path: Turnstile needs JS, so without it
  * the wizard never appears and email is the way in.
  */
@@ -14,7 +15,7 @@ import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Teacher profile",
   description:
-    "Create your teacher profile — six short questions about where you'd like to teach in China, your documents and your CV, sent straight to us.",
+    "Create your teacher profile — a few short questions about where you'd like to teach in China or Taiwan, your documents and your CV, sent straight to us.",
   alternates: { canonical: `${SITE_URL}/profile` },
 };
 
@@ -27,7 +28,7 @@ export default function Profile() {
       </h1>
       <TideLine className="mt-4 max-w-40" />
       <p className="mt-6 max-w-[62ch] text-lead text-flint">
-        Six short questions about where you&rsquo;d like to teach and where
+        A few short questions about where you&rsquo;d like to teach and where
         you&rsquo;ve got to with your documents, then your CV. It goes
         straight to Barry, who reads every profile himself.
       </p>

@@ -77,13 +77,39 @@ const BACKGROUND_LABELS: Record<string, string> = {
   clean: "Clean",
   disclose: "Has something to disclose — discuss privately",
 };
-// The wizard forks on this answer: china/either run the full question set;
-// taiwan is a skeleton route (contact details + CV only) until Barry's
-// Taiwan question set is written. TODO(Taiwan): add its fields here.
+// The wizard forks on this answer (Taiwan addendum): china runs the China
+// set, taiwan runs the Taiwan set, either runs the China set plus the two
+// Taiwan-only questions. Passport, the check status/age and the
+// clean/disclose flag are asked on every route.
 const DESTINATION_LABELS: Record<string, string> = {
   china: "Mainland China",
   taiwan: "Taiwan",
   either: "Open to either China or Taiwan",
+};
+// The Taiwan set — Barry's brief, 6 Sep 2026. Disqualifying answers are
+// soft flags: labelled for Barry, never rejected.
+const DEGREE_LABELS: Record<string, string> = {
+  yes: "Completed on campus",
+  no: "Online degree — not accepted for Taiwan",
+};
+const AGE_GROUP_LABELS: Record<string, string> = {
+  any_3_16: "Any age from 3 to 16",
+  "7_12_only": "Ages 7 to 12 only",
+  older_only: "Prefers older students — outside the Taiwan age range",
+};
+const CHECK_RECENT_LABELS: Record<string, string> = {
+  yes: "less than six months old",
+  no: "more than six months old",
+};
+// The national check Taiwan asks for, by passport country (Barry's list;
+// South Africa and Other fall back to generic wording).
+const CHECK_NAMES: Record<string, string> = {
+  uk: "Basic DBS check",
+  ireland: "Garda Police Certificate",
+  usa: "FBI background check",
+  canada: "RCMP criminal record check",
+  australia: "AFP National Police Check",
+  new_zealand: "Ministry of Justice Criminal Record Check",
 };
 
 const MAX_LOCATIONS = 2000;
@@ -336,9 +362,37 @@ async function handleProfile(request: Request, env: Env): Promise<Response> {
   }
   const { name, email } = sender;
 
-  // The China question set — required unless the candidate chose Taiwan,
-  // whose route is a skeleton until Barry's Taiwan questions are written
-  // (TODO(Taiwan): validate its fields here when they exist).
+  // Three validation blocks mirroring the wizard's routes (Taiwan
+  // addendum): every route, the China set (china + either), the Taiwan set
+  // (taiwan + either). Fields from the other set are ignored, not rejected.
+
+  // Every route: passport, the check's status and age, the clean/disclose
+  // flag. Expiry year is a format check only — an already-expired passport
+  // is itself useful information for Barry, so it is not rejected. The
+  // six-months answer is required exactly when the check is done.
+  const passportCountry = field(form, "passport_country");
+  const expiryMonth = field(form, "passport_expiry_month");
+  const expiryYear = field(form, "passport_expiry_year");
+  const background = field(form, "background_check");
+  const docCheck = field(form, "doc_background_check");
+  const checkRecent = field(form, "check_recent");
+  const yearNum = Number(expiryYear);
+  if (
+    !(passportCountry in PASSPORT_LABELS) ||
+    !/^(0[1-9]|1[0-2])$/.test(expiryMonth) ||
+    !/^\d{4}$/.test(expiryYear) ||
+    yearNum < 2020 ||
+    yearNum > 2050 ||
+    !(background in BACKGROUND_LABELS) ||
+    !(docCheck in DOC_STATUS_LABELS) ||
+    (docCheck === "done"
+      ? !(checkRecent in CHECK_RECENT_LABELS)
+      : checkRecent !== "")
+  ) {
+    log("rejected-validation");
+    return fail(400);
+  }
+
   const chinaLines: string[] = [];
   if (destination !== "taiwan") {
     const locations = field(form, "locations").trim();
@@ -349,14 +403,6 @@ async function handleProfile(request: Request, env: Env): Promise<Response> {
     const salary = stripCRLF(field(form, "salary_rmb"));
     const docDegree = field(form, "doc_degree_apostille");
     const docCert = field(form, "doc_teaching_certificate");
-    const docCheck = field(form, "doc_background_check");
-    const passportCountry = field(form, "passport_country");
-    const expiryMonth = field(form, "passport_expiry_month");
-    const expiryYear = field(form, "passport_expiry_year");
-    const background = field(form, "background_check");
-    // Expiry year is a format check only — an already-expired passport is
-    // itself useful information for Barry, so it is not rejected.
-    const yearNum = Number(expiryYear);
     if (
       locations.length > MAX_LOCATIONS ||
       (locations.length === 0 && anyLocation !== "yes") ||
@@ -366,14 +412,7 @@ async function handleProfile(request: Request, env: Env): Promise<Response> {
       !/^\d{1,7}$/.test(salary) ||
       Number(salary) < 1 ||
       !(docDegree in DOC_STATUS_LABELS) ||
-      !(docCert in DOC_STATUS_LABELS) ||
-      !(docCheck in DOC_STATUS_LABELS) ||
-      !(passportCountry in PASSPORT_LABELS) ||
-      !/^(0[1-9]|1[0-2])$/.test(expiryMonth) ||
-      !/^\d{4}$/.test(expiryYear) ||
-      yearNum < 2020 ||
-      yearNum > 2050 ||
-      !(background in BACKGROUND_LABELS)
+      !(docCert in DOC_STATUS_LABELS)
     ) {
       log("rejected-validation");
       return fail(400);
@@ -390,11 +429,33 @@ async function handleProfile(request: Request, env: Env): Promise<Response> {
       `Salary expectation: ${salary} RMB per month`,
       `Degree apostille: ${DOC_STATUS_LABELS[docDegree]}`,
       `Teaching certificate: ${DOC_STATUS_LABELS[docCert]}`,
-      `Recent background check: ${DOC_STATUS_LABELS[docCheck]}`,
-      `Passport: ${PASSPORT_LABELS[passportCountry]}, expires ${expiryMonth}/${expiryYear}`,
-      `Background check: ${BACKGROUND_LABELS[background]}`,
     );
   }
+
+  const taiwanLines: string[] = [];
+  if (destination !== "china") {
+    const degree = field(form, "degree_on_campus");
+    const ages = field(form, "age_groups");
+    if (!(degree in DEGREE_LABELS) || !(ages in AGE_GROUP_LABELS)) {
+      log("rejected-validation");
+      return fail(400);
+    }
+    taiwanLines.push(
+      `Degree completed on campus: ${DEGREE_LABELS[degree]}`,
+      `Age groups: ${AGE_GROUP_LABELS[ages]}`,
+    );
+  }
+
+  const checkName = CHECK_NAMES[passportCountry] ?? "national criminal record check";
+  const checkLine =
+    docCheck === "done"
+      ? `Done, ${CHECK_RECENT_LABELS[checkRecent]}`
+      : DOC_STATUS_LABELS[docCheck];
+  const commonLines = [
+    `Background check (${checkName}): ${checkLine}`,
+    `Passport: ${PASSPORT_LABELS[passportCountry]}, expires ${expiryMonth}/${expiryYear}`,
+    `Background check flag: ${BACKGROUND_LABELS[background]}`,
+  ];
 
   const cv = form.get("cv");
   if (
@@ -429,12 +490,9 @@ async function handleProfile(request: Request, env: Env): Promise<Response> {
     `From: ${name} <${email}>`,
     "",
     `Interested in: ${DESTINATION_LABELS[destination]}`,
-    ...(destination === "taiwan"
-      ? [
-          "",
-          "(The Taiwan questionnaire is not built yet — this profile carries contact details and the CV only.)",
-        ]
-      : chinaLines),
+    ...chinaLines,
+    ...taiwanLines,
+    ...commonLines,
     "",
     `CV attached: ${filename}`,
   ].join("\n");

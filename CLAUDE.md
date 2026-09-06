@@ -71,16 +71,20 @@ axe-powered. Card headings became a `headingLevel` prop (h2 on /jobs, h3 under h
 **Teacher Profile (2 Sep 2026, Barry + Tom — recorded as the second amendment block in
 PLAN.md, including its same-day addendum):** `/profile` is a client-side wizard in
 `components/ProfileWizard.tsx` that **forks on a destination question** (Mainland China /
-Taiwan / either): china + either run start → destination → six questions → contact + CV →
-completion; **the Taiwan question set is still being written**, so the taiwan route is a
-skeleton (placeholder step → contact + CV) — extension points are marked TODO(Taiwan) in
-the wizard and Worker. Job types are multi-select via `components/Dropdown.tsx`, a reusable
-ARIA-listbox dropdown (single mode used on the passport step). Relayed by `POST /api/profile`
-in the same Worker — full §8.3 stack plus CV checks (5 MB, .pdf/.doc/.docx, filename
-sanitised) with the CV sent as a Resend attachment, never stored; taiwan submissions skip
-the China field validation. Background-check question is a flag only (no offence details
-transit email, by design). The Worker grew path routing (`/api/contact` unchanged);
-`worker/test-worker.mjs` covers both routes and both wizard forks — keep it green.
+Taiwan / either): china runs start → destination → six China questions → contact + CV →
+completion; taiwan runs intro → degree on campus → age groups → passport → named national
+background check + its age → clean/disclose flag → contact + CV (**Barry's Taiwan brief,
+6 Sep 2026 — the PLAN's Taiwan addendum**); either runs the China set plus the two
+Taiwan-only questions. Disqualifying Taiwan answers are soft flags (note + labelled line
+for Barry), never dead ends; the check is named from the passport country. Job types are
+multi-select via `components/Dropdown.tsx`, a reusable ARIA-listbox dropdown (single mode
+used on the passport step). Relayed by `POST /api/profile` in the same Worker — full §8.3
+stack plus CV checks (5 MB, .pdf/.doc/.docx, filename sanitised) with the CV sent as a
+Resend attachment, never stored; validation runs in three blocks (every route / China set /
+Taiwan set), ignoring stray fields from the other set. Background-check question is a flag
+only (no offence details transit email, by design). The Worker grew path routing
+(`/api/contact` unchanged); `worker/test-worker.mjs` covers both routes and all three wizard
+forks — keep it green.
 Nav + sitemap have `/profile`; the privacy TODO comments and guardrail 4 record the CV
 exception. At deploy: second Worker route, rate-limit rule now `POST /api/*`, and confirm
 Resend-plan attachment support (worker/README.md).

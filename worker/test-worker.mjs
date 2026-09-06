@@ -188,6 +188,7 @@ function goodProfileFields(overrides = {}) {
     passport_expiry_month: "06",
     passport_expiry_year: "2029",
     background_check: "clean",
+    check_recent: "",
     name: "Test Person",
     email: "test@example.com",
     cv: cvFile(),
@@ -196,6 +197,38 @@ function goodProfileFields(overrides = {}) {
     "cf-turnstile-response": "tok",
     ...overrides,
   };
+}
+
+// The Taiwan set (Taiwan addendum): no China fields at all.
+function goodTaiwanFields(overrides = {}) {
+  return {
+    destination: "taiwan",
+    degree_on_campus: "yes",
+    age_groups: "any_3_16",
+    doc_background_check: "done",
+    check_recent: "yes",
+    passport_country: "uk",
+    passport_expiry_month: "06",
+    passport_expiry_year: "2029",
+    background_check: "clean",
+    name: "Test Person",
+    email: "test@example.com",
+    cv: cvFile(),
+    website: "",
+    form_started_at: String(Date.now() - 10_000),
+    "cf-turnstile-response": "tok",
+    ...overrides,
+  };
+}
+
+// "Either" needs both sets.
+function goodEitherFields(overrides = {}) {
+  return goodProfileFields({
+    destination: "either",
+    degree_on_campus: "yes",
+    age_groups: "7_12_only",
+    ...overrides,
+  });
 }
 
 function postProfile(fields, headers = { Origin: ORIGIN }) {
@@ -397,9 +430,9 @@ await test("profile: happy path → 303 with full envelope and attachment", asyn
     "Salary expectation: 25000 RMB per month",
     "Degree apostille: In progress",
     "Teaching certificate: Done",
-    "Recent background check: Not started",
+    "Background check (Basic DBS check): Not started",
     "Passport: United Kingdom, expires 06/2029",
-    "Background check: Clean",
+    "Background check flag: Clean",
   ]) {
     assert.ok(resendPayload.text.includes(line), `missing line: ${line}`);
   }
@@ -423,36 +456,164 @@ await test("profile: open-to-any with preferences noted in body", async () => {
   );
 });
 
-await test("profile: taiwan route needs only contact details + CV", async () => {
-  // The Taiwan question set is a skeleton (PLAN amendment) — none of the
-  // China fields are required or reported.
-  const res = await postProfile({
-    destination: "taiwan",
-    name: "Test Person",
-    email: "test@example.com",
-    cv: cvFile(),
-    website: "",
-    form_started_at: String(Date.now() - 10_000),
-    "cf-turnstile-response": "tok",
-  });
+// ---- the Taiwan set (Taiwan addendum) --------------------------------------
+
+await test("profile: taiwan happy path carries the Taiwan set, not the China set", async () => {
+  const res = await postProfile(goodTaiwanFields());
   assert.equal(res.status, 303);
-  assert.ok(resendPayload.text.includes("Interested in: Taiwan"));
-  assert.ok(resendPayload.text.includes("Taiwan questionnaire is not built yet"));
-  assert.ok(!resendPayload.text.includes("Preferred locations"));
-  assert.ok(!resendPayload.text.includes("Salary expectation"));
+  assert.equal(res.headers.get("Location"), `${ORIGIN}/profile?sent=1`);
+  const { text } = resendPayload;
+  assert.ok(text.includes("Interested in: Taiwan"));
+  assert.ok(text.includes("Degree completed on campus: Completed on campus"));
+  assert.ok(text.includes("Age groups: Any age from 3 to 16"));
+  assert.ok(
+    text.includes("Background check (Basic DBS check): Done, less than six months old"),
+  );
+  assert.ok(text.includes("Passport: United Kingdom, expires 06/2029"));
+  assert.ok(text.includes("Background check flag: Clean"));
+  assert.ok(!text.includes("Preferred locations"));
+  assert.ok(!text.includes("Salary expectation"));
+  assert.ok(!text.includes("Degree apostille"));
+  assert.ok(!text.includes("not built yet"));
   assert.equal(resendPayload.attachments.length, 1);
 });
 
-await test("profile: 'either' destination still requires the China set", async () => {
+await test("profile: taiwan requires its own fields", async () => {
+  for (const f of ["degree_on_campus", "age_groups"]) {
+    assert.equal(
+      (await postProfile(goodTaiwanFields({ [f]: null }))).status,
+      400,
+      `${f} missing was accepted`,
+    );
+    assert.equal(
+      (await postProfile(goodTaiwanFields({ [f]: "not-a-value" }))).status,
+      400,
+      `${f} accepted a bad value`,
+    );
+  }
+});
+
+await test("profile: taiwan still requires passport, check status and flag", async () => {
+  for (const f of [
+    "passport_country",
+    "passport_expiry_month",
+    "passport_expiry_year",
+    "background_check",
+    "doc_background_check",
+  ]) {
+    assert.equal(
+      (await postProfile(goodTaiwanFields({ [f]: null }))).status,
+      400,
+      `${f} missing was accepted`,
+    );
+  }
+});
+
+await test("profile: taiwan ignores stray China fields", async () => {
+  const res = await postProfile(
+    goodTaiwanFields({ salary_rmb: "abc", locations: "" }),
+  );
+  assert.equal(res.status, 303);
+  assert.ok(!resendPayload.text.includes("Salary expectation"));
+});
+
+await test("profile: six-months answer required exactly when the check is done", async () => {
+  const cases = [
+    ["done", "", 400],
+    ["done", "maybe", 400],
+    ["done", "no", 303],
+    ["not_started", "yes", 400],
+    ["in_progress", "", 303],
+  ];
+  for (const [status, recent, expected] of cases) {
+    const res = await postProfile(
+      goodTaiwanFields({ doc_background_check: status, check_recent: recent }),
+    );
+    assert.equal(res.status, expected, `${status}+"${recent}" → ${res.status}`);
+  }
+  // The same rule holds on the China route (the documents step asks it).
   assert.equal(
-    (await postProfile(goodProfileFields({ destination: "either", salary_rmb: null }))).status,
+    (await postProfile(goodProfileFields({ doc_background_check: "done" }))).status,
     400,
   );
-  const res = await postProfile(goodProfileFields({ destination: "either" }));
+  const res = await postProfile(
+    goodProfileFields({ doc_background_check: "done", check_recent: "no" }),
+  );
   assert.equal(res.status, 303);
   assert.ok(
-    resendPayload.text.includes("Interested in: Open to either China or Taiwan"),
+    resendPayload.text.includes(
+      "Background check (Basic DBS check): Done, more than six months old",
+    ),
   );
+});
+
+await test("profile: the check is named from the passport country", async () => {
+  const expected = {
+    uk: "Basic DBS check",
+    ireland: "Garda Police Certificate",
+    usa: "FBI background check",
+    canada: "RCMP criminal record check",
+    australia: "AFP National Police Check",
+    new_zealand: "Ministry of Justice Criminal Record Check",
+    south_africa: "national criminal record check",
+    other: "national criminal record check",
+  };
+  for (const [country, name] of Object.entries(expected)) {
+    const res = await postProfile(goodTaiwanFields({ passport_country: country }));
+    assert.equal(res.status, 303);
+    assert.ok(
+      resendPayload.text.includes(`Background check (${name}):`),
+      `${country} → ${name}`,
+    );
+  }
+});
+
+await test("profile: disqualifying Taiwan answers are soft flags, not rejections", async () => {
+  let res = await postProfile(goodTaiwanFields({ degree_on_campus: "no" }));
+  assert.equal(res.status, 303);
+  assert.ok(
+    resendPayload.text.includes(
+      "Degree completed on campus: Online degree — not accepted for Taiwan",
+    ),
+  );
+  res = await postProfile(goodTaiwanFields({ age_groups: "older_only" }));
+  assert.equal(res.status, 303);
+  assert.ok(
+    resendPayload.text.includes(
+      "Age groups: Prefers older students — outside the Taiwan age range",
+    ),
+  );
+});
+
+await test("profile: 'either' needs both sets and reports both", async () => {
+  assert.equal(
+    (await postProfile(goodEitherFields({ salary_rmb: null }))).status,
+    400,
+  );
+  assert.equal(
+    (await postProfile(goodEitherFields({ degree_on_campus: null }))).status,
+    400,
+  );
+  const res = await postProfile(goodEitherFields());
+  assert.equal(res.status, 303);
+  const { text } = resendPayload;
+  assert.ok(text.includes("Interested in: Open to either China or Taiwan"));
+  assert.ok(text.includes("Salary expectation: 25000 RMB per month"));
+  assert.ok(text.includes("Degree completed on campus: Completed on campus"));
+  assert.ok(text.includes("Age groups: Ages 7 to 12 only"));
+  // China lines precede Taiwan lines, which precede the shared lines.
+  assert.ok(
+    text.indexOf("Salary expectation") <
+      text.indexOf("Degree completed on campus") &&
+      text.indexOf("Degree completed on campus") <
+        text.indexOf("Background check ("),
+  );
+});
+
+await test("profile: china ignores stray Taiwan fields", async () => {
+  const res = await postProfile(goodProfileFields({ degree_on_campus: "garbage" }));
+  assert.equal(res.status, 303);
+  assert.ok(!resendPayload.text.includes("Degree completed on campus"));
 });
 
 await test("profile: missing destination → 400", async () => {
@@ -469,7 +630,7 @@ await test("profile: disclose flag carries the discuss-privately line", async ()
   assert.equal(res.status, 303);
   assert.ok(
     resendPayload.text.includes(
-      "Background check: Has something to disclose — discuss privately",
+      "Background check flag: Has something to disclose — discuss privately",
     ),
   );
 });

@@ -14,10 +14,13 @@ import { APPLY_EMAIL } from "@/lib/site";
  * the question steps, a contact-details step with CV upload, and a
  * completion screen — one static route, screens switched in React state.
  *
- * Routes: China (and "open to either") get the full six-question set.
- * The Taiwan question set is still being written by Barry, so its route is
- * a skeleton — a placeholder step, then straight to contact details + CV,
- * so a Taiwan candidate still reaches Barry's inbox today.
+ * Routes (PLAN amendment 2 Sep 2026 (profile), Taiwan addendum): China
+ * gets the six China questions; Taiwan gets an intro plus Barry's Taiwan
+ * set — on-campus degree, age groups, passport, the named national
+ * background check and its age, the clean/disclose flag; "open to either"
+ * runs the China set plus the two Taiwan-only questions. Disqualifying
+ * answers are soft flags: a note for the candidate, a label for Barry,
+ * never a dead end.
  *
  * Posts to the Worker at /api/profile (worker/index.ts), which relays the
  * answers to Barry's inbox with the CV as an email attachment. Nothing is
@@ -78,6 +81,36 @@ const PASSPORT_COUNTRIES = [
   ["other", "Other"],
 ] as const;
 
+// The Taiwan set (Barry's brief, 6 Sep 2026 — PLAN amendment 2 Sep 2026
+// (profile), Taiwan addendum).
+const DEGREE_OPTIONS = [
+  ["yes", "Completed on campus"],
+  ["no", "Completed online"],
+] as const;
+
+const AGE_GROUP_OPTIONS = [
+  ["any_3_16", "Any age from 3 to 16"],
+  ["7_12_only", "Ages 7 to 12 only"],
+  ["older_only", "I'd rather teach older students"],
+] as const;
+
+const CHECK_RECENT_OPTIONS = [
+  ["yes", "Yes"],
+  ["no", "No, it's older than that"],
+] as const;
+
+// The national check Taiwan asks for, by passport country (Barry's list).
+// South Africa and Other are not on it, so they fall back to generic
+// wording rather than an invented name.
+const CHECK_NAMES: Partial<Record<string, string>> = {
+  uk: "Basic DBS check",
+  ireland: "Garda Police Certificate",
+  usa: "FBI background check",
+  canada: "RCMP criminal record check",
+  australia: "AFP National Police Check",
+  new_zealand: "Ministry of Justice Criminal Record Check",
+};
+
 const MONTHS = [
   ["01", "January"],
   ["02", "February"],
@@ -116,6 +149,11 @@ type Answers = {
   passportExpiryMonth: string;
   passportExpiryYear: string;
   backgroundCheck: "" | "clean" | "disclose";
+  // Taiwan set. checkRecent only means anything when docBackgroundCheck
+  // is "done" — it is the "less than six months old?" follow-up.
+  degreeOnCampus: "" | "yes" | "no";
+  ageGroups: "" | "any_3_16" | "7_12_only" | "older_only";
+  checkRecent: "" | "yes" | "no";
   name: string;
   email: string;
   cvFile: File | null;
@@ -134,6 +172,9 @@ const EMPTY_ANSWERS: Answers = {
   passportExpiryMonth: "",
   passportExpiryYear: "",
   backgroundCheck: "",
+  degreeOnCampus: "",
+  ageGroups: "",
+  checkRecent: "",
   name: "",
   email: "",
   cvFile: null,
@@ -141,7 +182,7 @@ const EMPTY_ANSWERS: Answers = {
 
 /**
  * The wizard is a walk along a route of step ids, and the destination
- * answer picks the route. Both routes share the [start, destination]
+ * answer picks the route. All routes share the [start, destination]
  * prefix, so switching destination on the second screen is always safe.
  * The completion screen is not a step — it renders when the submission
  * succeeds (or on the Worker's ?sent=1 redirect).
@@ -156,6 +197,9 @@ type StepId =
   | "passport"
   | "background"
   | "taiwan-intro"
+  | "taiwan-degree"
+  | "taiwan-ages"
+  | "taiwan-check"
   | "contact";
 
 const CHINA_ROUTE: readonly StepId[] = [
@@ -170,18 +214,59 @@ const CHINA_ROUTE: readonly StepId[] = [
   "contact",
 ];
 
-// TODO(Taiwan): Barry's Taiwan question set is still being written. When it
-// lands, replace "taiwan-intro" with the real steps (and their validation,
-// payload fields and Worker rules) — the route mechanism needs no change.
+// Passport sits before the check step so the step can name the check for
+// the chosen country. Both routes end with the clean/disclose flag.
 const TAIWAN_ROUTE: readonly StepId[] = [
   "start",
   "destination",
   "taiwan-intro",
+  "taiwan-degree",
+  "taiwan-ages",
+  "passport",
+  "taiwan-check",
+  "background",
+  "contact",
+];
+
+// "Open to either": the China set plus the two Taiwan-only questions. The
+// background check's age is asked on the documents step, so no check step.
+const EITHER_ROUTE: readonly StepId[] = [
+  "start",
+  "destination",
+  "locations",
+  "job-types",
+  "salary",
+  "documents",
+  "taiwan-degree",
+  "taiwan-ages",
+  "passport",
+  "background",
   "contact",
 ];
 
 function routeFor(destination: Destination): readonly StepId[] {
-  return destination === "taiwan" ? TAIWAN_ROUTE : CHINA_ROUTE;
+  if (destination === "taiwan") return TAIWAN_ROUTE;
+  if (destination === "either") return EITHER_ROUTE;
+  return CHINA_ROUTE;
+}
+
+/** "Done" needs the six-months follow-up answered; anything else doesn't. */
+function checkRecencyMissing(a: Answers): boolean {
+  return a.docBackgroundCheck === "done" && a.checkRecent === "";
+}
+
+/** The Taiwan check step's lead line is built from the passport country. */
+function checkNameFor(country: string): string {
+  return CHECK_NAMES[country] ?? "national criminal record check";
+}
+// "an FBI", "an RCMP", "an AFP" — the initialisms that start with a vowel
+// sound. Everything else on Barry's list takes "a".
+const CHECK_TAKES_AN = new Set(["usa", "canada", "australia"]);
+function checkArticle(country: string): string {
+  return CHECK_TAKES_AN.has(country) ? "an" : "a";
+}
+function countryLabel(country: string): string {
+  return PASSPORT_COUNTRIES.find(([val]) => val === country)?.[1] ?? country;
 }
 
 function validateStep(stepId: StepId, a: Answers): string | null {
@@ -203,9 +288,23 @@ function validateStep(stepId: StepId, a: Answers): string | null {
         ? null
         : "Please enter a whole number of RMB, e.g. 20000.";
     case "documents":
-      return a.docDegree && a.docTeachingCert && a.docBackgroundCheck
+      if (!(a.docDegree && a.docTeachingCert && a.docBackgroundCheck))
+        return "Choose an answer for each of the three documents.";
+      return checkRecencyMissing(a)
+        ? "Tell us whether your background check is less than six months old."
+        : null;
+    case "taiwan-degree":
+      return a.degreeOnCampus
         ? null
-        : "Choose an answer for each of the three documents.";
+        : "Choose one of the two options to continue.";
+    case "taiwan-ages":
+      return a.ageGroups ? null : "Choose one of the options to continue.";
+    case "taiwan-check":
+      if (!a.docBackgroundCheck)
+        return "Tell us where you've got to with your background check.";
+      return checkRecencyMissing(a)
+        ? "Tell us whether your background check is less than six months old."
+        : null;
     case "passport":
       return a.passportCountry && a.passportExpiryMonth && a.passportExpiryYear
         ? null
@@ -244,26 +343,31 @@ function fieldBorder(invalid: boolean): string {
   return `${fieldCls} ${invalid ? "border-rust" : "border-gull"}`;
 }
 
-/** One three-way radio group on the documents step. No hooks — plain JSX. */
-function StatusRadios({
+/**
+ * One row of chip radios — the three document statuses by default, or any
+ * short option list (the six-months follow-up). No hooks — plain JSX.
+ */
+function StatusRadios<T extends string>({
   legend,
   hint,
   group,
+  options,
   value,
   onChange,
 }: {
   legend: string;
-  hint: string;
+  hint?: string;
   group: string;
-  value: DocStatus;
-  onChange: (next: DocStatus) => void;
+  options: readonly (readonly [T, string])[];
+  value: T | "";
+  onChange: (next: T) => void;
 }) {
   return (
     <fieldset>
       <legend className={labelCls}>{legend}</legend>
-      <p className={hintCls}>{hint}</p>
+      {hint && <p className={hintCls}>{hint}</p>}
       <div className="mt-2 flex flex-wrap gap-2">
-        {DOC_STATUSES.map(([val, label]) => (
+        {options.map(([val, label]) => (
           <label
             key={val}
             className={`flex cursor-pointer items-center gap-2 rounded-btn border-[1.5px] px-3.5 py-2 text-fine transition-colors duration-150 ease-out ${
@@ -429,8 +533,8 @@ export function ProfileWizard() {
     // Final submit. The live form only holds the contact step's inputs
     // plus the honeypot, time-trap and Turnstile fields; every earlier
     // answer is written in from state. The CV also comes from state so a
-    // Back/Next round trip can't lose it. The Taiwan route sends only the
-    // destination and contact details — its questions don't exist yet.
+    // Back/Next round trip can't lose it. Three blocks, mirroring the
+    // Worker's validation: every route, China-set routes, Taiwan-set routes.
     const cv = answers.cvFile;
     if (!cv) return; // validateStep already guarantees this
     const problem = cvProblem(cv);
@@ -441,6 +545,15 @@ export function ProfileWizard() {
     const form = event.currentTarget;
     const fd = new FormData(form);
     fd.set("destination", answers.destination);
+    fd.set("passport_country", answers.passportCountry);
+    fd.set("passport_expiry_month", answers.passportExpiryMonth);
+    fd.set("passport_expiry_year", answers.passportExpiryYear);
+    fd.set("background_check", answers.backgroundCheck);
+    fd.set("doc_background_check", answers.docBackgroundCheck);
+    fd.set(
+      "check_recent",
+      answers.docBackgroundCheck === "done" ? answers.checkRecent : "",
+    );
     if (answers.destination !== "taiwan") {
       fd.set("locations", answers.locations.trim());
       fd.set("any_location", answers.anyLocation ? "yes" : "");
@@ -449,11 +562,10 @@ export function ProfileWizard() {
       fd.set("salary_rmb", answers.salaryRmb);
       fd.set("doc_degree_apostille", answers.docDegree);
       fd.set("doc_teaching_certificate", answers.docTeachingCert);
-      fd.set("doc_background_check", answers.docBackgroundCheck);
-      fd.set("passport_country", answers.passportCountry);
-      fd.set("passport_expiry_month", answers.passportExpiryMonth);
-      fd.set("passport_expiry_year", answers.passportExpiryYear);
-      fd.set("background_check", answers.backgroundCheck);
+    }
+    if (answers.destination !== "china") {
+      fd.set("degree_on_campus", answers.degreeOnCampus);
+      fd.set("age_groups", answers.ageGroups);
     }
     fd.set("cv", cv, cv.name);
 
@@ -527,8 +639,8 @@ export function ProfileWizard() {
               <ul className="list-disc space-y-2 pl-5 text-flint">
                 <li>
                   A handful of short questions — where you&rsquo;d like to
-                  teach, the type of school, salary, your documents, your
-                  passport and your background check.
+                  teach, your qualifications, your passport and your
+                  background check.
                 </li>
                 <li>Then your name, email address and CV.</li>
                 <li>
@@ -667,6 +779,7 @@ export function ProfileWizard() {
                 legend="Apostille of your degree"
                 hint="An apostille certifies your degree for use abroad."
                 group="wizard-doc-degree"
+                options={DOC_STATUSES}
                 value={answers.docDegree}
                 onChange={(v) => patch({ docDegree: v })}
               />
@@ -674,6 +787,7 @@ export function ProfileWizard() {
                 legend="Teaching certificate"
                 hint="TEFL, TESOL, CELTA, PGCE, or similar."
                 group="wizard-doc-cert"
+                options={DOC_STATUSES}
                 value={answers.docTeachingCert}
                 onChange={(v) => patch({ docTeachingCert: v })}
               />
@@ -681,9 +795,19 @@ export function ProfileWizard() {
                 legend="Recent background check"
                 hint="A criminal-record check from your home country — a DBS check in the UK."
                 group="wizard-doc-check"
+                options={DOC_STATUSES}
                 value={answers.docBackgroundCheck}
                 onChange={(v) => patch({ docBackgroundCheck: v })}
               />
+              {answers.docBackgroundCheck === "done" && (
+                <StatusRadios
+                  legend="Is it less than six months old?"
+                  group="wizard-check-recent"
+                  options={CHECK_RECENT_OPTIONS}
+                  value={answers.checkRecent}
+                  onChange={(v) => patch({ checkRecent: v })}
+                />
+              )}
             </>
           )}
 
@@ -772,6 +896,12 @@ export function ProfileWizard() {
                   patch({ backgroundCheck: v as Answers["backgroundCheck"] })
                 }
               />
+              {answers.destination !== "china" && (
+                <p className={hintCls}>
+                  For Taiwan, minor offences such as a DUI are normally
+                  accepted.
+                </p>
+              )}
               {answers.backgroundCheck === "disclose" && (
                 <p className="text-flint">
                   That&rsquo;s fine — we deliberately don&rsquo;t ask for any
@@ -782,17 +912,117 @@ export function ProfileWizard() {
             </>
           )}
 
+          {/* The Taiwan set — Barry's brief, 6 Sep 2026. Information first
+              (buxibans, ages, no apostille), then the questions. */}
           {stepId === "taiwan-intro" && (
             <>
               <h2 ref={headingRef} tabIndex={-1} className="text-h3">
                 Teaching in Taiwan
               </h2>
               <p className="text-flint">
-                Our Taiwan questions are still being written, so this is the
-                short version: leave your name, email address and CV on the
-                next screen, and Barry will pick things up with you directly
-                by email.
+                Our Taiwan positions are at buxibans — private language
+                academies rather than state schools, much like training
+                centres in China or hagwons in Korea. The pupils are
+                children, aged 3 to 16 or 7 to 12 depending on the position.
               </p>
+              <p className="text-flint">
+                Neither your degree nor your background check needs an
+                apostille for Taiwan. The next few questions cover your
+                degree, the ages you&rsquo;d teach, your passport and your
+                background check.
+              </p>
+            </>
+          )}
+
+          {stepId === "taiwan-degree" && (
+            <>
+              <h2 ref={headingRef} tabIndex={-1} className="text-h3">
+                Your bachelor&rsquo;s degree
+              </h2>
+              <ChoiceCards
+                legend="How was your bachelor's degree completed?"
+                group="wizard-degree"
+                options={DEGREE_OPTIONS}
+                value={answers.degreeOnCampus}
+                onChange={(v) =>
+                  patch({ degreeOnCampus: v as Answers["degreeOnCampus"] })
+                }
+              />
+              {answers.degreeOnCampus === "no" && (
+                <p className="text-flint">
+                  Taiwan&rsquo;s work-permit rules don&rsquo;t accept online
+                  degrees, so Barry may suggest mainland China instead. You
+                  can still send your profile.
+                </p>
+              )}
+            </>
+          )}
+
+          {stepId === "taiwan-ages" && (
+            <>
+              <h2 ref={headingRef} tabIndex={-1} className="text-h3">
+                Which ages are you happy to teach?
+              </h2>
+              <ChoiceCards
+                legend="Which ages are you happy to teach?"
+                group="wizard-ages"
+                options={AGE_GROUP_OPTIONS}
+                value={answers.ageGroups}
+                onChange={(v) =>
+                  patch({ ageGroups: v as Answers["ageGroups"] })
+                }
+              />
+              {answers.ageGroups === "older_only" && (
+                <p className="text-flint">
+                  Our Taiwan positions are all with children, so Barry may
+                  suggest mainland China instead. You can still send your
+                  profile.
+                </p>
+              )}
+            </>
+          )}
+
+          {stepId === "taiwan-check" && (
+            <>
+              {/* Not "Your background check" — that is the next step's
+                  heading, and two identical headings in a row read as a
+                  mistake. */}
+              <h2 ref={headingRef} tabIndex={-1} className="text-h3">
+                Your police check
+              </h2>
+              <p className="text-flint">
+                {CHECK_NAMES[answers.passportCountry] ? (
+                  <>
+                    For a {countryLabel(answers.passportCountry)} passport,
+                    Taiwan asks for {checkArticle(answers.passportCountry)}{" "}
+                    {checkNameFor(answers.passportCountry)}, less than six
+                    months old when you apply.
+                  </>
+                ) : (
+                  <>
+                    Taiwan asks for a national criminal record check from
+                    your country&rsquo;s police, less than six months old
+                    when you apply.
+                  </>
+                )}
+              </p>
+              <StatusRadios
+                legend="Where have you got to?"
+                hint="It doesn't need an apostille."
+                group="wizard-taiwan-check"
+                options={DOC_STATUSES}
+                value={answers.docBackgroundCheck}
+                onChange={(v) => patch({ docBackgroundCheck: v })}
+              />
+              {answers.docBackgroundCheck === "done" && (
+                <StatusRadios
+                  legend="Is it less than six months old?"
+                  group="wizard-check-recent"
+                  options={CHECK_RECENT_OPTIONS}
+                  value={answers.checkRecent}
+                  onChange={(v) => patch({ checkRecent: v })}
+                />
+              )}
             </>
           )}
 

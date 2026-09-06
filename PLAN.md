@@ -53,10 +53,33 @@ Three review checkpoints are built into the build order. Stop at each one.
 >    — Mainland China / Taiwan / open to either — and **forks**: China and
 >    "either" run the six questions above (job type became **multi-select**
 >    via a custom dropdown, `components/Dropdown.tsx`, also used on the
->    passport step); Barry's **Taiwan question set is still being written**,
->    so the Taiwan route is a placeholder step that collects contact details
->    + CV only, keeping the lead flowing until the real questions land
->    (marked TODO(Taiwan) in `ProfileWizard.tsx` and `worker/index.ts`).
+>    passport step); Barry's Taiwan question set was still being written,
+>    so the Taiwan route was a placeholder step collecting contact details
+>    + CV only until the real questions landed (below).
+>
+>    *Taiwan addendum, 6 Sep 2026 (Barry's brief, relayed by Tom — the copy
+>    source for the Taiwan steps):* the Taiwan route is now intro → degree
+>    → age groups → passport → background check → clean/disclose flag →
+>    contact + CV. Barry's requirements, each as one question: bachelor's
+>    degree **completed on campus** (online not accepted); a **national
+>    criminal background check** named per passport country — FBI (USA),
+>    RCMP (Canada), Basic DBS (UK), Garda Police Certificate (Ireland), AFP
+>    National Police Check (Australia), Ministry of Justice Criminal Record
+>    Check (New Zealand); South Africa and Other get generic wording, not an
+>    invented name — **less than six months old** (asked as a follow-up when
+>    the check is done, on every route); willing to teach **children aged
+>    3–16 or 7–12**. Buxibans (private language academies, like training
+>    centres in China or Korean hagwons) and "no apostille needed" are
+>    information on the intro screen, not questions. Rules: **disqualifying
+>    answers are soft flags** (a note for the candidate, a labelled line for
+>    Barry, never a dead end); "open to either" runs the China set plus the
+>    two Taiwan-only questions (degree, ages); no salary or location step for
+>    Taiwan (not in the brief); the clean/disclose flag stays **flag-only**,
+>    with Barry's "minor offences such as a DUI are normally accepted" line
+>    as reassurance on Taiwan routes. Worker validation follows the same
+>    three blocks (every route / China set / Taiwan set) and ignores stray
+>    fields from the other set. Cite as "PLAN amendment 2 Sep 2026
+>    (profile), Taiwan addendum".
 
 ---
 
