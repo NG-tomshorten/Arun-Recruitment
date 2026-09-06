@@ -69,6 +69,17 @@ Brand-lens review of every page: salary line restructured so amounts never wrap,
 services as a numbered list with one CTA card, copy trims on home and `/jobs`, gull added to the
 wizard completion card (the permitted placements are listed in `components/Gull.tsx`).
 
+### UI polish pass (6 Sep 2026)
+Taste-plugin audit of every page at desktop and phone width, then the fixes, all within the
+existing tokens: header lockup on one line at every width with a current-page marker
+(`components/NavLink.tsx`) and a mobile menu that closes on Escape and outside tap; `Button`
+pressed/hover states and one border box for both variants; two card recipes, a shared `field`
+recipe and a `chip` as utilities in `globals.css` (documented on `/styleguide`); role title on
+placement cards; styled filter selects, two per row on phones; the chart motif behind every
+inner-page heading (`components/PageHeader.tsx`); balanced headings; footer link treatment
+unified and two columns on phones; wizard progress bar and option states. Decision on the white
+card surface in `DECISIONS.md`.
+
 ## Not started
 
 - **Step 8 — deploy.** See the top of this file.

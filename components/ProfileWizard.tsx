@@ -130,7 +130,7 @@ const MONTHS = [
 // (the Worker accepts 2020–2050). Refresh alongside lib/rates.ts.
 const EXPIRY_YEARS: readonly (readonly [string, string])[] = Array.from(
   { length: 15 },
-  (_, i) => [String(2026 + i), String(2026 + i)] as const,
+  (_, i) => [String(2026 + i), String(2026 + i)] as const
 );
 
 type DocStatus = "" | "not_started" | "in_progress" | "done";
@@ -334,8 +334,9 @@ function cvProblem(file: File): string | null {
 }
 
 const labelCls = "block text-fine font-medium text-channel";
-const fieldCls =
-  "mt-1.5 w-full rounded-btn border-[1.5px] bg-white px-3.5 py-2.5 text-ink";
+// The shared `field` recipe (globals.css); the border colour is applied by
+// fieldBorder so an error can swap it to rust.
+const fieldCls = "field mt-1.5";
 const hintCls = "mt-1 text-fine text-flint";
 
 /** Border swaps to rust on the step's flagged control (styleguide pattern). */
@@ -370,10 +371,10 @@ function StatusRadios<T extends string>({
         {options.map(([val, label]) => (
           <label
             key={val}
-            className={`flex cursor-pointer items-center gap-2 rounded-btn border-[1.5px] px-3.5 py-2 text-fine transition-colors duration-150 ease-out ${
+            className={`flex cursor-pointer items-center gap-2 rounded-btn border-[1.5px] px-3.5 py-2 text-fine transition-[color,background-color,border-color,transform] duration-150 ease-out active:translate-y-px ${
               value === val
-                ? "border-harbour bg-foam text-harbour-deep"
-                : "border-gull text-flint hover:border-harbour"
+                ? "border-harbour bg-foam font-medium text-harbour-deep"
+                : "border-gull bg-white text-flint hover:border-flint hover:bg-foam/60"
             }`}
           >
             <input
@@ -413,10 +414,10 @@ function ChoiceCards({
         {options.map(([val, label]) => (
           <label
             key={val}
-            className={`flex cursor-pointer items-center gap-3 rounded-btn border-[1.5px] px-4 py-3 transition-colors duration-150 ease-out ${
+            className={`flex cursor-pointer items-center gap-3 rounded-btn border-[1.5px] px-4 py-3 transition-[color,background-color,border-color,transform] duration-150 ease-out active:translate-y-px ${
               value === val
-                ? "border-harbour bg-foam text-harbour-deep"
-                : "border-gull text-ink hover:border-harbour"
+                ? "border-harbour bg-foam font-medium text-harbour-deep"
+                : "border-gull bg-white text-ink hover:border-flint hover:bg-foam/60"
             }`}
           >
             <input
@@ -442,13 +443,13 @@ const useMounted = () =>
   useSyncExternalStore(
     noopSubscribe,
     () => true,
-    () => false,
+    () => false
   );
 const useSearch = () =>
   useSyncExternalStore(
     noopSubscribe,
     () => window.location.search,
-    () => "",
+    () => ""
   );
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -552,7 +553,7 @@ export function ProfileWizard() {
     fd.set("doc_background_check", answers.docBackgroundCheck);
     fd.set(
       "check_recent",
-      answers.docBackgroundCheck === "done" ? answers.checkRecent : "",
+      answers.docBackgroundCheck === "done" ? answers.checkRecent : ""
     );
     if (answers.destination !== "taiwan") {
       fd.set("locations", answers.locations.trim());
@@ -592,10 +593,7 @@ export function ProfileWizard() {
 
   if (status === "sent" || sentViaRedirect) {
     return (
-      <div
-        role="status"
-        className="rounded-card border border-harbour bg-foam p-8"
-      >
+      <div role="status" className="card-callout p-8">
         <Gull withHorizon={false} className="h-6 w-12 text-harbour" />
         <h2 className="mt-2 text-h3">Profile sent</h2>
         <p className="mt-3 text-flint">
@@ -625,9 +623,27 @@ export function ProfileWizard() {
         hidden={!mounted}
       >
         {stepIndex >= 1 && (
-          <p className="text-fine font-medium text-harbour tnum">
-            Step {stepIndex} of {route.length - 1}
-          </p>
+          <div>
+            <p className="text-fine font-medium text-harbour tnum">
+              Step {stepIndex} of {route.length - 1}
+            </p>
+            {/* Progress bar (taste pass, 6 Sep 2026): the counter alone made
+                eight steps feel long. Width follows the step; the fill
+                animates within the 150–200ms rule. */}
+            <div
+              className="mt-2 h-1 w-full max-w-xs overflow-hidden rounded-full bg-foam"
+              aria-hidden="true"
+            >
+              <div
+                className="h-full rounded-full bg-harbour transition-[width] duration-200 ease-out"
+                style={{
+                  width: `${Math.round(
+                    (stepIndex / (route.length - 1)) * 100
+                  )}%`,
+                }}
+              />
+            </div>
+          </div>
         )}
 
         <div key={stepId} className="step-in mt-4 space-y-5">
@@ -639,13 +655,13 @@ export function ProfileWizard() {
               <ul className="list-disc space-y-2 pl-5 text-flint">
                 <li>
                   A handful of short questions — where you&rsquo;d like to
-                  teach, your qualifications, your passport and your
-                  background check.
+                  teach, your qualifications, your passport and your background
+                  check.
                 </li>
                 <li>Then your name, email address and CV.</li>
                 <li>
-                  It takes about two minutes, and your profile goes straight
-                  to Barry by email — nothing is stored on this website.
+                  It takes about two minutes, and your profile goes straight to
+                  Barry by email — nothing is stored on this website.
                 </li>
               </ul>
             </>
@@ -756,9 +772,7 @@ export function ProfileWizard() {
                     onChange={(e) => patch({ salaryRmb: e.target.value })}
                     aria-describedby="profile-salary-hint"
                     aria-invalid={invalid}
-                    className={`w-40 rounded-btn border-[1.5px] bg-white px-3.5 py-2.5 text-ink tnum ${
-                      invalid ? "border-rust" : "border-gull"
-                    }`}
+                    className={`field w-40 tnum ${invalid ? "border-rust" : ""}`}
                   />
                   <span className="text-fine text-flint">RMB per month</span>
                 </div>
@@ -905,8 +919,8 @@ export function ProfileWizard() {
               {answers.backgroundCheck === "disclose" && (
                 <p className="text-flint">
                   That&rsquo;s fine — we deliberately don&rsquo;t ask for any
-                  detail here. Barry will discuss it with you privately, and
-                  it doesn&rsquo;t rule you out of the conversation.
+                  detail here. Barry will discuss it with you privately, and it
+                  doesn&rsquo;t rule you out of the conversation.
                 </p>
               )}
             </>
@@ -921,15 +935,14 @@ export function ProfileWizard() {
               </h2>
               <p className="text-flint">
                 Our Taiwan positions are at buxibans — private language
-                academies rather than state schools, much like training
-                centres in China or hagwons in Korea. The pupils are
-                children, aged 3 to 16 or 7 to 12 depending on the position.
+                academies rather than state schools, much like training centres
+                in China or hagwons in Korea. The pupils are children, aged 3 to
+                16 or 7 to 12 depending on the position.
               </p>
               <p className="text-flint">
-                Neither your degree nor your background check needs an
-                apostille for Taiwan. The next few questions cover your
-                degree, the ages you&rsquo;d teach, your passport and your
-                background check.
+                Neither your degree nor your background check needs an apostille
+                for Taiwan. The next few questions cover your degree, the ages
+                you&rsquo;d teach, your passport and your background check.
               </p>
             </>
           )}
@@ -951,8 +964,8 @@ export function ProfileWizard() {
               {answers.degreeOnCampus === "no" && (
                 <p className="text-flint">
                   Taiwan&rsquo;s work-permit rules don&rsquo;t accept online
-                  degrees, so Barry may suggest mainland China instead. You
-                  can still send your profile.
+                  degrees, so Barry may suggest mainland China instead. You can
+                  still send your profile.
                 </p>
               )}
             </>
@@ -1000,9 +1013,9 @@ export function ProfileWizard() {
                   </>
                 ) : (
                   <>
-                    Taiwan asks for a national criminal record check from
-                    your country&rsquo;s police, less than six months old
-                    when you apply.
+                    Taiwan asks for a national criminal record check from your
+                    country&rsquo;s police, less than six months old when you
+                    apply.
                   </>
                 )}
               </p>
@@ -1065,7 +1078,7 @@ export function ProfileWizard() {
                   }
                   className={fieldBorder(
                     invalid &&
-                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email.trim()),
+                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email.trim())
                   )}
                 />
               </div>
@@ -1166,7 +1179,7 @@ export function ProfileWizard() {
             <button
               type="submit"
               disabled={status === "sending"}
-              className="inline-flex items-center justify-center rounded-btn bg-harbour px-5 py-2.5 font-medium text-chalk transition-colors duration-150 ease-out hover:bg-harbour-deep disabled:opacity-60"
+              className="inline-flex items-center justify-center rounded-btn border-[1.5px] border-harbour bg-harbour px-5 py-2.5 font-medium text-chalk shadow-lift transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-harbour-deep hover:bg-harbour-deep active:translate-y-px active:shadow-none disabled:pointer-events-none disabled:opacity-60"
             >
               {status === "sending" ? "Sending…" : "Send profile"}
             </button>

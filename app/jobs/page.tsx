@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JobsIndex } from "@/components/JobsIndex";
-import { TideLine } from "@/components/TideLine";
+import { PageHeader } from "@/components/PageHeader";
 import { fetchShownJobs, toCardData } from "@/lib/jobs";
 import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 
@@ -23,26 +23,26 @@ export default async function JobsPage() {
   const jobs = (await fetchShownJobs()).map(toCardData);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-      <p className="kicker">Placements</p>
-      <h1 className="mt-4 text-h1">Teaching jobs we&rsquo;ve filled</h1>
-      <TideLine className="mt-4 max-w-40" />
-      <p className="mt-6 max-w-[56ch] text-lead text-flint">
-        A record of the placements we have made in Taiwan and mainland China,
-        with the salary and benefits as each employer gave them.
-      </p>
-      <p className="mt-4 max-w-[56ch] text-flint">
-        If you are looking for a role like one of these, email your CV to{" "}
-        <a
-          href={`mailto:${APPLY_EMAIL}`}
-          className="select-all text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
-        >
-          {APPLY_EMAIL}
-        </a>
-        .
-      </p>
-
-      <JobsIndex jobs={jobs} />
-    </div>
+    <>
+      <PageHeader
+        kicker="Placements"
+        title={<>Teaching jobs we&rsquo;ve filled</>}
+        lead="A record of the placements we have made in Taiwan and mainland China, with the salary and benefits as each employer gave them."
+      >
+        <p className="mt-4 max-w-[56ch] text-flint">
+          If you are looking for a role like one of these, email your CV to{" "}
+          <a
+            href={`mailto:${APPLY_EMAIL}`}
+            className="select-all text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
+          >
+            {APPLY_EMAIL}
+          </a>
+          .
+        </p>
+      </PageHeader>
+      <div className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
+        <JobsIndex jobs={jobs} />
+      </div>
+    </>
   );
 }

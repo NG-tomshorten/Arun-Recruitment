@@ -44,7 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${job.title} (filled)`,
     description:
       description ||
-      `${job.title} — a teaching placement we made in ${job.cities.join(", ")}, ${job.country}.`,
+      `${job.title} — a teaching placement we made in ${job.cities.join(
+        ", "
+      )}, ${job.country}.`,
     alternates: { canonical: `${SITE_URL}/jobs/${slug}` },
     // A hidden placement keeps its URL but leaves the search index (PLAN §5).
     ...(job.active === false ? { robots: { index: false } } : {}),
@@ -93,16 +95,16 @@ function JobBody({ body }: { body: JobWithSlug["body"] }) {
 function SimilarRolesCard({ title }: { title: string }) {
   const subject = encodeURIComponent(`Roles like: ${title}`);
   return (
-    <div className="rounded-card border border-gull bg-chalk p-6 shadow-haze">
+    <div className="card-callout p-6">
       <h2 className="text-h3">This position has been filled</h2>
       <p className="mt-3 text-fine text-flint">
-        The page stays here as a record of the placement. We recruit for
-        similar roles — email us your CV, your nationality and your teaching
+        The page stays here as a record of the placement. We recruit for similar
+        roles — email us your CV, your nationality and your teaching
         qualifications, and we will be in touch when one comes up.
       </p>
       <a
         href={`mailto:${APPLY_EMAIL}?subject=${subject}`}
-        className="mt-5 inline-flex w-full items-center justify-center rounded-btn bg-harbour px-5 py-3 font-medium text-chalk transition-colors duration-150 ease-out hover:bg-harbour-deep"
+        className="mt-5 inline-flex w-full items-center justify-center rounded-btn border-[1.5px] border-harbour bg-harbour px-5 py-3 font-medium text-chalk shadow-lift transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-harbour-deep hover:bg-harbour-deep active:translate-y-px active:shadow-none"
       >
         Email us your CV
       </a>
@@ -120,7 +122,7 @@ export default async function JobPage({ params }: Props) {
   const requirements = job.requirements;
   const benefits = (job.benefits ?? []).filter((b): b is string => !!b);
   const passports = (requirements?.passports ?? []).filter(
-    (p): p is string => !!p,
+    (p): p is string => !!p
   );
 
   return (
@@ -148,7 +150,7 @@ export default async function JobPage({ params }: Props) {
           </p>
 
           {salary && (
-            <div className="mt-8 rounded-card border border-gull bg-chalk p-6 shadow-haze">
+            <div className="card mt-8 p-6">
               <p className="tnum text-[1.9rem] font-semibold leading-tight text-channel">
                 {formatSalaryRange(salary)}
               </p>
@@ -163,13 +165,11 @@ export default async function JobPage({ params }: Props) {
                   {approxGBPRange(
                     salary.min,
                     salary.max ?? undefined,
-                    salary.currency as SalaryCurrency,
+                    salary.currency as SalaryCurrency
                   )}
                 </span>
                 {salary.afterTax && (
-                  <span className="rounded-full bg-brand-teal/45 px-2.5 py-0.5 text-[0.8125rem] font-medium text-channel">
-                    after tax
-                  </span>
+                  <span className="chip bg-brand-teal/45">after tax</span>
                 )}
               </p>
             </div>
@@ -212,10 +212,7 @@ export default async function JobPage({ params }: Props) {
                   </h3>
                   <ul className="mt-2 flex flex-wrap gap-2">
                     {passports.map((passport) => (
-                      <li
-                        key={passport}
-                        className="rounded-full bg-foam px-3 py-1 text-fine font-medium text-channel"
-                      >
+                      <li key={passport} className="chip">
                         {passport}
                       </li>
                     ))}

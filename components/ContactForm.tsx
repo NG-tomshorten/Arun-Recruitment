@@ -49,13 +49,13 @@ const useMounted = () =>
   useSyncExternalStore(
     noopSubscribe,
     () => true,
-    () => false,
+    () => false
   );
 const useSearch = () =>
   useSyncExternalStore(
     noopSubscribe,
     () => window.location.search,
-    () => "",
+    () => ""
   );
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -99,10 +99,7 @@ export function ContactForm() {
 
   if (status === "sent" || sentViaRedirect) {
     return (
-      <div
-        role="status"
-        className="rounded-card border border-harbour bg-foam p-8"
-      >
+      <div role="status" className="card-callout p-8">
         <h2 className="text-h3">Message sent</h2>
         <p className="mt-3 text-flint">
           Thank you — we will reply to the email address you gave. If you
@@ -140,7 +137,7 @@ export function ContactForm() {
             required
             maxLength={200}
             autoComplete="name"
-            className="mt-1.5 w-full rounded-btn border-[1.5px] border-gull bg-white px-3.5 py-2.5 text-ink"
+            className="field mt-1.5"
           />
         </div>
         <div>
@@ -157,7 +154,7 @@ export function ContactForm() {
             required
             maxLength={254}
             autoComplete="email"
-            className="mt-1.5 w-full rounded-btn border-[1.5px] border-gull bg-white px-3.5 py-2.5 text-ink"
+            className="field mt-1.5"
           />
         </div>
         <div>
@@ -173,7 +170,7 @@ export function ContactForm() {
             required
             maxLength={5000}
             rows={7}
-            className="mt-1.5 w-full rounded-btn border-[1.5px] border-gull bg-white px-3.5 py-2.5 text-ink"
+            className="field mt-1.5"
           />
         </div>
 
@@ -216,15 +213,15 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="inline-flex items-center justify-center rounded-btn bg-harbour px-5 py-2.5 font-medium text-chalk transition-colors duration-150 ease-out hover:bg-harbour-deep disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-btn border-[1.5px] border-harbour bg-harbour px-5 py-2.5 font-medium text-chalk shadow-lift transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-harbour-deep hover:bg-harbour-deep active:translate-y-px active:shadow-none disabled:pointer-events-none disabled:opacity-60"
         >
           {status === "sending" ? "Sending…" : "Send message"}
         </button>
 
         {/* Disclosure line — wording per PLAN §7 */}
         <p className="text-[0.8125rem] text-flint">
-          This form collects your name and email address so we can reply to
-          you. See our{" "}
+          This form collects your name and email address so we can reply to you.
+          See our{" "}
           <Link
             href="/privacy"
             className="underline underline-offset-4 transition-colors duration-150 hover:text-harbour-deep"

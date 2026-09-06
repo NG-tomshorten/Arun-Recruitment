@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { TideLine } from "@/components/TideLine";
+import { PageHeader } from "@/components/PageHeader";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -61,62 +61,68 @@ export const metadata: Metadata = {
 
 export default function ForEmployers() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-      <p className="kicker">For employers</p>
-      <h1 className="mt-4 max-w-[24ch] text-h1">Recruitment services</h1>
-      <TideLine className="mt-4 max-w-40" />
-      <p className="mt-6 max-w-[62ch] text-lead text-flint">
-        Arun Language Training &amp; Recruitment Ltd offers recruitment
-        services to UK and international organisations requiring English
-        language instructors and other subject specialists. We aim to provide
-        high-calibre candidates with a high level of reliability.
-      </p>
-
-      {/* The seven services as a numbered menu — hairline rules, not a card
+    <>
+      <PageHeader
+        kicker="For employers"
+        title="Recruitment services"
+        lead={
+          <>
+            Arun Language Training &amp; Recruitment Ltd offers recruitment
+            services to UK and international organisations requiring English
+            language instructors and other subject specialists. We aim to
+            provide high-calibre candidates with a high level of reliability.
+          </>
+        }
+      />
+      <div className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
+        {/* The seven services as a numbered menu — hairline rules, not a card
           grid, so the one card below (the CTA) is the page's loud element. */}
-      <ol className="mt-12 max-w-[44rem] list-none border-b border-gull/60">
-        {SERVICES.map((service, index) => (
-          <li
-            key={service.name}
-            className="flex gap-5 border-t border-gull/60 py-5 sm:gap-8"
+        <ol className="mt-4 max-w-[44rem] list-none border-b border-gull/60">
+          {SERVICES.map((service, index) => (
+            <li
+              key={service.name}
+              className="flex gap-5 border-t border-gull/60 py-5 sm:gap-8"
+            >
+              <span className="kicker tnum pt-0.5">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-channel">
+                  {service.name}
+                </h2>
+                <p className="mt-1 text-fine text-flint">
+                  {service.description}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        {/* The menu leads straight to Barry */}
+        <div className="card-callout mt-10 max-w-[44rem] p-8">
+          <h2 className="text-h3">Start a conversation</h2>
+          <p className="mt-2 text-flint">
+            Take the full menu or just the parts you need.
+          </p>
+          <a
+            href={`mailto:${EMPLOYER_EMAIL}`}
+            className="mt-5 inline-flex items-center justify-center rounded-btn border-[1.5px] border-harbour bg-harbour px-5 py-2.5 font-medium text-chalk shadow-lift transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out hover:border-harbour-deep hover:bg-harbour-deep active:translate-y-px active:shadow-none"
           >
-            <span className="kicker tnum pt-0.5">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <div>
-              <h2 className="font-display text-lg font-semibold text-channel">
-                {service.name}
-              </h2>
-              <p className="mt-1 text-fine text-flint">{service.description}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+            Email Barry Shorten
+          </a>
+        </div>
 
-      {/* The menu leads straight to Barry */}
-      <div className="mt-10 max-w-[44rem] rounded-card border border-harbour bg-foam p-8 shadow-haze">
-        <h2 className="text-h3">Start a conversation</h2>
-        <p className="mt-2 text-flint">
-          Take the full menu or just the parts you need.
+        <p className="mt-10 max-w-[62ch] text-flint">
+          If you are interested in recruiting English language instructors, EFL
+          teachers or other subject specialists, contact Barry Shorten directly:{" "}
+          <a
+            href={`mailto:${EMPLOYER_EMAIL}`}
+            className="select-all text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
+          >
+            {EMPLOYER_EMAIL}
+          </a>
         </p>
-        <a
-          href={`mailto:${EMPLOYER_EMAIL}`}
-          className="mt-4 inline-block font-medium text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
-        >
-          Email Barry Shorten
-        </a>
       </div>
-
-      <p className="mt-10 max-w-[62ch] text-flint">
-        If you are interested in recruiting English language instructors, EFL
-        teachers or other subject specialists, contact Barry Shorten directly:{" "}
-        <a
-          href={`mailto:${EMPLOYER_EMAIL}`}
-          className="select-all text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
-        >
-          {EMPLOYER_EMAIL}
-        </a>
-      </p>
-    </div>
+    </>
   );
 }

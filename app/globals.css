@@ -53,6 +53,7 @@
   --text-fine--line-height: 1.55;
 
   --shadow-haze: 0 8px 30px rgb(18 46 54 / 0.07);
+  --shadow-lift: 0 1px 2px rgb(18 46 54 / 0.12); /* buttons — a hint of edge, tinted channel */
   --radius-card: 14px;
   --radius-btn: 10px;
 }
@@ -71,6 +72,8 @@
   h3,
   h4 {
     @apply font-display font-semibold text-channel;
+    /* No orphaned last words on multi-line headings (taste pass, 6 Sep 2026) */
+    text-wrap: balance;
   }
 
   ::selection {
@@ -193,6 +196,41 @@
   letter-spacing: 0.09em;
 }
 
+/*
+ * Surfaces — exactly two card recipes (PLAN §11.4, unified in the taste
+ * pass of 6 Sep 2026; see /styleguide "Surfaces"):
+ *   card          white on chalk, gull hairline, haze shadow — information
+ *                 (placement cards, salary, key facts, contact details).
+ *   card-callout  foam wash, harbour border, no shadow — a message or a
+ *                 single call to action (CTA panels, sent/empty states).
+ */
+@utility card {
+  @apply rounded-card border border-gull bg-white shadow-haze;
+}
+@utility card-callout {
+  @apply rounded-card border border-harbour bg-foam;
+}
+
+/*
+ * Form field — inputs, textareas and selects share one recipe: gull border
+ * idle, flint on hover, harbour when focused (the beak-deep focus ring
+ * from @layer base sits outside it). Pair with border-rust for errors.
+ */
+@utility field {
+  @apply w-full rounded-btn border-[1.5px] border-gull bg-white px-3.5 py-2.5 text-ink transition-colors duration-150 ease-out;
+  &:hover {
+    border-color: var(--color-flint);
+  }
+  &:focus-visible {
+    border-color: var(--color-harbour);
+  }
+}
+
+/* Chip — the one pill: passports, "after tax", filter labels */
+@utility chip {
+  @apply inline-flex items-center rounded-full bg-foam px-3 py-1 text-fine font-medium leading-snug text-channel;
+}
+
 /* Tabular figures wherever salary numbers appear (PLAN §11.2) */
 @utility tnum {
   font-feature-settings: "tnum";
@@ -214,4 +252,19 @@
 }
 @utility step-in {
   animation: step-in 180ms ease-out;
+}
+
+/* The mobile nav panel drops in on the same 180ms curve */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility panel-in {
+  animation: panel-in 180ms ease-out;
 }

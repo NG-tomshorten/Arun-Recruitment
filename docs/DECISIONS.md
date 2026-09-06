@@ -77,3 +77,14 @@ still sends the profile with a labelled line for Barry. Barry decides; the wizar
 lead. The required national check is derived from the passport country rather than asked, and
 South Africa / Other (on our passport list, not in Barry's brief) get generic wording rather
 than an invented check name.
+
+## 2026-09-06 — Cards are white on chalk, not chalk on foam
+
+PLAN §11.4 specifies chalk cards on foam sections. The pages are chalk end to end (no foam
+sections survived the pivot to a minimal home page), so a chalk card on a chalk page had no edge
+— the salary panel on a placement page read as a stray rectangle. Cards are now `bg-white` with
+the gull hairline and haze shadow (`card` in `globals.css`), and a second recipe, `card-callout`
+(foam wash, harbour border, no shadow), carries messages and single CTAs. White is Tailwind's
+default token, already used for inputs; it is not added to the palette or the contrast gate
+because every text colour that passes on chalk passes on white. If foam sections ever return,
+`card` should go back to chalk there — one recipe, not a third.

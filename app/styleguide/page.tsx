@@ -17,8 +17,18 @@ export const metadata: Metadata = {
 const TOKENS = [
   { name: "chalk", hex: "#FAF7F2", use: "Page background", light: true },
   { name: "foam", hex: "#EDF2F2", use: "Section washes, chips", light: true },
-  { name: "shingle", hex: "#E8E1D5", use: "Occasional warm surface", light: true },
-  { name: "gull", hex: "#B7C2C7", use: "Hairlines, borders, dividers", light: true },
+  {
+    name: "shingle",
+    hex: "#E8E1D5",
+    use: "Occasional warm surface",
+    light: true,
+  },
+  {
+    name: "gull",
+    hex: "#B7C2C7",
+    use: "Hairlines, borders, dividers",
+    light: true,
+  },
   { name: "flint", hex: "#55646B", use: "Secondary text" },
   { name: "ink", hex: "#1E2C31", use: "Body text" },
   { name: "channel", hex: "#122E36", use: "Headings, footer background" },
@@ -34,8 +44,16 @@ const TOKENS = [
     use: "Shallow water — teal section wash below the shore; ink text only",
     light: true,
   },
-  { name: "harbour", hex: "#2C7A86", use: "Brand-teal deepened for AA — primary buttons, active states" },
-  { name: "harbour-deep", hex: "#1F5763", use: "Links on light, hover/pressed" },
+  {
+    name: "harbour",
+    hex: "#2C7A86",
+    use: "Brand-teal deepened for AA — primary buttons, active states",
+  },
+  {
+    name: "harbour-deep",
+    hex: "#1F5763",
+    use: "Links on light, hover/pressed",
+  },
   { name: "beak", hex: "#D9A441", use: "Tiny highlights only", light: true },
   { name: "beak-deep", hex: "#B67F1E", use: "Focus rings" },
   { name: "rust", hex: "#A94438", use: "Form errors" },
@@ -59,10 +77,13 @@ function Section({
 
 function SampleJobCard() {
   return (
-    <article className="max-w-sm rounded-card border border-gull bg-chalk p-6 shadow-haze transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
+    <article className="card max-w-sm p-6 transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
       <div>
-        <h3 className="text-h3">Chengdu, China</h3>
-        <p className="mt-1 text-fine text-flint">Kindergarten · 3–6 year olds</p>
+        <p className="kicker">Kindergarten · 3–6 years</p>
+        <h3 className="mt-2 text-h3">Chengdu, China</h3>
+        <p className="mt-1.5 text-fine text-flint">
+          Kindergarten English teachers, Chengdu
+        </p>
       </div>
       <p className="tnum mt-5 text-[1.55rem] font-semibold leading-tight text-channel">
         RMB 21,000–23,000
@@ -70,9 +91,7 @@ function SampleJobCard() {
       </p>
       <p className="mt-1 flex flex-wrap items-center gap-2 text-fine text-flint">
         <span className="tnum">{approxGBPRange(21000, 23000, "RMB")}</span>
-        <span className="rounded-full bg-brand-teal/45 px-2.5 py-0.5 text-[0.8125rem] font-medium text-channel">
-          after tax
-        </span>
+        <span className="chip bg-brand-teal/45">after tax</span>
       </p>
       <ul className="mt-5 space-y-1.5 text-fine text-ink">
         <li>Housing allowance, RMB 1,500 / month</li>
@@ -123,11 +142,11 @@ export default function Styleguide() {
           tide line, selection highlight, light fills (the &ldquo;after
           tax&rdquo; pill) and the footer gull; harbour is its AA-passing deep
           form for buttons, links and kickers. Contrast pairs are asserted by{" "}
-          <code>scripts/check-contrast.mjs</code> on every build. Two
-          deviations from the plan&rsquo;s draft hexes, both forced by that
-          gate: harbour deepened from #2E7D8A to #2C7A86 (chalk text on it was
-          4.45:1, just under AA), and beak-deep added because raw beak misses
-          the 3:1 non-text minimum for focus rings on chalk.
+          <code>scripts/check-contrast.mjs</code> on every build. Two deviations
+          from the plan&rsquo;s draft hexes, both forced by that gate: harbour
+          deepened from #2E7D8A to #2C7A86 (chalk text on it was 4.45:1, just
+          under AA), and beak-deep added because raw beak misses the 3:1
+          non-text minimum for focus rings on chalk.
         </p>
       </Section>
 
@@ -154,13 +173,12 @@ export default function Styleguide() {
         </div>
         <p className="mt-4 max-w-[68ch] text-fine text-flint">
           The original mark (media pack from Barry, Aug 2026): one gull in
-          brand-teal #8CC1C7 — the main brand accent, sampled from this
-          artwork — and two in charcoal, close to channel. Used in the header,
-          favicon, and later the JSON-LD
-          organisation logo and OG images. Originals (PSDs + Futura Light TTF)
-          live in <code>brand/</code> — the Futura TTF is desktop-licensed
-          only and must never be web-embedded; site type is Montserrat +
-          Inter.
+          brand-teal #8CC1C7 — the main brand accent, sampled from this artwork
+          — and two in charcoal, close to channel. Used in the header, favicon,
+          and later the JSON-LD organisation logo and OG images. Originals (PSDs
+          + Futura Light TTF) live in <code>brand/</code> — the Futura TTF is
+          desktop-licensed only and must never be web-embedded; site type is
+          Montserrat + Inter.
         </p>
       </Section>
 
@@ -212,8 +230,8 @@ export default function Styleguide() {
               jobs in Taiwan and mainland China. Salaries are quoted in the
               local currency with an approximate sterling figure alongside, and
               every listing says plainly whether the figure is before or after
-              tax. Body text is Inter at 17px with a 1.65 line height, capped
-              at roughly 68 characters per line.
+              tax. Body text is Inter at 17px with a 1.65 line height, capped at
+              roughly 68 characters per line.
             </p>
           </div>
           <div>
@@ -245,9 +263,9 @@ export default function Styleguide() {
           </div>
           <div>
             <p className="mb-2 text-fine text-flint">
-              The shore — the same wave, alive: three brand-teal swells
-              drifting and rising out of phase, foam breaking on the front
-              crest. Home hero only. Stills under prefers-reduced-motion.
+              The shore — the same wave, alive: three brand-teal swells drifting
+              and rising out of phase, foam breaking on the front crest. Home
+              hero only. Stills under prefers-reduced-motion.
             </p>
             <Shore />
           </div>
@@ -271,8 +289,10 @@ export default function Styleguide() {
           </Button>
         </div>
         <p className="mt-4 text-fine text-flint">
-          Hover: primary deepens to harbour-deep, secondary washes foam. Tab to
-          either button to see the beak-deep focus ring (2px, 2px offset).
+          Hover: primary deepens to harbour-deep, secondary washes foam.
+          Pressing nudges either down a pixel. Both share one 1.5px border box
+          so they sit at the same height. Tab to either button to see the
+          beak-deep focus ring (2px, 2px offset).
         </p>
         <div className="mt-8 flex flex-wrap gap-2.5">
           <span className="rounded-full bg-foam px-3.5 py-1.5 text-fine font-medium text-channel">
@@ -294,21 +314,66 @@ export default function Styleguide() {
         </p>
       </Section>
 
+      <Section title="Surfaces">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="card p-6">
+            <p className="kicker">card</p>
+            <p className="mt-2 font-display text-lg font-semibold text-channel">
+              Information
+            </p>
+            <p className="mt-2 text-fine text-flint">
+              White on chalk, gull hairline, haze shadow. Placement cards, the
+              salary panel, contact details — anything the visitor reads.
+            </p>
+          </div>
+          <div className="card-callout p-6">
+            <p className="kicker">card-callout</p>
+            <p className="mt-2 font-display text-lg font-semibold text-channel">
+              A message or one action
+            </p>
+            <p className="mt-2 text-fine text-flint">
+              Foam wash, harbour border, no shadow. CTA panels, the sent and
+              empty states, the &ldquo;position filled&rdquo; rail. One per
+              view.
+            </p>
+          </div>
+        </div>
+        <p className="mt-4 max-w-[68ch] text-fine text-flint">
+          Exactly two recipes, both utilities in <code>globals.css</code>. A
+          third look is a design decision, not a one-off class.
+        </p>
+      </Section>
+
       <Section title="Placement card">
         <div className="rounded-card bg-foam p-8">
           <SampleJobCard />
         </div>
         <p className="mt-4 max-w-[68ch] text-fine text-flint">
-          Chalk card on a foam section: location first, salary large in tabular
-          figures with the approx-£ beneath in flint, &ldquo;after tax&rdquo;
-          pill where true, two strongest benefits, the month of the placement.
+          The <code>card</code> recipe: type of school as the kicker, location
+          as the heading, the role title beneath, salary large in tabular
+          figures with the approx-£ alongside in flint, &ldquo;after tax&rdquo;
+          chip where true, two strongest benefits, the month of the placement.
           Hover lifts 2px and shifts the border to harbour. GBP figure computed
           from <code>lib/rates.ts</code> at build time.
         </p>
       </Section>
 
-      <Section title="Form error">
+      <Section title="Form fields">
         <div className="max-w-sm">
+          <label
+            htmlFor="sg-name"
+            className="block text-fine font-medium text-channel"
+          >
+            Name
+          </label>
+          <input
+            id="sg-name"
+            type="text"
+            placeholder="The field recipe — hover, then focus"
+            className="field mt-1.5"
+          />
+        </div>
+        <div className="mt-5 max-w-sm">
           <label
             htmlFor="sg-email"
             className="block text-fine font-medium text-channel"
@@ -321,7 +386,7 @@ export default function Styleguide() {
             defaultValue="not-an-email"
             aria-invalid="true"
             aria-describedby="sg-email-error"
-            className="mt-1.5 w-full rounded-btn border-[1.5px] border-rust bg-white px-3.5 py-2.5 text-ink"
+            className="field mt-1.5 border-rust"
           />
           <p id="sg-email-error" className="mt-1.5 text-fine text-rust">
             Please enter a valid email address.

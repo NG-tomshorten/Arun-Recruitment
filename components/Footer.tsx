@@ -12,19 +12,27 @@ const SOCIAL_LINKS = [
   { label: "X (Twitter)", href: "https://twitter.com/arunrecruitment/" },
 ] as const;
 
+// One link treatment throughout the footer (taste pass, 6 Sep 2026): no
+// underlines except on the email address, which is the one thing here a
+// visitor is likely to copy.
+const linkCls =
+  "text-chalk/85 transition-colors duration-150 ease-out hover:text-chalk";
+
 export function Footer() {
   return (
     <footer className="bg-channel text-chalk">
       <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:px-6">
         {/* The gull on its horizon rule (PLAN §11.4) */}
         <div className="flex items-end" aria-hidden="true">
-          <span className="mb-[4.5px] flex-1 border-t border-chalk/25" />
+          <span className="mb-[4.5px] flex-1 border-t border-chalk/40" />
           <Gull withHorizon={false} className="h-6 w-12 text-brand-teal" />
-          <span className="mb-[4.5px] flex-1 border-t border-chalk/25" />
+          <span className="mb-[4.5px] flex-1 border-t border-chalk/40" />
         </div>
 
-        <div className="mt-10 grid gap-10 sm:grid-cols-3">
-          <div>
+        {/* Two columns on phones — weighted so the email address fits on
+            one line, the company block spanning both — three from sm */}
+        <div className="mt-10 grid grid-cols-[3fr_2fr] gap-x-5 gap-y-10 sm:grid-cols-3 sm:gap-10">
+          <div className="col-span-2 sm:col-span-1">
             <p className="font-display text-lg text-chalk">
               Arun Language Training &amp; Recruitment Ltd
             </p>
@@ -44,25 +52,19 @@ export function Footer() {
               <li>
                 <a
                   href="mailto:info@arunlanguagetraining.com"
-                  className="text-chalk/85 underline underline-offset-4 transition-colors duration-150 hover:text-chalk"
+                  className={`${linkCls} underline underline-offset-4`}
                 >
                   info@arunlanguagetraining.com
                 </a>
               </li>
               <li>
-                <a
-                  href="tel:+447495368499"
-                  className="text-chalk/85 transition-colors duration-150 hover:text-chalk"
-                >
+                <a href="tel:+447495368499" className={`${linkCls} tnum`}>
                   +44 (0)7495 368 499
                 </a>
               </li>
               {SOCIAL_LINKS.map((s) => (
                 <li key={s.label}>
-                  <a
-                    href={s.href}
-                    className="text-chalk/85 underline underline-offset-4 transition-colors duration-150 hover:text-chalk"
-                  >
+                  <a href={s.href} className={linkCls}>
                     {s.label}
                   </a>
                 </li>
@@ -76,19 +78,13 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-fine">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-chalk/85 transition-colors duration-150 hover:text-chalk"
-                  >
+                  <Link href={link.href} className={linkCls}>
                     {link.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link
-                  href="/privacy"
-                  className="text-chalk/85 transition-colors duration-150 hover:text-chalk"
-                >
+                <Link href="/privacy" className={linkCls}>
                   Privacy policy
                 </Link>
               </li>

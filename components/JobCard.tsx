@@ -3,10 +3,12 @@ import { EMPLOYER_TYPE_LABELS, type JobCardData } from "@/lib/format";
 
 /**
  * Placement card (PLAN §6, §11.4 — amended 2 Sep 2026: a record of a role
- * we filled, not a live vacancy): location first, salary large in tabular
- * figures with approx-£ beneath, "after tax" pill where true, the two
- * strongest benefits, and the month of the placement. Rendered inside the
- * /jobs index (a client component) and on the server-rendered home page.
+ * we filled, not a live vacancy): location first, the role title beneath
+ * it (taste pass, 6 Sep 2026 — it used to be screen-reader only, so a card
+ * said where but not what), salary large in tabular figures with approx-£
+ * beneath, "after tax" chip where true, the two strongest benefits, and the
+ * month of the placement. Rendered inside the /jobs index (a client
+ * component) and on the server-rendered home page.
  */
 export function JobCard({
   job,
@@ -30,9 +32,10 @@ export function JobCard({
     .join(" · ");
 
   return (
-    <article className="relative flex w-full flex-col rounded-card border border-gull bg-chalk p-6 shadow-haze transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
+    <article className="card relative flex w-full flex-col p-6 transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
       <div>
-        <Heading className="text-h3">
+        <p className="kicker">{meta}</p>
+        <Heading className="mt-2 text-h3">
           {/* The whole card is clickable via the stretched overlay below;
               the heading link is what screen readers and keyboards see. */}
           <Link
@@ -42,7 +45,7 @@ export function JobCard({
             {location}
           </Link>
         </Heading>
-        <p className="mt-1 text-fine text-flint">{meta}</p>
+        <p className="mt-1.5 text-fine text-flint">{job.title}</p>
       </div>
 
       {job.salaryText && (
@@ -57,7 +60,7 @@ export function JobCard({
             <span aria-hidden="true">·</span>
             <span className="tnum">{job.approxGbp}</span>
             {job.afterTax && (
-              <span className="rounded-full bg-brand-teal/45 px-2.5 py-0.5 text-[0.8125rem] font-medium text-channel">
+              <span className="chip bg-brand-teal/45">
                 after tax
               </span>
             )}
@@ -77,7 +80,6 @@ export function JobCard({
           keeps a minimum gap when this card is the tallest. */}
       <div className="mt-auto pt-5">
         <p className="border-t border-gull/50 pt-4 text-[0.8125rem] text-flint">
-          <span className="sr-only">{job.title} — </span>
           {job.postedLabel}
         </p>
       </div>
