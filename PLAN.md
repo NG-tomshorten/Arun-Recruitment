@@ -1,6 +1,6 @@
 # Arun Language Training & Recruitment — implementation plan
 
-**Status: ready to build.** This supersedes the earlier draft prompt. `site-capture.md` sits alongside this file and is the source of truth for all copy and data — it was built on 1 Aug 2026 from a full crawl of the live site, including content hidden in HTML comments. Section references (§3 jobs, §4 company/social, etc.) point into that file.
+**Status: see `docs/STATUS.md`** — this file is the spec and does not track progress. It supersedes the earlier draft prompt. `site-capture.md` sits alongside this file and is the source of truth for all copy and data — it was built on 1 Aug 2026 from a full crawl of the live site, including content hidden in HTML comments. Section references (§3 jobs, §4 company/social, etc.) point into that file.
 
 Three review checkpoints are built into the build order. Stop at each one.
 

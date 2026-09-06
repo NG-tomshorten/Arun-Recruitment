@@ -7,6 +7,8 @@
     "dev:next": "next dev",
     "build": "npm run check:contrast && rm -rf .next tina/__generated__/.cache && tinacms build --local --skip-cloud-checks --no-client-build-cache -c \"NODE_ENV=production next build\"",
     "check:contrast": "node scripts/check-contrast.mjs",
+    "verify": "bash scripts/verify-build.sh",
+    "test": "node worker/test-worker.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
