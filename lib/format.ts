@@ -13,8 +13,9 @@ export type JobSalary = NonNullable<Job["salary"]>;
  * The serialisable projection of a placement that crosses the server →
  * client boundary for the /jobs index (PLAN §6 as amended 2 Sep 2026: the
  * page is a record of filled placements, not a job board). Display strings
- * are precomputed server-side: card leads with location, then salary with
- * approx-GBP and an after-tax pill, then the two strongest benefits.
+ * are precomputed server-side: the card is a record — location, the role,
+ * then a short fact list (salary with approx-GBP, students, what was
+ * included) and a "Filled" mark with the month.
  */
 export type JobCardData = {
   slug: string;
@@ -32,7 +33,6 @@ export type JobCardData = {
   // dates are the old listing dates, close to but not exactly when each
   // placement was made, so cards commit to no more than the month.
   postedDate: string; // raw ISO, drives the newest-first sort
-  salarySortKey: number; // approx GBP/month, ordering only
 };
 
 /* Labels — mirror the option lists in tina/config.ts. */
@@ -90,7 +90,7 @@ export function formatMonthYear(iso: string): string {
 }
 
 /**
- * URL-param value for a filter option ("Xi'an" → "xian", "Language school"
+ * URL-param value for a filter option ("Taiwan" → "taiwan", "Language school"
  * → "language-school"). Mirrors the slugify in tina/config.ts so shareable
  * filter URLs (PLAN §6, `?country=taiwan`) stay readable.
  */

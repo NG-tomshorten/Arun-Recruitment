@@ -13,8 +13,9 @@ workflow + Dependabot. **Blocked on Tom's accounts.** Deploy-time items queued s
 - Worker: second route `/api/profile` in `wrangler.toml`, confirm the Resend plan allows
   attachments (`worker/README.md`).
 - Site: `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `NEXT_PUBLIC_CF_BEACON_TOKEN` in the build env.
-- Barry to glance at the reworded home lead and `/jobs` intro (taste pass), and confirm whether
-  South African passports qualify for Taiwan (Taiwan question set).
+- Barry to glance at the reworded home lead and `/jobs` intro (taste pass), the five placement
+  titles trimmed of "needed" / "vacancies" / "positions" / "required" (showcase pass), and
+  confirm whether South African passports qualify for Taiwan (Taiwan question set).
 
 ## Done
 
@@ -79,6 +80,16 @@ placement cards; styled filter selects, two per row on phones; the chart motif b
 inner-page heading (`components/PageHeader.tsx`); balanced headings; footer link treatment
 unified and two columns on phones; wizard progress bar and option states. Decision on the white
 card surface in `DECISIONS.md`.
+
+### Showcase pass — `/jobs` and `/jobs/[slug]` (6 Sep 2026)
+Tom: the two pages still read as a job board. The index now browses by filter chip (country,
+type of school) instead of a select-and-sort bar; cards are records — a "Filled" stamp beside
+the kicker, location, role, then labelled facts (salary, what was included) and the month. The
+placement page is a case record: stamp, story on the left, a fact file in the rail with the
+salary as one fact, a single "roles like this" callout after the record, then three more
+placements. Five titles that still said "needed" / "vacancies" / "required" were trimmed
+(for Barry's glance, above). `stamp` and `fact-label` utilities in `globals.css`, shown on
+`/styleguide`. Trade-offs in `DECISIONS.md`.
 
 ## Not started
 

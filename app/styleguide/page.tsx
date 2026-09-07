@@ -77,28 +77,46 @@ function Section({
 
 function SampleJobCard() {
   return (
-    <article className="card max-w-sm p-6 transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
+    <article className="card group relative flex max-w-sm flex-col p-6 transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-harbour">
       <div>
-        <p className="kicker">Kindergarten · 3–6 years</p>
+        <div className="flex items-start justify-between gap-3">
+          <p className="kicker pt-0.5">Kindergarten · 3–6 years</p>
+          <span className="stamp shrink-0">Filled</span>
+        </div>
         <h3 className="mt-2 text-h3">Chengdu, China</h3>
         <p className="mt-1.5 text-fine text-flint">
-          Kindergarten English teachers, Chengdu
+          Kindergarten teachers in Chengdu
         </p>
       </div>
-      <p className="tnum mt-5 text-[1.55rem] font-semibold leading-tight text-channel">
-        RMB 21,000–23,000
-        <span className="text-fine font-normal text-flint"> / month</span>
-      </p>
-      <p className="mt-1 flex flex-wrap items-center gap-2 text-fine text-flint">
-        <span className="tnum">{approxGBPRange(21000, 23000, "RMB")}</span>
-        <span className="chip bg-brand-teal/45">after tax</span>
-      </p>
-      <ul className="mt-5 space-y-1.5 text-fine text-ink">
-        <li>Housing allowance, RMB 1,500 / month</li>
-        <li>Medical insurance provided</li>
-      </ul>
-      <p className="mt-5 border-t border-gull/50 pt-4 text-[0.8125rem] text-flint">
-        July 2026
+      <dl className="mt-5 grid grid-cols-[4.5rem_1fr] gap-x-4 gap-y-3 border-t border-gull/50 pt-5 text-fine">
+        <dt className="fact-label pt-0.5">Salary</dt>
+        <dd>
+          <p className="tnum font-semibold text-channel">
+            RMB 21,000–23,000{" "}
+            <span className="whitespace-nowrap font-normal text-flint">
+              per month
+            </span>
+          </p>
+          <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-flint">
+            <span className="tnum">{approxGBPRange(21000, 23000, "RMB")}</span>
+            <span className="chip bg-brand-teal/45 text-[0.8125rem]">
+              after tax
+            </span>
+          </p>
+        </dd>
+        <dt className="fact-label pt-0.5">Included</dt>
+        <dd>
+          <ul className="space-y-1 text-ink">
+            <li>Housing allowance, RMB 1,500 / month</li>
+            <li>Medical insurance provided</li>
+          </ul>
+        </dd>
+      </dl>
+      <p className="mt-5 flex items-center justify-between gap-3 border-t border-gull/50 pt-4 text-[0.8125rem] text-flint">
+        <span>July 2026</span>
+        <span className="font-medium text-harbour-deep transition-colors duration-150 ease-out group-hover:text-harbour">
+          See the placement
+        </span>
       </p>
     </article>
   );
@@ -310,7 +328,17 @@ export default function Styleguide() {
         </div>
         <p className="mt-3 text-fine text-flint">
           Filter chips: foam/channel idle; the active chip inverts to
-          channel/chalk.
+          channel/chalk. These browse the placements on <code>/jobs</code>.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <span className="stamp">Filled</span>
+          <span className="chip">UK</span>
+          <span className="chip bg-brand-teal/45">after tax</span>
+        </div>
+        <p className="mt-3 text-fine text-flint">
+          The <code>stamp</code> (outlined harbour, small caps) marks every
+          placement as filled; <code>chip</code> is the plain pill for
+          passports and the after-tax note.
         </p>
       </Section>
 
@@ -349,12 +377,14 @@ export default function Styleguide() {
           <SampleJobCard />
         </div>
         <p className="mt-4 max-w-[68ch] text-fine text-flint">
-          The <code>card</code> recipe: type of school as the kicker, location
-          as the heading, the role title beneath, salary large in tabular
-          figures with the approx-£ alongside in flint, &ldquo;after tax&rdquo;
-          chip where true, two strongest benefits, the month of the placement.
-          Hover lifts 2px and shifts the border to harbour. GBP figure computed
-          from <code>lib/rates.ts</code> at build time.
+          The <code>card</code> recipe as a placement record: type of school
+          as the kicker with the <code>stamp</code> beside it, location as the
+          heading, the role beneath, then labelled facts
+          (<code>fact-label</code>) — salary in tabular figures with the
+          approx-£ and &ldquo;after tax&rdquo; chip, what the employer
+          included — and the month of the placement. Hover lifts 2px and
+          shifts the border to harbour. GBP figure computed from{" "}
+          <code>lib/rates.ts</code> at build time.
         </p>
       </Section>
 

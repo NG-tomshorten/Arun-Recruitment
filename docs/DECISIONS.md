@@ -88,3 +88,24 @@ the gull hairline and haze shadow (`card` in `globals.css`), and a second recipe
 default token, already used for inputs; it is not added to the palette or the contrast gate
 because every text colour that passes on chalk passes on white. If foam sections ever return,
 `card` should go back to chalk there — one recipe, not a third.
+
+## 2026-09-06 — `/jobs` browses by chip; no salary sort, no city select
+
+PLAN §6 specifies filters by country, city and employer type plus a salary/newest sort. With the
+2 Sep amendment (a record of placements, not a job board) the four-select bar and "Highest
+salary" sort were the strongest remaining job-board signals — a search form is what makes a page
+read as listings. The index now uses the filter chips already specified in PLAN §11.4 and on
+`/styleguide` for country and type of school, newest first, no sort. The city filter went with it:
+ten placements across a dozen cities made a select that mostly returned one card, and the chips
+would not scale to it. `?country=` and `?type=` URL params still work; `?city=` and `?sort=`
+are ignored rather than redirected (never linked from anywhere).
+
+## 2026-09-06 — Five placement titles trimmed of vacancy wording
+
+`site-capture.md` is the copy source, but its titles ("Kindergarten teachers needed in Chengdu",
+"Primary school teaching vacancies — Foshan") are the very thing that presented filled roles as
+live, which the 2 Sep amendment says was wrong. Each was edited by removing only the vacancy word
+("needed", "vacancies", "positions", "required"); nothing was added. Titles are Barry's field in
+the admin and he can reword them; the field hint now says to leave those words out. Queued for
+his glance in `STATUS.md`.
+

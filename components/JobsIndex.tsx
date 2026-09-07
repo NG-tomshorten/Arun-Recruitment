@@ -11,39 +11,37 @@ import { APPLY_EMAIL } from "@/lib/site";
 
 /**
  * The /jobs index body (PLAN §6 — amended 2 Sep 2026: a showcase of the
- * placements we have made, not a job board): card grid filtered client-side
- * by country, city and employer type; sortable by salary or newest. Filter
- * state syncs to URL params (?country=taiwan) so filtered views are
- * shareable.
+ * placements we have made, not a job board). Showcase pass, 6 Sep 2026: the
+ * select-and-sort bar went — a search form is what makes a page read as a
+ * job board — and browsing is by chip (the filter chips of PLAN §11.4 and
+ * /styleguide): country, then type of school. No salary sort, no city
+ * select; the decision is in docs/DECISIONS.md. Chip state still syncs to
+ * URL params (?country=taiwan) so a filtered view is shareable.
  *
  * Progressive enhancement: the full, newest-first list is server-rendered;
- * the filter controls stay `hidden` until hydration reveals them, so with
- * JS disabled the complete list renders and no dead controls appear. URL
- * params are read after mount for the same reason — useSearchParams would
- * push the whole list out of the static HTML behind a Suspense fallback.
+ * the chips stay `hidden` until hydration reveals them, so with JS disabled
+ * the complete list renders and no dead controls appear. URL params are
+ * read after mount for the same reason — useSearchParams would push the
+ * whole list out of the static HTML behind a Suspense fallback.
  */
 
 type Filters = {
   country: string;
-  city: string;
   type: string;
-  sort: string;
 };
 
-const NO_FILTERS: Filters = {
-  country: "",
-  city: "",
-  type: "",
-  sort: "newest",
-};
+const NO_FILTERS: Filters = { country: "", type: "" };
+
+const COUNTRIES = [
+  { value: "taiwan", label: "Taiwan" },
+  { value: "china", label: "China" },
+];
 
 function readFilters(search: string): Filters {
   const params = new URLSearchParams(search);
   return {
     country: params.get("country") ?? "",
-    city: params.get("city") ?? "",
     type: params.get("type") ?? "",
-    sort: params.get("sort") === "salary" ? "salary" : "newest",
   };
 }
 
@@ -67,9 +65,7 @@ function subscribeToSearch(callback: () => void) {
 function writeFilters(filters: Filters) {
   const params = new URLSearchParams();
   if (filters.country) params.set("country", filters.country);
-  if (filters.city) params.set("city", filters.city);
   if (filters.type) params.set("type", filters.type);
-  if (filters.sort !== "newest") params.set("sort", filters.sort);
   const query = params.toString();
   // replaceState, not the router — filtering is a view of this page, not a
   // navigation, and it must not scroll or add history entries.
@@ -82,54 +78,47 @@ function writeFilters(filters: Filters) {
 }
 
 /**
- * One filter control: label over a styled native select (the `field` recipe
- * with the browser chrome stripped and our own chevron — taste pass,
- * 6 Sep 2026). Two per row on phones, inline from sm.
+ * One row of filter chips (PLAN §11.4): a label, "All", then one chip per
+ * option. Toggle buttons with aria-pressed — foam/channel idle, the pressed
+ * chip inverts to channel/chalk.
  */
-function Filter({
+function ChipRow({
   label,
   value,
+  options,
   onChange,
-  className,
-  children,
 }: {
   label: string;
   value: string;
+  options: { value: string; label: string }[];
   onChange: (value: string) => void;
-  className?: string;
-  children: React.ReactNode;
 }) {
+  const chip =
+    "rounded-full px-3.5 py-1.5 text-fine font-medium leading-snug transition-[color,background-color,transform] duration-150 ease-out active:translate-y-px";
+  const idle = "bg-foam text-channel hover:bg-gull/60";
+  const pressed = "bg-channel text-chalk";
   return (
-    <label
-      className={`flex flex-col text-fine font-medium text-flint ${
-        className ?? ""
-      }`}
+    <div
+      role="group"
+      aria-label={label}
+      className="flex flex-wrap items-center gap-2"
     >
-      {label}
-      <span className="relative mt-1.5 block">
-        <select
-          className="field appearance-none py-2 pr-9 text-fine sm:w-auto sm:min-w-36"
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-        >
-          {children}
-        </select>
-        <svg
-          viewBox="0 0 16 16"
-          aria-hidden="true"
-          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-flint"
-        >
-          <path
-            d="M4 6l4 4 4-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
-    </label>
+      <span className="mr-1 text-fine font-medium text-flint">{label}</span>
+      {[{ value: "", label: "All" }, ...options].map((option) => {
+        const isPressed = option.value === value;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={isPressed}
+            onClick={() => onChange(option.value)}
+            className={`${chip} ${isPressed ? pressed : idle}`}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -150,88 +139,57 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
     writeFilters({ ...filters, ...patch });
   };
 
-  const cities = useMemo(
+  // Only offer the school types that appear in the record.
+  const types = useMemo(
     () =>
-      [...new Set(jobs.flatMap((job) => job.cities))].sort((a, b) =>
-        a.localeCompare(b, "en-GB")
-      ),
+      Object.entries(EMPLOYER_TYPE_LABELS)
+        .filter(([value]) => jobs.some((job) => job.employerType === value))
+        .map(([value, label]) => ({ value, label })),
     [jobs]
   );
 
-  const visible = useMemo(() => {
-    const matches = jobs.filter(
-      (job) =>
-        (!filters.country || filterParam(job.country) === filters.country) &&
-        (!filters.city ||
-          job.cities.some((city) => filterParam(city) === filters.city)) &&
-        (!filters.type || job.employerType === filters.type)
-    );
-    if (filters.sort === "salary")
-      return [...matches].sort((a, b) => b.salarySortKey - a.salarySortKey);
-    return matches; // server order is already newest first
-  }, [jobs, filters]);
+  const visible = useMemo(
+    () =>
+      jobs.filter(
+        (job) =>
+          (!filters.country ||
+            filterParam(job.country) === filters.country) &&
+          (!filters.type || job.employerType === filters.type)
+      ),
+    [jobs, filters]
+  );
 
-  const active = filters.country || filters.city || filters.type;
+  const active = filters.country || filters.type;
 
   return (
     <>
       {/* hidden until hydration — no dead controls without JS */}
-      <form
+      <div
         hidden={!mounted}
-        aria-label="Filter and sort the placements"
-        className="mt-10 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-end"
-        onSubmit={(event) => event.preventDefault()}
+        role="group"
+        aria-label="Browse the placements"
+        className="mt-10 flex flex-col gap-3 border-y border-gull/50 py-5 sm:flex-row sm:flex-wrap sm:gap-x-10"
       >
-        <Filter
+        <ChipRow
           label="Country"
           value={filters.country}
+          options={COUNTRIES}
           onChange={(value) => set({ country: value })}
-        >
-          <option value="">All</option>
-          <option value="taiwan">Taiwan</option>
-          <option value="china">China</option>
-        </Filter>
-        <Filter
-          label="City"
-          value={filters.city}
-          onChange={(value) => set({ city: value })}
-        >
-          <option value="">All</option>
-          {cities.map((city) => (
-            <option key={city} value={filterParam(city)}>
-              {city}
-            </option>
-          ))}
-        </Filter>
-        <Filter
-          label="Type of school"
+        />
+        <ChipRow
+          label="School"
           value={filters.type}
+          options={types}
           onChange={(value) => set({ type: value })}
-        >
-          <option value="">All</option>
-          {Object.entries(EMPLOYER_TYPE_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </Filter>
-        <Filter
-          label="Sort by"
-          value={filters.sort}
-          onChange={(value) => set({ sort: value })}
-          className="sm:ml-auto"
-        >
-          <option value="newest">Newest</option>
-          <option value="salary">Highest salary</option>
-        </Filter>
-      </form>
+        />
+      </div>
 
       {/* Results count announced to screen readers on every filter change */}
       <p aria-live="polite" className="mt-6 text-fine text-flint">
         {visible.length === 1
-          ? `1 placement${active ? " matches your filters" : ""}`
+          ? `1 placement${active ? " matches your selection" : ""}`
           : `${visible.length} placements${
-              active ? " match your filters" : ""
+              active ? " match your selection" : ""
             }`}
       </p>
 
@@ -247,7 +205,7 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
         <div className="card-callout mt-10 max-w-[52ch] p-8">
           <h2 className="text-h3">No placements match</h2>
           <p className="mt-3 text-flint">
-            Clear the filters to see the full list, or{" "}
+            Show the full list, or{" "}
             <a
               href={`mailto:${APPLY_EMAIL}`}
               className="text-harbour-deep underline underline-offset-4 transition-colors duration-150 hover:text-harbour"
@@ -258,10 +216,10 @@ export function JobsIndex({ jobs }: { jobs: JobCardData[] }) {
           </p>
           <button
             type="button"
-            onClick={() => set({ ...NO_FILTERS, sort: filters.sort })}
+            onClick={() => set(NO_FILTERS)}
             className="mt-5 inline-flex items-center rounded-btn border-[1.5px] border-harbour px-4 py-2 text-fine font-medium text-harbour-deep transition-[color,background-color,transform] duration-150 ease-out hover:bg-chalk active:translate-y-px"
           >
-            Clear filters
+            Show all placements
           </button>
         </div>
       )}

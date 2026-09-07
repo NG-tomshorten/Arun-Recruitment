@@ -1,6 +1,6 @@
 import { client } from "@/tina/__generated__/client";
 import type { Job } from "@/tina/__generated__/types";
-import { approxGBP, approxGBPRange, type SalaryCurrency } from "@/lib/rates";
+import { approxGBPRange, type SalaryCurrency } from "@/lib/rates";
 import {
   formatMonthYear,
   formatSalaryRange,
@@ -52,17 +52,6 @@ export async function fetchJob(slug: string): Promise<JobWithSlug> {
   return { ...(result.data.job as Job), slug };
 }
 
-/**
- * Sort key for "highest salary": approx GBP per month. Hourly rates are
- * scaled by a nominal 100 teaching hours/month — a deliberately rough
- * ordering heuristic, used only to sort and never displayed.
- */
-function monthlyGBPSortKey(salary: Job["salary"]): number {
-  if (!salary) return 0;
-  const monthly = salary.period === "hour" ? salary.min * 100 : salary.min;
-  return approxGBP(monthly, salary.currency as SalaryCurrency);
-}
-
 /** Project a placement into the serialisable card shape the index needs. */
 export function toCardData(job: JobWithSlug): JobCardData {
   const salary = job.salary ?? null;
@@ -86,7 +75,6 @@ export function toCardData(job: JobWithSlug): JobCardData {
     benefits: (job.benefits ?? []).filter((b): b is string => !!b).slice(0, 2),
     postedLabel: formatMonthYear(job.postedDate),
     postedDate: job.postedDate,
-    salarySortKey: monthlyGBPSortKey(job.salary),
   };
 }
 

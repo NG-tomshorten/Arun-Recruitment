@@ -231,6 +231,22 @@
   @apply inline-flex items-center rounded-full bg-foam px-3 py-1 text-fine font-medium leading-snug text-channel;
 }
 
+/*
+ * Record furniture (PLAN amendment 2 Sep 2026 — /jobs is a record of
+ * placements, not a job board; showcase pass, 6 Sep 2026):
+ *   fact-label  the small-caps label over a value in a placement record
+ *   stamp       the "Filled" mark every placement carries — outlined in
+ *               harbour so it reads as a status, not another chip
+ */
+@utility fact-label {
+  @apply font-sans text-[0.8125rem] font-semibold uppercase text-flint;
+  letter-spacing: 0.09em;
+}
+@utility stamp {
+  @apply inline-flex items-center rounded-full border-[1.5px] border-harbour px-2.5 py-0.5 font-sans text-[0.8125rem] font-semibold uppercase leading-snug text-harbour-deep;
+  letter-spacing: 0.09em;
+}
+
 /* Tabular figures wherever salary numbers appear (PLAN §11.2) */
 @utility tnum {
   font-feature-settings: "tnum";

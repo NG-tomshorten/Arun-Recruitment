@@ -171,7 +171,7 @@ export default defineConfig({
             name: 'title',
             label: 'Job title',
             description:
-              'Write it the way a teacher would search for it — for example "Kindergarten teachers needed in Chengdu". This is the heading on the page and the line Google shows.',
+              'Name the role and the place, the way a teacher would search for it — for example "Kindergarten teachers in Chengdu". These are placements you have already made, so leave out "needed", "vacancies" or "required". This is the heading on the page and the line Google shows.',
             required: true,
             isTitle: true, // so the job list shows titles, not filenames
           },
