@@ -109,3 +109,14 @@ live, which the 2 Sep amendment says was wrong. Each was edited by removing only
 the admin and he can reword them; the field hint now says to leave those words out. Queued for
 his glance in `STATUS.md`.
 
+
+## 2026-09-07 — `/for-employers` services reveal on hover, built as tabs
+
+Tom asked for the seven services in one row with the extra line revealed on hover, to shorten
+the page. A hover-only reveal excludes keyboard and touch users, so the row is a WAI-ARIA tab
+list with automatic activation: hover, focus, tap and arrow keys all select a service, and one
+panel beneath the row shows its line. All seven lines stay in the HTML (inactive ones `hidden`),
+the panel reserves two lines of height so nothing shifts, and the only motion is the existing
+180ms `step-in` fade. Cost: a visitor sees one description at a time rather than all seven,
+which is the point. This is closer to PLAN §6's "clean grid" than the taste-pass list it
+replaces.

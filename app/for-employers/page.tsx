@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/PageHeader";
+import { ServiceMenu, type Service } from "@/components/ServiceMenu";
 import { SITE_URL } from "@/lib/site";
 
 /**
- * /for-employers (PLAN §6): the seven-service menu as a numbered list with
+ * /for-employers (PLAN §6): the seven-service menu as a row with
  * one-line descriptions written fresh (the old site has none — capture
  * §2.2), and Barry's direct email as the CTA. Intro copy from capture §2.2,
  * lightly modernised; the live "Servcices" typo is not carried over
- * (CLAUDE.md guardrail 3).
+ * (CLAUDE.md guardrail 3). Compact pass, 7 Sep 2026: the list became the
+ * hover-to-reveal row in components/ServiceMenu.tsx.
  */
 
 const EMPLOYER_EMAIL = "barry.shorten@arunlanguagetraining.com";
 
 // The seven services, in the order the old site lists them (capture §2.2).
 // Descriptions are ours — one plain line each, no recruitment-industry filler.
-const SERVICES: { name: string; description: string }[] = [
+const SERVICES: Service[] = [
   {
     name: "Advertising",
     description:
@@ -75,28 +77,13 @@ export default function ForEmployers() {
         }
       />
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
-        {/* The seven services as a numbered menu — hairline rules, not a card
-          grid, so the one card below (the CTA) is the page's loud element. */}
-        <ol className="mt-4 max-w-[44rem] list-none border-b border-gull/60">
-          {SERVICES.map((service, index) => (
-            <li
-              key={service.name}
-              className="flex gap-5 border-t border-gull/60 py-5 sm:gap-8"
-            >
-              <span className="kicker tnum pt-0.5">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <h2 className="font-display text-lg font-semibold text-channel">
-                  {service.name}
-                </h2>
-                <p className="mt-1 text-fine text-flint">
-                  {service.description}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ol>
+        {/* The seven services in one row — hover, focus or tap a service and
+          its line shows beneath the row; the one card below (the CTA) stays
+          the page's loud element. Pulled up under the lead (-mt-3 against the
+          header band's own padding) so the menu reads as part of it. */}
+        <div className="-mt-3">
+          <ServiceMenu services={SERVICES} />
+        </div>
 
         {/* The menu leads straight to Barry */}
         <div className="card-callout mt-10 max-w-[44rem] p-8">

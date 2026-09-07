@@ -91,6 +91,12 @@ placements. Five titles that still said "needed" / "vacancies" / "required" were
 (for Barry's glance, above). `stamp` and `fact-label` utilities in `globals.css`, shown on
 `/styleguide`. Trade-offs in `DECISIONS.md`.
 
+### Compact pass — `/for-employers` (7 Sep 2026)
+Tom: the page ran too long. The seven services now sit in one row
+(`components/ServiceMenu.tsx`), and the description of the service under the pointer shows
+beneath the row; built as tabs so focus, tap and arrow keys reveal it too. Two columns on
+phones, four from `sm`. Trade-off in `DECISIONS.md`.
+
 ## Not started
 
 - **Step 8 — deploy.** See the top of this file.
