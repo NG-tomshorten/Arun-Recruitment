@@ -137,3 +137,13 @@ and launch to Asana (`CLAUDE.md`, "Finding work"). `docs/STATUS.md` keeps the bu
 - **Cost:** two systems to keep in step. The rule is that a code change is a GitHub issue and
   anything done in a dashboard, an account, DNS, or by Barry is an Asana task, and each names
   the other where they depend. The last `PLAN.md` is at commit `2527864`.
+
+## 2026-10-24 — South Africa removed from the profile wizard's passport list
+
+Barry's copy review answered GitHub #9 with neither option it offered: South Africa comes off the
+wizard's passport dropdown on every route rather than getting a named check or a soft flag. The
+Worker's passport list matches, so a stale form posting `south_africa` now gets a 400. Placement
+records are a separate list (`tina/config.ts`) and keep South Africa, because four of those
+employers accepted it.
+
+- **Cost:** a South African candidate now picks "Other". That's Barry's call to make.

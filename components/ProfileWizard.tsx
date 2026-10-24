@@ -77,7 +77,6 @@ const PASSPORT_COUNTRIES = [
   ["canada", "Canada"],
   ["australia", "Australia"],
   ["new_zealand", "New Zealand"],
-  ["south_africa", "South Africa"],
   ["other", "Other"],
 ] as const;
 
@@ -99,8 +98,7 @@ const CHECK_RECENT_OPTIONS = [
 ] as const;
 
 // The national check Taiwan asks for, by passport country (Barry's list).
-// South Africa and Other are not on it, so they fall back to generic
-// wording rather than an invented name.
+// Other falls back to generic wording rather than an invented name.
 const CHECK_NAMES: Partial<Record<string, string>> = {
   uk: "Basic DBS check",
   ireland: "Garda Police Certificate",
@@ -1007,14 +1005,14 @@ export function ProfileWizard() {
                   <>
                     For a {countryLabel(answers.passportCountry)} passport,
                     Taiwan asks for {checkArticle(answers.passportCountry)}{" "}
-                    {checkNameFor(answers.passportCountry)}, less than six
-                    months old when you apply.
+                    {checkNameFor(answers.passportCountry)}, issued within the
+                    last six months.
                   </>
                 ) : (
                   <>
                     Taiwan asks for a national criminal record check from your
-                    country&rsquo;s police, less than six months old when you
-                    apply.
+                    country&rsquo;s police, issued within the last six
+                    months.
                   </>
                 )}
               </p>

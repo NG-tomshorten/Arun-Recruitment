@@ -70,7 +70,6 @@ const PASSPORT_LABELS: Record<string, string> = {
   canada: "Canada",
   australia: "Australia",
   new_zealand: "New Zealand",
-  south_africa: "South Africa",
   other: "Other",
 };
 const BACKGROUND_LABELS: Record<string, string> = {
@@ -102,7 +101,7 @@ const CHECK_RECENT_LABELS: Record<string, string> = {
   no: "more than six months old",
 };
 // The national check Taiwan asks for, by passport country (Barry's list;
-// South Africa and Other fall back to generic wording).
+// Other falls back to generic wording).
 const CHECK_NAMES: Record<string, string> = {
   uk: "Basic DBS check",
   ireland: "Garda Police Certificate",

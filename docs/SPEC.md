@@ -171,7 +171,7 @@ The route reuses the full §8.3 hardening stack (origin check, honeypot, time-tr
 *Barry's brief, 6 Sep 2026, relayed by Tom: the copy source for the Taiwan steps.* The Taiwan route is intro → degree → age groups → passport → background check → clean/disclose flag → contact + CV. Barry's requirements, each asked as one question:
 
 - A bachelor's degree **completed on campus** (online not accepted).
-- A **national criminal background check**, named per passport country: FBI (USA), RCMP (Canada), Basic DBS (UK), Garda Police Certificate (Ireland), AFP National Police Check (Australia), Ministry of Justice Criminal Record Check (New Zealand). South Africa and Other get generic wording, not an invented name. Whether South African passports qualify at all is open with Barry (GitHub #9). The check must be **less than six months old** (asked as a follow-up when the check is done, on every route).
+- A **national criminal background check**, named per passport country: FBI (USA), RCMP (Canada), Basic DBS (UK), Garda Police Certificate (Ireland), AFP National Police Check (Australia), Ministry of Justice Criminal Record Check (New Zealand). Other gets generic wording, not an invented name. South Africa is not on the wizard's passport list on any route (Barry's copy review, 24 Oct 2026, GitHub #9); placement records keep it where the employer accepted it. The check must be **less than six months old** (asked as a follow-up when the check is done, on every route).
 - Willing to teach **children aged 3–16 or 7–12**.
 
 Buxibans (private language academies, like training centres in China or Korean hagwons) and "no apostille needed" are information on the intro screen, not questions.

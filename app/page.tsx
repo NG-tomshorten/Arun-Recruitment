@@ -18,12 +18,12 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24">
           <p className="kicker">Teacher recruitment</p>
           <h1 className="mt-4 max-w-[22ch] text-display">
-            We place English teachers in Taiwan and China
+            Teacher Recruitment for Taiwan and China
           </h1>
           <p className="mt-6 max-w-[52ch] text-lead text-flint">
-            We find teaching posts for British and Commonwealth graduates,
-            and reliable instructors for the schools, colleges and companies
-            that need them.
+            We place teachers in kindergarten, training centres, schools and
+            universities across Taiwan and mainland China, and find reliable
+            teachers for the schools and employers that need them.
           </p>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <Button href="/contact">I&rsquo;m a teacher looking for work</Button>

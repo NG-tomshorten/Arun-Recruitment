@@ -13,9 +13,9 @@ import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
  */
 
 export const metadata: Metadata = {
-  title: "Teaching jobs we've filled in Taiwan and China",
+  title: "Teaching vacancies we've filled in Taiwan and China",
   description:
-    "A record of the English-teaching placements Arun Language Training & Recruitment has made in Taiwan and mainland China: kindergartens, primary schools, universities and language schools.",
+    "A record of the English-teaching placements Arun Language Training & Recruitment has made in Taiwan and mainland China: kindergartens, primary schools, universities and training centres.",
   alternates: { canonical: `${SITE_URL}/jobs` },
 };
 
@@ -26,7 +26,7 @@ export default async function JobsPage() {
     <>
       <PageHeader
         kicker="Placements"
-        title={<>Teaching jobs we&rsquo;ve filled</>}
+        title={<>Recent vacancies we have filled</>}
         lead="A record of the placements we have made in Taiwan and mainland China, with the salary and benefits as each employer gave them."
       >
         <p className="mt-4 max-w-[56ch] text-flint">

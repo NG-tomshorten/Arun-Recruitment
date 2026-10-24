@@ -96,3 +96,10 @@ phones, four from `sm`. Trade-off in `DECISIONS.md`.
 kept in Appendix A), open work into nine GitHub issues and the Asana *Development tasks* project
 (launch areas L1–L6), with the dependency chain through to cutover. `CLAUDE.md` now points at the
 tickets. Decision in `DECISIONS.md`.
+
+### Barry's copy review (24 Oct 2026)
+Home title, heading, lead and meta description rewritten to Barry's text. `/jobs` renamed
+"Recent vacancies we have filled" (nav, footer and 404 link "Vacancies filled"). South Africa
+taken off the profile wizard's passport list (GitHub #9). All ten placement descriptions replaced
+with the tidied "About the role" prose Barry approved (frontmatter untouched). Taiwan police-check
+line now reads "issued within the last six months". Decision in `DECISIONS.md`.

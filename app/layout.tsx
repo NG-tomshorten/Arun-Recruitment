@@ -23,11 +23,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default:
-      "Arun Language Training & Recruitment — English teacher recruitment for Taiwan and China",
+      "Arun Language Training & Recruitment — Teacher Recruitment for Taiwan and China",
     template: "%s — Arun Language Training & Recruitment",
   },
   description:
-    "Teacher recruitment from West Sussex: English-teaching placements in Taiwan and mainland China for British and Commonwealth graduates, and recruitment services for schools and employers.",
+    "We place teachers in kindergarten, training centres, schools and universities across Taiwan and mainland China, and find reliable teachers for the schools and employers that need them.",
   // One static OG card for every page (SPEC §9, simplified by choice —
   // no per-placement image generation). public/images/og.png.
   openGraph: {

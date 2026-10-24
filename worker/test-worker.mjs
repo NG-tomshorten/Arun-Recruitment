@@ -356,6 +356,12 @@ await test("profile: passport expiry format enforced", async () => {
   assert.equal(res.status, 303);
 });
 
+// Barry's copy review, 24 Oct 2026 (GitHub #9): South Africa is off the list.
+await test("profile: South Africa is no longer an accepted passport country", async () => {
+  const res = await postProfile(goodProfileFields({ passport_country: "south_africa" }));
+  assert.equal(res.status, 400);
+});
+
 await test("profile: bad email / empty or oversize name → 400", async () => {
   assert.equal((await postProfile(goodProfileFields({ email: "nope" }))).status, 400);
   assert.equal((await postProfile(goodProfileFields({ name: "  " }))).status, 400);
@@ -555,7 +561,6 @@ await test("profile: the check is named from the passport country", async () => 
     canada: "RCMP criminal record check",
     australia: "AFP National Police Check",
     new_zealand: "Ministry of Justice Criminal Record Check",
-    south_africa: "national criminal record check",
     other: "national criminal record check",
   };
   for (const [country, name] of Object.entries(expected)) {
