@@ -9,14 +9,19 @@ main = "index.ts"
 compatibility_date = "2026-09-01"
 
 # Routes are attached at deploy time (SPEC §13, deploy), once the zone exists
-# in this Cloudflare account:
+# in this Cloudflare account. new.arunlanguagetraining.com is the staging
+# hostname: the forms post to relative /api/* paths, so any hostname serving
+# the site needs these routes too, or the real form sends can't be tested
+# before cutover (docs/DECISIONS.md, 2026-10-24).
 # routes = [
 #   { pattern = "www.arunlanguagetraining.com/api/contact", zone_name = "arunlanguagetraining.com" },
-#   { pattern = "www.arunlanguagetraining.com/api/profile", zone_name = "arunlanguagetraining.com" }
+#   { pattern = "www.arunlanguagetraining.com/api/profile", zone_name = "arunlanguagetraining.com" },
+#   { pattern = "new.arunlanguagetraining.com/api/contact", zone_name = "arunlanguagetraining.com" },
+#   { pattern = "new.arunlanguagetraining.com/api/profile", zone_name = "arunlanguagetraining.com" }
 # ]
 
 [vars]
-ALLOWED_ORIGINS = "https://www.arunlanguagetraining.com,https://arunlanguagetraining.com"
+ALLOWED_ORIGINS = "https://www.arunlanguagetraining.com,https://arunlanguagetraining.com,https://new.arunlanguagetraining.com"
 TO_EMAIL = "info@arunlanguagetraining.com"
 FROM_EMAIL = "enquiries@send.arunlanguagetraining.com"
 
