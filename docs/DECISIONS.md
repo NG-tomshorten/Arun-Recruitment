@@ -159,3 +159,26 @@ A browser extension on Tom's machine stamps a `data-*` attribute on `<html>` bef
 hydrates, which raised a hydration-mismatch overlay in dev. The flag on `<html>` in
 `app/layout.tsx` silences attribute mismatches on that one element only; mismatches in its
 children still report. Nothing visitors see changes.
+
+## 2026-10-24 — Two build scripts: `build` is local-mode, `build:prod` builds the TinaCloud admin
+
+`npm run build` (and so `npm run verify`, and CI per #2) keeps `tinacms build --local
+--skip-cloud-checks`: it needs no TinaCloud account, but the admin it ships has an empty
+client ID and branch and cannot sign in. Cloudflare Workers Builds runs `npm run build:prod`
+instead, which drops both flags and adds `--content=local` (GitHub #1).
+
+- **Why `--content=local`:** the admin is generated against TinaCloud, but `next build` still
+  reads the placements from the checked-out files through a local GraphQL server, so the site
+  always matches the commit being built and the build never depends on TinaCloud's index
+  being current. Without it the generated client would fetch content from TinaCloud at build time.
+- **Why the cloud checks stay on:** they verify the client ID and token, wait for TinaCloud to
+  finish indexing the branch, and fail the build if TinaCloud's schema differs from
+  `tina/config.ts`. Skipping them could ship an admin whose schema TinaCloud rejects.
+- **Branch:** `tina/config.ts` reads `NEXT_PUBLIC_TINA_BRANCH`, then Workers Builds'
+  `WORKERS_CI_BRANCH`, then Pages' `CF_PAGES_BRANCH`. Set `NEXT_PUBLIC_TINA_BRANCH=main` in the
+  build env anyway: a preview build of another branch then still points the admin at `main`,
+  the only branch Barry edits (SPEC §10), instead of failing the cloud check on a branch
+  TinaCloud has not indexed.
+- **Cost:** two scripts to keep in step. Both keep the contrast gate, `NODE_ENV=production` and
+  the cache clearing from the 2026-09-01 entry. `build:prod` fails without `NEXT_PUBLIC_TINA_CLIENT_ID`,
+  `TINA_TOKEN` and a branch, which is the point.

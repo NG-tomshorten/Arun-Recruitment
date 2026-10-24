@@ -16,8 +16,9 @@ import {
  *
  * Everything consumes the types Tina generates — no hand-written Job type
  * (SPEC §5). Queries run against the local GraphQL server that `tinacms dev`
- * (development) or `tinacms build --local -c "next build"` (production
- * build) keeps alive; nothing here executes at request time — the site is
+ * (development), `npm run build` (`--local`) or `npm run build:prod`
+ * (`--content=local`, GitHub #1) keeps alive, so every build reads the
+ * checked-out content; nothing here executes at request time — the site is
  * static. Client-safe formatting lives in lib/format.ts.
  */
 
