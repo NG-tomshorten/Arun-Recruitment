@@ -34,6 +34,18 @@ echo "verify-build: cloning node_modules…"
 cp -Rc node_modules "$WT/node_modules" 2>/dev/null || cp -R node_modules "$WT/node_modules"
 
 cd "$WT"
+# The dev server holds Tina's GraphQL port (4001) and datalayer port (9000), and
+# `tinacms build --local` binds both, so the build gets two free ports of its
+# own. The generated client baked into this worktree points at the build's port,
+# which is thrown away with it (docs/DECISIONS.md, 2026-09-01).
+free_port() {
+  node -e 'const s=require("net").createServer();s.listen(0,()=>{console.log(s.address().port);s.close()})'
+}
+TINA_PORT=$(free_port)
+TINA_DATALAYER_PORT=$(free_port)
+while [ "$TINA_DATALAYER_PORT" = "$TINA_PORT" ]; do TINA_DATALAYER_PORT=$(free_port); done
+export TINA_PORT TINA_DATALAYER_PORT
+echo "verify-build: Tina ports ${TINA_PORT} (GraphQL) and ${TINA_DATALAYER_PORT} (datalayer)"
 npm run build
 
 pages=$(find out -name '*.html' | wc -l | tr -d ' ')
