@@ -24,6 +24,11 @@ not cover.
   changes across, clones `node_modules` with `cp -Rc` (APFS copy-on-write, ~15s) and builds
   there. The clone is not a symlink because Turbopack refuses a `node_modules` symlink that
   points outside its root.
+- **Ports:** `tinacms build --local` binds Tina's GraphQL port (4001) and datalayer port (9000),
+  both already held by the dev server. The `build` script reads `TINA_PORT` and
+  `TINA_DATALAYER_PORT` (defaulting to 4001 and 9000), and the verify script sets both to free
+  ports, so the worktree's generated client points at a throwaway port. The dev server's ports
+  are unchanged.
 - **Cost:** ~15s and a few hundred MB of clone per run; removed on exit.
 
 ## 2026-09-02 — The home page stays minimal
