@@ -128,7 +128,7 @@ export default function Styleguide() {
       <p className="kicker">Checkpoint A</p>
       <h1 className="mt-4 text-h1">Design system</h1>
       <p className="mt-4 max-w-[68ch] text-flint">
-        Dev-only reference for the Arun coast design system (PLAN §11). Not
+        Dev-only reference for the Arun coast design system (SPEC §11). Not
         linked from the site, noindexed, and excluded from the sitemap.
       </p>
 

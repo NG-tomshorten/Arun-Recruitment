@@ -4,7 +4,7 @@ import { ServiceMenu, type Service } from "@/components/ServiceMenu";
 import { SITE_URL } from "@/lib/site";
 
 /**
- * /for-employers (PLAN §6): the seven-service menu as a row with
+ * /for-employers (SPEC §6): the seven-service menu as a row with
  * one-line descriptions written fresh (the old site has none — capture
  * §2.2), and Barry's direct email as the CTA. Intro copy from capture §2.2,
  * lightly modernised; the live "Servcices" typo is not carried over

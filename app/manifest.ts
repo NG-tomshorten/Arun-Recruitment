@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 // Metadata routes must declare themselves static under `output: 'export'`.
 export const dynamic = "force-static";
 
-/** Web app manifest (PLAN §13 step 6). Colours are the chalk/channel tokens. */
+/** Web app manifest (SPEC §9). Colours are the chalk/channel tokens. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Arun Language Training & Recruitment",

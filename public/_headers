@@ -1,6 +1,6 @@
-# HTTP security headers (PLAN §8.2), served by Cloudflare for every response.
+# HTTP security headers (SPEC §8.2), served by Cloudflare for every response.
 #
-# CSP note — accepted risk, per the plan's own fallback: PLAN §8.2 wanted
+# CSP note — accepted risk, per the plan's own fallback: SPEC §8.2 wanted
 # sha256 hashes for Next's inline bootstrap scripts, but the App Router
 # export carries ~139 unique inline scripts across 19 pages (~7.5 KB of
 # hashes) against Cloudflare's 2,000-character-per-header limit, so hashing
@@ -13,7 +13,7 @@
 # frame-ancestors 'self' (not DENY): Tina's contextual editing iframes the
 # site from same-origin /admin. HSTS deliberately ships without `preload`
 # (§8.2 — hard to reverse; noted as a later option).
-# The Cloudflare hosts are the analytics beacon + Turnstile (PLAN §9, §8.3).
+# The Cloudflare hosts are the analytics beacon + Turnstile (SPEC §9, §8.3).
 
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
@@ -25,7 +25,7 @@
 
 # The Tina admin SPA needs the TinaCloud hosts — taken from the Tina CSP
 # docs (tina.io/docs/guides/csp-configuration, checked 2 Sep 2026), not
-# guessed, per PLAN §8.2. The `!` line detaches the site-wide CSP so the
+# guessed, per SPEC §8.2. The `!` line detaches the site-wide CSP so the
 # admin gets its own. Both /admin and /admin/* so the bare path matches.
 
 /admin

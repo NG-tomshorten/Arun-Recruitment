@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 
 /**
- * /contact (PLAN §6): the enquiry form (PLAN §7, relayed by the Worker —
+ * /contact (SPEC §6): the enquiry form (SPEC §7, relayed by the Worker —
  * worker/index.ts) plus the plain contact details from capture §4. The
  * details column and the <noscript> block are the no-JS path: Turnstile
  * needs JS, so without it the form never appears and email is the way in.

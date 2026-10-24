@@ -2,7 +2,7 @@ import Link from "next/link";
 import { EMPLOYER_TYPE_LABELS, type JobCardData } from "@/lib/format";
 
 /**
- * Placement card (PLAN §6, §11.4 — amended 2 Sep 2026: a record of a role
+ * Placement card (SPEC §6, §11.4 — amended 2 Sep 2026: a record of a role
  * we filled, not a live vacancy). Reworked as a record in the showcase pass
  * of 6 Sep 2026: the "Filled" stamp sits beside the kicker, the location is
  * the heading with the role beneath, and the salary and what came with it

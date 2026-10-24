@@ -7,7 +7,7 @@
 
 @theme {
   /*
-   * Palette — the Arun coast (PLAN §11.1).
+   * Palette — the Arun coast (SPEC §11.1).
    * Usage discipline: ~80% neutrals, ~15% harbour teals, ~5% amber.
    * Every pair listed in scripts/check-contrast.mjs must pass WCAG AA —
    * the check runs as part of `npm run build`.
@@ -511,14 +511,14 @@
   );
 }
 
-/* Eyebrow kicker over sections, e.g. TEACH IN TAIWAN (PLAN §11.2) */
+/* Eyebrow kicker over sections, e.g. TEACH IN TAIWAN (SPEC §11.2) */
 @utility kicker {
   @apply font-sans text-[0.8125rem] font-semibold uppercase text-harbour;
   letter-spacing: 0.09em;
 }
 
 /*
- * Surfaces — exactly two card recipes (PLAN §11.4, unified in the taste
+ * Surfaces — exactly two card recipes (SPEC §11.4, unified in the taste
  * pass of 6 Sep 2026; see /styleguide "Surfaces"):
  *   card          white on chalk, gull hairline, haze shadow — information
  *                 (placement cards, salary, key facts, contact details).
@@ -553,7 +553,7 @@
 }
 
 /*
- * Record furniture (PLAN amendment 2 Sep 2026 — /jobs is a record of
+ * Record furniture (SPEC §5–§6 — /jobs is a record of
  * placements, not a job board; showcase pass, 6 Sep 2026):
  *   fact-label  the small-caps label over a value in a placement record
  *   stamp       the "Filled" mark every placement carries — outlined in
@@ -568,13 +568,13 @@
   letter-spacing: 0.09em;
 }
 
-/* Tabular figures wherever salary numbers appear (PLAN §11.2) */
+/* Tabular figures wherever salary numbers appear (SPEC §11.2) */
 @utility tnum {
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-/* Wizard step entrance (/profile — PLAN amendment 2 Sep 2026 (profile)).
+/* Wizard step entrance (/profile — SPEC §7.2).
    Within the 150–200ms ease-out interaction rule; the reduced-motion block
    in @layer base stills it. */
 @keyframes step-in {

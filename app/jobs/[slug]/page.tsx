@@ -23,7 +23,7 @@ import { approxGBPRange, type SalaryCurrency } from "@/lib/rates";
 import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 
 /**
- * /jobs/[slug] — one placement record (PLAN §6, amended 2 Sep 2026: these
+ * /jobs/[slug] — one placement record (SPEC §6, amended 2 Sep 2026: these
  * are roles we have already filled, so there is no apply flow and no
  * JobPosting JSON-LD — structured job-posting markup on a filled role would
  * misrepresent it to Google). Showcase pass, 6 Sep 2026: laid out as a case
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ", "
       )}, ${job.country}.`,
     alternates: { canonical: `${SITE_URL}/jobs/${slug}` },
-    // A hidden placement keeps its URL but leaves the search index (PLAN §5).
+    // A hidden placement keeps its URL but leaves the search index (SPEC §5).
     ...(job.active === false ? { robots: { index: false } } : {}),
   };
 }

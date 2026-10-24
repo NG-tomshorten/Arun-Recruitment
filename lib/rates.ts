@@ -4,7 +4,7 @@
  * TODO: verify against live mid-market rates at cutover (values set Aug 2026).
  *
  * GBP figures are computed at build time and always displayed as "approx. £…".
- * JSON-LD always emits the original currency, never the conversion (PLAN §5).
+ * JSON-LD always emits the original currency, never the conversion (SPEC §5).
  */
 export const GBP_RATES = {
   RMB: 9.3,

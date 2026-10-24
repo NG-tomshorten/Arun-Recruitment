@@ -6,11 +6,11 @@ import { Gull } from "@/components/Gull";
 import { NAV_LINKS } from "@/components/nav";
 
 /**
- * The custom not-found page (PLAN §4, copy line from PLAN §6). Static export
+ * The custom not-found page (SPEC §4, copy line from SPEC §6). Static export
  * renders it to 404.html, so Cloudflare serves it for every unmatched path.
  *
  * It also catches /gdpr-consent: that page already 404s on the live site, and
- * PLAN §4 says to leave it dead — no redirect in public/_redirects, no sitemap
+ * SPEC §4 says to leave it dead — no redirect in public/_redirects, no sitemap
  * entry. This page is deliberately where it lands.
  *
  * One of the two sanctioned placements of the gull glyph (components/Gull.tsx).

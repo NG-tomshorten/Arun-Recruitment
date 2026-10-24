@@ -2,7 +2,8 @@
 
 Things that were decided the hard way, so nobody "fixes" them back. One entry per decision:
 what was chosen, why, and what it costs. Newest at the bottom. Product decisions from Barry go
-in PLAN.md as amendments; this file is for engineering trade-offs that PLAN.md does not cover.
+into the relevant section of `docs/SPEC.md`; this file is for engineering trade-offs the spec does
+not cover.
 
 ## 2026-09-01 — The build script forces `NODE_ENV=production` and clears two caches
 
@@ -40,7 +41,7 @@ marginal gain on ten filled roles.
 ## 2026-09-02 — CSP `script-src` is `'unsafe-inline'`, by the plan's own fallback
 
 The export has 139 unique inline scripts (Next's hydration payloads); Cloudflare caps a header at
-2,000 characters, so hashing them all is unviable. PLAN §8.2 anticipated this fallback.
+2,000 characters, so hashing them all is unviable. SPEC §8.2 anticipated this fallback.
 `/admin` gets its own CSP with the TinaCloud hosts from tina.io's CSP guide. Revisit only if
 Next ships nonce support for static exports.
 
@@ -68,7 +69,7 @@ Turnstile together locally with no real keys. Real keys land at step 8.
 The one file input on the site rides to Barry's inbox as a Resend attachment and is forgotten
 the moment Resend accepts it (guardrail 4's single exception). The background-check question
 collects "clean" or "something to disclose" with deliberately no detail field: criminal-offence
-data must never transit email. Spec in the PLAN.md profile amendment.
+data must never transit email. Spec in SPEC §7.2.
 
 ## 2026-09-06 — Disqualifying Taiwan answers are soft flags, never dead ends
 
@@ -80,7 +81,7 @@ than an invented check name.
 
 ## 2026-09-06 — Cards are white on chalk, not chalk on foam
 
-PLAN §11.4 specifies chalk cards on foam sections. The pages are chalk end to end (no foam
+The original plan specified chalk cards on foam sections (SPEC Appendix A.6). The pages are chalk end to end (no foam
 sections survived the pivot to a minimal home page), so a chalk card on a chalk page had no edge
 — the salary panel on a placement page read as a stray rectangle. Cards are now `bg-white` with
 the gull hairline and haze shadow (`card` in `globals.css`), and a second recipe, `card-callout`
@@ -91,10 +92,11 @@ because every text colour that passes on chalk passes on white. If foam sections
 
 ## 2026-09-06 — `/jobs` browses by chip; no salary sort, no city select
 
-PLAN §6 specifies filters by country, city and employer type plus a salary/newest sort. With the
+The original plan specified filters by country, city and employer type plus a salary/newest sort
+(SPEC Appendix A.3). With the
 2 Sep amendment (a record of placements, not a job board) the four-select bar and "Highest
 salary" sort were the strongest remaining job-board signals — a search form is what makes a page
-read as listings. The index now uses the filter chips already specified in PLAN §11.4 and on
+read as listings. The index now uses the filter chips already specified in SPEC §11.4 and on
 `/styleguide` for country and type of school, newest first, no sort. The city filter went with it:
 ten placements across a dozen cities made a select that mostly returned one card, and the chips
 would not scale to it. `?country=` and `?type=` URL params still work; `?city=` and `?sort=`
@@ -118,5 +120,20 @@ list with automatic activation: hover, focus, tap and arrow keys all select a se
 panel beneath the row shows its line. All seven lines stay in the HTML (inactive ones `hidden`),
 the panel reserves two lines of height so nothing shifts, and the only motion is the existing
 180ms `step-in` fade. Cost: a visitor sees one description at a time rather than all seven,
-which is the point. This is closer to PLAN §6's "clean grid" than the taste-pass list it
+which is the point. This is closer to the original plan's "clean grid" (SPEC Appendix A.3) than the taste-pass list it
 replaces.
+
+## 2026-10-24 — `PLAN.md` split into `docs/SPEC.md` and tickets
+
+The plan mixed three things: the spec, a build order, and status. The spec (with the 2 Sep and
+6 Sep amendments folded in) is now `docs/SPEC.md`, with § numbers unchanged so code citations
+moved from `PLAN §n` to `SPEC §n` mechanically. Text the 2 Sep pivot voided (JobPosting JSON-LD,
+the apply panel, the TEFL page, the original build order) is kept verbatim in its Appendix A.
+Open work moved to tickets: code to GitHub issues, infrastructure, accounts, Barry's sign-offs
+and launch to Asana (`CLAUDE.md`, "Finding work"). `docs/STATUS.md` keeps the build history only.
+
+- **Why:** one place for each kind of thing. A to-do list in a spec file goes stale, and Claude
+  needs a queue to pull from, not a plan to re-read.
+- **Cost:** two systems to keep in step. The rule is that a code change is a GitHub issue and
+  anything done in a dashboard, an account, DNS, or by Barry is an Asana task, and each names
+  the other where they depend. The last `PLAN.md` is at commit `2527864`.

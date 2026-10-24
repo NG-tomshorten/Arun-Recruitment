@@ -162,7 +162,7 @@ await test("happy path → 303 to /contact?sent=1 with correct envelope", async 
   assert.ok(!("html" in resendPayload)); // user content is never rendered as HTML
 });
 
-// ---- the profile route (PLAN amendment 2 Sep 2026 (profile)) ---------------
+// ---- the profile route (SPEC §7.2) ---------------
 // Node ≥20 provides File/FormData/Blob as undici globals, so the CV rides
 // through the same helpers.
 

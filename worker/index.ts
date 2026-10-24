@@ -1,9 +1,9 @@
 /**
- * Cloudflare Worker — the form relays (PLAN §8.3):
+ * Cloudflare Worker — the form relays (SPEC §8.3):
  *
  *   POST /api/contact — the /contact enquiry form
  *   POST /api/profile — the /profile Teacher Profile wizard
- *                       (PLAN amendment 2 Sep 2026 (profile))
+ *                       (SPEC §7.2)
  *
  * This is the one piece of the system that is not a static file (CLAUDE.md
  * guardrail 7 exception). It relays each form to Barry's inbox via Resend
@@ -11,7 +11,7 @@
  * profile flow's CV is forgotten the moment Resend accepts it. Deployed
  * separately from the site build — see worker/README.md.
  *
- * Hardening layers, in request order (PLAN §8.3), shared by both routes:
+ * Hardening layers, in request order (SPEC §8.3), shared by both routes:
  *   1. POST only; same-origin Origin/Referer check
  *   2. honeypot field — any value ⇒ silently accept and drop
  *   3. time-trap — submissions under ~3s after render rejected
@@ -19,9 +19,9 @@
  *      route adds file size/extension checks and filename sanitising
  *   5. Turnstile server-side verification
  *   6. Resend send: user content in body text only, never in headers
- *      beyond reply_to; from the verified send. subdomain (PLAN §8.4)
+ *      beyond reply_to; from the verified send. subdomain (SPEC §8.4)
  * The Cloudflare zone rate-limit rule (5 req/min/IP on POST /api/*) is
- * configured in the dashboard at deploy time (PLAN §13 step 8).
+ * configured in the dashboard at deploy time (SPEC §13, deploy).
  */
 
 interface Env {
@@ -48,7 +48,7 @@ const MAX_EMAIL = 254;
 const MAX_MESSAGE = 5000;
 const MIN_FILL_MS = 3000;
 
-// Profile flow (PLAN amendment 2 Sep 2026 (profile)). Enum value → display
+// Profile flow (SPEC §7.2). Enum value → display
 // label; the key set is also the single source of truth for validation.
 const JOB_TYPE_LABELS: Record<string, string> = {
   kindergarten: "Kindergarten",
@@ -128,7 +128,7 @@ const CV_MIME_TYPES = new Set([
   "application/octet-stream",
 ]);
 
-/** Outcome + timestamp only — never message content (PLAN §8.3). */
+/** Outcome + timestamp only — never message content (SPEC §8.3). */
 function log(outcome: string): void {
   console.log(JSON.stringify({ outcome, at: new Date().toISOString() }));
 }
@@ -141,7 +141,7 @@ function fail(status: number): Response {
   );
 }
 
-/** 303 so a no-JS submit lands back on the posting page as a GET (PLAN §8.3). */
+/** 303 so a no-JS submit lands back on the posting page as a GET (SPEC §8.3). */
 function succeed(origin: string, path: "/contact" | "/profile"): Response {
   return new Response(null, {
     status: 303,
@@ -293,7 +293,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 
   // Relay via Resend. User content appears only as body text and as the
   // reply_to address (already CRLF-stripped and format-checked) — never
-  // interpolated into other headers, never rendered as HTML (PLAN §8.3).
+  // interpolated into other headers, never rendered as HTML (SPEC §8.3).
   const sent = await sendViaResend(env, {
     from: `Arun website <${env.FROM_EMAIL}>`,
     to: [env.TO_EMAIL],
@@ -485,7 +485,7 @@ async function handleProfile(request: Request, env: Env): Promise<Response> {
 
   // Same relay rules as the contact flow: user content in body text and
   // reply_to only, plain text, never HTML; the CV rides as an attachment
-  // and is never stored anywhere (PLAN amendment 2 Sep 2026 (profile)).
+  // and is never stored anywhere (SPEC §7.2).
   const body = [
     `From: ${name} <${email}>`,
     "",

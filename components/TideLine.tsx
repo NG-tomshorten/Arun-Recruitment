@@ -1,7 +1,7 @@
 import { useId } from "react";
 
 /**
- * The tide line — a 1px, low-amplitude wave rule (PLAN §11.3), drawn in the
+ * The tide line — a 1px, low-amplitude wave rule (SPEC §11.3), drawn in the
  * brand teal (the water gets the brand colour). Section divider and kicker
  * underline. The only wave on the site.
  */

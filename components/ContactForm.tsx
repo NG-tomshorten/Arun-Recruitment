@@ -6,10 +6,10 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { APPLY_EMAIL } from "@/lib/site";
 
 /**
- * The general enquiry form (PLAN §7; the Teacher Profile wizard at
- * /profile is the site's one other form — PLAN amendment 2 Sep 2026
- * (profile)). Name, email, message; posts to the Worker at /api/contact
- * (worker/index.ts, PLAN §8.3). Nothing is stored anywhere: the Worker
+ * The general enquiry form (SPEC §7; the Teacher Profile wizard at
+ * /profile is the site's one other form — SPEC §7.2). Name, email,
+ * message; posts to the Worker at /api/contact
+ * (worker/index.ts, SPEC §8.3). Nothing is stored anywhere: the Worker
  * relays the message to Barry's inbox and forgets it (CLAUDE.md
  * guardrail 4).
  *
@@ -23,7 +23,7 @@ import { APPLY_EMAIL } from "@/lib/site";
 
 // Cloudflare's published Turnstile TEST site key — always passes, pairs with
 // the test secret in worker/README.md. The real key arrives at deploy time
-// (PLAN §13 step 8) via NEXT_PUBLIC_TURNSTILE_SITE_KEY (public by design).
+// (SPEC §13, deploy) via NEXT_PUBLIC_TURNSTILE_SITE_KEY (public by design).
 const TURNSTILE_SITE_KEY =
   process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA";
 
@@ -65,7 +65,7 @@ export function ContactForm() {
   // A no-JS submit round-trips through the Worker's 303 to /contact?sent=1.
   const sentViaRedirect = new URLSearchParams(useSearch()).get("sent") === "1";
   const [status, setStatus] = useState<Status>("idle");
-  // Time-trap stamp (PLAN §8.3), set through a ref after hydration so the
+  // Time-trap stamp (SPEC §8.3), set through a ref after hydration so the
   // static HTML carries no build-time value and nothing mismatches.
   const startedRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -174,7 +174,7 @@ export function ContactForm() {
           />
         </div>
 
-        {/* Honeypot (PLAN §8.3): invisible to people, tempting to bots.
+        {/* Honeypot (SPEC §8.3): invisible to people, tempting to bots.
             Any value makes the Worker silently drop the submission. */}
         <div className="sr-only" aria-hidden="true">
           <label htmlFor="contact-website">Website</label>
@@ -193,7 +193,7 @@ export function ContactForm() {
           name="form_started_at"
           defaultValue=""
         />
-        {/* Turnstile (PLAN §14.2) — the script injects the widget here and
+        {/* Turnstile (SPEC §14.2) — the script injects the widget here and
             adds a hidden cf-turnstile-response input to the form. */}
         <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} />
 
@@ -218,7 +218,7 @@ export function ContactForm() {
           {status === "sending" ? "Sending…" : "Send message"}
         </button>
 
-        {/* Disclosure line — wording per PLAN §7 */}
+        {/* Disclosure line — wording per SPEC §7 */}
         <p className="text-[0.8125rem] text-flint">
           This form collects your name and email address so we can reply to you.
           See our{" "}

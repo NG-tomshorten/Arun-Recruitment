@@ -9,12 +9,12 @@ import { Gull } from "@/components/Gull";
 import { APPLY_EMAIL } from "@/lib/site";
 
 /**
- * The Teacher Profile wizard (PLAN amendment 2 Sep 2026 (profile)): a
+ * The Teacher Profile wizard (SPEC §7.2): a
  * start screen, a China/Taiwan destination question that FORKS the route,
  * the question steps, a contact-details step with CV upload, and a
  * completion screen — one static route, screens switched in React state.
  *
- * Routes (PLAN amendment 2 Sep 2026 (profile), Taiwan addendum): China
+ * Routes (SPEC §7.3): China
  * gets the six China questions; Taiwan gets an intro plus Barry's Taiwan
  * set — on-campus degree, age groups, passport, the named national
  * background check and its age, the clean/disclose flag; "open to either"
@@ -81,8 +81,7 @@ const PASSPORT_COUNTRIES = [
   ["other", "Other"],
 ] as const;
 
-// The Taiwan set (Barry's brief, 6 Sep 2026 — PLAN amendment 2 Sep 2026
-// (profile), Taiwan addendum).
+// The Taiwan set (Barry's brief, 6 Sep 2026 — SPEC §7.3).
 const DEGREE_OPTIONS = [
   ["yes", "Completed on campus"],
   ["no", "Completed online"],
@@ -467,7 +466,7 @@ export function ProfileWizard() {
   const route = routeFor(answers.destination);
   const stepId = route[stepIndex];
 
-  // Time-trap stamp (PLAN §8.3), set through a ref after hydration so the
+  // Time-trap stamp (SPEC §8.3), set through a ref after hydration so the
   // static HTML carries no build-time value and nothing mismatches. Set at
   // wizard mount — a real fill takes minutes, comfortably over the trap.
   const startedRef = useRef<HTMLInputElement>(null);
@@ -1119,14 +1118,14 @@ export function ProfileWizard() {
                 )}
               </div>
 
-              {/* Turnstile (PLAN §14.2), rendered explicitly — see the
+              {/* Turnstile (SPEC §14.2), rendered explicitly — see the
                   effect above. Adds a hidden cf-turnstile-response input. */}
               <div ref={turnstileRef} />
             </>
           )}
         </div>
 
-        {/* Honeypot (PLAN §8.3): invisible to people, tempting to bots.
+        {/* Honeypot (SPEC §8.3): invisible to people, tempting to bots.
             Any value makes the Worker silently drop the submission. */}
         <div className="sr-only" aria-hidden="true">
           <label htmlFor="profile-website">Website</label>

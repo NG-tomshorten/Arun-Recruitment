@@ -1,7 +1,7 @@
 import { useId } from "react";
 
 /**
- * The shore — a live water's edge under the home hero (still PLAN §11.3's
+ * The shore — a live water's edge under the home hero (still SPEC §11.3's
  * single wave motif, animated). Three teal swells drift sideways while
  * rising and falling out of phase, and a chalk foam line breaks along the
  * front wave's crest. CSS-only: the drift/swell keyframes live in

@@ -1,5 +1,5 @@
 /**
- * WCAG AA contrast build gate (PLAN §11.1).
+ * WCAG AA contrast build gate (SPEC §11.1).
  * Reads the --color-* tokens straight out of app/globals.css and asserts the
  * pairs below, so a future palette tweak can't silently break contrast.
  * Runs as part of `npm run build`; exits non-zero on any failure.

@@ -22,7 +22,7 @@ export function Footer() {
   return (
     <footer className="bg-channel text-chalk">
       <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:px-6">
-        {/* The gull on its horizon rule (PLAN §11.4) */}
+        {/* The gull on its horizon rule (SPEC §11.4) */}
         <div className="flex items-end" aria-hidden="true">
           <span className="mb-[4.5px] flex-1 border-t border-chalk/40" />
           <Gull withHorizon={false} className="h-6 w-12 text-brand-teal" />

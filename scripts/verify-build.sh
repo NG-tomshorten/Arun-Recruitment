@@ -23,6 +23,8 @@ git worktree add -q "$WT" -b "$BRANCH" HEAD
 
 # Modified and untracked (non-ignored) files travel with us; deletions too.
 git ls-files -m -o --exclude-standard -z | while IFS= read -r -d '' f; do
+  # -m lists deleted files too; the -d pass below removes those
+  [ -e "$ROOT/$f" ] || continue
   mkdir -p "$WT/$(dirname "$f")"
   cp "$ROOT/$f" "$WT/$f"
 done

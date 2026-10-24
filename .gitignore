@@ -33,7 +33,7 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# cloudflare worker (PLAN §8.3) — local secrets and wrangler's build cache
+# cloudflare worker (SPEC §8.3) — local secrets and wrangler's build cache
 worker/.dev.vars
 worker/.wrangler/
 
@@ -43,7 +43,7 @@ worker/.wrangler/
 # vercel
 .vercel
 
-# tinacms (PLAN §10). The admin bundle and the codegen output are both rebuilt by
+# tinacms (SPEC §10). The admin bundle and the codegen output are both rebuilt by
 # `tinacms build` on every deploy, and in local mode the generated client hardcodes
 # http://localhost:4001/graphql — committing it would poison a Cloudflare build.
 # tina/tina-lock.json is NOT ignored: it is the schema lock TinaCloud reads.

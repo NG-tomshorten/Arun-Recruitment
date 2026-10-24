@@ -1,5 +1,5 @@
 /**
- * Abstract nautical-chart drawing of the Arun mouth (PLAN §11.3):
+ * Abstract nautical-chart drawing of the Arun mouth (SPEC §11.3):
  * the river's meander, depth-sounding marks, a compass-rose fragment.
  * Rendered at 4–6% opacity on chalk, slightly higher on channel.
  * Decorative only — never behind body text. Colour/opacity come from className,

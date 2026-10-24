@@ -1,27 +1,21 @@
-# Build status
+# Build history
 
-Where the build has got to against the order in PLAN.md §13, and what is next. This is the
-only place progress is recorded: update it in the same change that finishes a step or a
-checkpoint, and keep entries short — the code, the commit history and PLAN.md carry the detail.
-Trade-offs go in `DECISIONS.md`, not here.
+What has been built, newest at the bottom, so a reader can see how the site got here. This is
+**not** the to-do list: open work lives in GitHub issues (code) and in Asana (infrastructure,
+accounts, Barry's sign-offs, launch). See `CLAUDE.md`, "Finding work". Add an entry when a
+meaningful piece lands, and keep it short; the code, the commit history and the closed tickets
+carry the detail. Trade-offs go in `DECISIONS.md`, not here.
 
-**Next: Step 8 — deploy.** Cloudflare (Workers Builds from the repo, fallback Pages), custom
-domain, Full (strict) TLS, zone settings (PLAN §8.5), real Turnstile + Resend keys, DMARC
-`p=none`, rate-limit rule on `POST /api/*` (5 req/min/IP), Web Analytics beacon token, CI
-workflow + Dependabot. **Blocked on Tom's accounts.** Deploy-time items queued so far:
-
-- Worker: second route `/api/profile` in `wrangler.toml`, confirm the Resend plan allows
-  attachments (`worker/README.md`).
-- Site: `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `NEXT_PUBLIC_CF_BEACON_TOKEN` in the build env.
-- Barry to glance at the reworded home lead and `/jobs` intro (taste pass), the five placement
-  titles trimmed of "needed" / "vacancies" / "positions" / "required" (showcase pass), and
-  confirm whether South African passports qualify for Taiwan (Taiwan question set).
+Steps 1–7 below follow the original build order (`docs/SPEC.md` Appendix A.7). What was left of
+steps 8–10 on 24 Oct 2026 became tickets, as did the deploy-time items queued here (the Worker's
+`/api/profile` route, Resend attachments, the Turnstile and beacon build variables) and Barry's
+three open sign-offs.
 
 ## Done
 
 ### Step 1 — scaffold + design system (1 Aug 2026)
 Scaffold, design tokens, layout shell, gull, chart motif, tide line, `/styleguide`, Barry's brand
-media pack. **Checkpoint A closed:** Barry chose Montserrat from eleven candidates (PLAN §11.2).
+media pack. **Checkpoint A closed:** Barry chose Montserrat from eleven candidates (SPEC §11.2).
 
 ### Step 2 — Tina schema + content (31 Aug 2026)
 `tina/config.ts`, the ten listings in `content/jobs/`, local mode (`npm run dev` runs
@@ -38,7 +32,7 @@ generated client and types.
 `/tefl-course` was deleted the same day by the pivot below.
 
 ### Step 5 — `/contact` + the Worker contact route (2 Sep 2026)
-Form hidden until hydration with a `<noscript>` mailto; `worker/` implements the full PLAN §8.3
+Form hidden until hydration with a `<noscript>` mailto; `worker/` implements the full SPEC §8.3
 stack (origin check, honeypot, time-trap, validation + CRLF strip, Turnstile, Resend relay).
 `npm test` runs the unit harness that covers every branch.
 
@@ -46,7 +40,7 @@ stack (origin check, honeypot, time-trap, validation + CRLF strip, Turnstile, Re
 Barry: the ten listings were already-filled roles. `/jobs` is now a record of placements
 (no apply flows, no JobPosting JSON-LD, month + year dates, `active` only hides); `/tefl-course`
 deleted, its legacy redirect re-pointed at `/`; teacher CTAs go to `/contact` and mailto.
-Recorded as the first amendment block at the top of PLAN.md. The home page was then reverted
+Recorded as an amendment to the plan, now folded into `docs/SPEC.md` §5–§6. The home page was then reverted
 to the minimal Checkpoint-A shape (hero fork + sea scene, no content fetch).
 
 ### Step 6 — sitemap, robots, metadata, OG, icons, beacon (2 Sep 2026)
@@ -55,14 +49,14 @@ metadata, one static OG card (`public/images/og.png` from `scripts/og-card.html`
 manifest icons, Cloudflare beacon in the layout (dormant until the token is set).
 
 ### Step 7 — security + quality pass (2 Sep 2026)
-`public/_headers` (PLAN §8.2 suite; CSP trade-off in `DECISIONS.md`), `security.txt`,
+`public/_headers` (SPEC §8.2 suite; CSP trade-off in `DECISIONS.md`), `security.txt`,
 dependency audit (next bumped, `qs` pinned, five moderates accepted — see `DECISIONS.md`).
 Lighthouse: `/` 96/100/100/100, `/jobs` 99/100/100/100, placement page 97/100/100/100.
 
 ### Teacher Profile wizard — `/profile` (2 Sep 2026; Taiwan set 6 Sep 2026)
 Client-side wizard in `components/ProfileWizard.tsx`, forking on a China/Taiwan destination
 question, relayed with the CV as an email attachment by `POST /api/profile` in the same Worker.
-Spec: the second amendment block in PLAN.md, including its Taiwan addendum (Barry's brief,
+Spec: `docs/SPEC.md` §7.2, and §7.3 for the Taiwan route (Barry's brief,
 6 Sep 2026). `npm test` covers both routes and all three wizard forks.
 
 ### Taste pass (2 Sep 2026)
@@ -97,11 +91,8 @@ Tom: the page ran too long. The seven services now sit in one row
 beneath the row; built as tabs so focus, tap and arrow keys reveal it too. Two columns on
 phones, four from `sm`. Trade-off in `DECISIONS.md`.
 
-## Not started
-
-- **Step 8 — deploy.** See the top of this file.
-- **Step 9 — TinaCloud.** Connect, editorial workflow off, invite Barry, test the whole Barry loop
-  for real (PLAN §13).
-- **Step 10 — docs + launch.** `docs/EDITING-GUIDE.md` (Barry) and `docs/MAINTENANCE.md` (Tom)
-  per PLAN §12 — the accepted audit moderates and the CSP fallback need recording there; then
-  **⛔ Checkpoint C** and cutover.
+### Moved to tickets (24 Oct 2026)
+`PLAN.md` split: the spec into `docs/SPEC.md` (same § numbers, amendments folded in, voided text
+kept in Appendix A), open work into nine GitHub issues and the Asana *Development tasks* project
+(launch areas L1–L6), with the dependency chain through to cutover. `CLAUDE.md` now points at the
+tickets. Decision in `DECISIONS.md`.

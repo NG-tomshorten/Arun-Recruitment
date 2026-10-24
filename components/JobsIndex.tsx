@@ -10,10 +10,10 @@ import {
 import { APPLY_EMAIL } from "@/lib/site";
 
 /**
- * The /jobs index body (PLAN §6 — amended 2 Sep 2026: a showcase of the
+ * The /jobs index body (SPEC §6 — amended 2 Sep 2026: a showcase of the
  * placements we have made, not a job board). Showcase pass, 6 Sep 2026: the
  * select-and-sort bar went — a search form is what makes a page read as a
- * job board — and browsing is by chip (the filter chips of PLAN §11.4 and
+ * job board — and browsing is by chip (the filter chips of SPEC §11.4 and
  * /styleguide): country, then type of school. No salary sort, no city
  * select; the decision is in docs/DECISIONS.md. Chip state still syncs to
  * URL params (?country=taiwan) so a filtered view is shareable.
@@ -78,7 +78,7 @@ function writeFilters(filters: Filters) {
 }
 
 /**
- * One row of filter chips (PLAN §11.4): a label, "All", then one chip per
+ * One row of filter chips (SPEC §11.4): a label, "All", then one chip per
  * option. Toggle buttons with aria-pressed — foam/channel idle, the pressed
  * chip inverts to channel/chalk.
  */

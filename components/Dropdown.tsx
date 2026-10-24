@@ -3,8 +3,8 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 /**
- * Custom dropdown for the /profile wizard (PLAN amendment 2 Sep 2026
- * (profile)) — a button + listbox in the site's form styling, because the
+ * Custom dropdown for the /profile wizard (SPEC §7.2) — a button +
+ * listbox in the site's form styling, because the
  * native <select> can't do multi-select without the dire <select multiple>
  * UI and can't be styled to match. Single mode picks one value and closes;
  * multiple mode toggles values and stays open.

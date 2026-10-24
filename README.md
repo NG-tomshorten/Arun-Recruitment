@@ -27,15 +27,16 @@ data, no cookies. Target running cost: £0/month.
 
 | File | What it is |
 |---|---|
-| [`PLAN.md`](PLAN.md) | The spec: architecture, security, design, content model, build order. Amendments at the top override the sections they contradict. |
-| [`docs/STATUS.md`](docs/STATUS.md) | Where the build has got to and what is next. |
+| [`docs/SPEC.md`](docs/SPEC.md) | The spec: architecture, routes, content model, forms, security, design, launch. |
+| [GitHub issues](https://github.com/NG-tomshorten/Arun-Recruitment/issues) | Open code work. Infrastructure, accounts and launch tasks are in Asana (see `CLAUDE.md`, "Finding work"). |
+| [`docs/STATUS.md`](docs/STATUS.md) | Build history: what has been built so far. |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Engineering trade-offs already made, and why. |
 | [`CLAUDE.md`](CLAUDE.md) | How to work in this repo: conventions, guardrails, verification. Written for Claude Code, useful for people. |
 | [`site-capture.md`](site-capture.md) | Full capture of the old site (1 Aug 2026); the only source of copy and job data. |
 | [`worker/README.md`](worker/README.md) | The form-relay Worker: local dev, curl examples, deploy steps. |
 | [`brand/README.md`](brand/README.md) | Logo derivatives and the Futura licensing trap. |
 
-`docs/EDITING-GUIDE.md` (for Barry) and `docs/MAINTENANCE.md` (for Tom) land at build step 10.
+`docs/EDITING-GUIDE.md` (for Barry) and `docs/MAINTENANCE.md` (for Tom) are still to write (issues #6 and #5).
 
 ## Commands
 

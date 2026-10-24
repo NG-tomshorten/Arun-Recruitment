@@ -3,7 +3,7 @@
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 
 /**
- * The seven-service menu on /for-employers (PLAN §6: "a clean grid with
+ * The seven-service menu on /for-employers (SPEC §6: "a clean grid with
  * one-line descriptions"). Compact pass, 7 Sep 2026: the services sit in
  * one row, and the description of the one under the pointer
  * shows beneath the row instead of every description stacking down the

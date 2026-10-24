@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-// Self-hosted via next/font (PLAN §11.2). Montserrat chosen by Barry at
+// Self-hosted via next/font (SPEC §11.2). Montserrat chosen by Barry at
 // Checkpoint A (Aug 2026) from the font-lab comparison, replacing Fraunces.
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   description:
     "Teacher recruitment from West Sussex: English-teaching placements in Taiwan and mainland China for British and Commonwealth graduates, and recruitment services for schools and employers.",
-  // One static OG card for every page (PLAN §9, simplified by choice —
+  // One static OG card for every page (SPEC §9, simplified by choice —
   // no per-placement image generation). public/images/og.png.
   openGraph: {
     siteName: "Arun Language Training & Recruitment",
@@ -73,9 +73,9 @@ export default function RootLayout({
           </main>
         </div>
         <Footer />
-        {/* Cloudflare Web Analytics (PLAN §9) — cookieless, the one
+        {/* Cloudflare Web Analytics (SPEC §9) — cookieless, the one
             permitted analytics script. The token is set in the deploy
-            environment (PLAN §13 step 8); without it, no script ships. */}
+            environment (SPEC §13, deploy); without it, no script ships. */}
         {process.env.NEXT_PUBLIC_CF_BEACON_TOKEN && (
           <script
             defer

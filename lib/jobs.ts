@@ -9,13 +9,13 @@ import {
 } from "@/lib/format";
 
 /**
- * Server-side placement data access (PLAN §5, §6 — amended 2 Sep 2026: the
+ * Server-side placement data access (SPEC §5, §6 — amended 2 Sep 2026: the
  * listings are a record of placements we have made, not open vacancies, so
  * there is no apply flow and no JobPosting JSON-LD; structured job-posting
  * markup on filled roles would misrepresent them to Google).
  *
  * Everything consumes the types Tina generates — no hand-written Job type
- * (PLAN §5). Queries run against the local GraphQL server that `tinacms dev`
+ * (SPEC §5). Queries run against the local GraphQL server that `tinacms dev`
  * (development) or `tinacms build --local -c "next build"` (production
  * build) keeps alive; nothing here executes at request time — the site is
  * static. Client-safe formatting lives in lib/format.ts.
@@ -23,7 +23,7 @@ import {
 
 export { SITE_URL, APPLY_EMAIL } from "@/lib/site";
 
-/** The filename is the slug is the URL (PLAN §5). */
+/** The filename is the slug is the URL (SPEC §5). */
 export type JobWithSlug = Job & { slug: string };
 
 export async function fetchAllJobs(): Promise<JobWithSlug[]> {

@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 import { TideLine } from "@/components/TideLine";
 
 /**
- * /privacy — PLAN §4 (same path as the old site, so no redirect) and PLAN §6:
+ * /privacy — SPEC §4 (same path as the old site, so no redirect) and SPEC §6:
  * the existing policy ported **verbatim** from site-capture.md §5. Nothing here
  * is rewritten, modernised or summarised, including the original's own typos
  * and its mis-ordered contents list. Where the old text describes something the
- * rebuilt site does not do, the text stays and a TODO(PLAN §6) marks it.
+ * rebuilt site does not do, the text stays and a TODO(SPEC §6) marks it.
  */
 
 export const metadata: Metadata = {
@@ -41,7 +41,7 @@ export default function Privacy() {
         <TideLine className="mt-4 max-w-40" />
 
         {/*
-          TODO(PLAN §6): this page is a verbatim port of the policy last updated
+          TODO(SPEC §6): this page is a verbatim port of the policy last updated
           13 May 2018 (site-capture.md §5). Two whole-document problems, on top
           of the section-by-section ones marked below:
             1. It is written against the EU General Data Protection Regulation
@@ -49,7 +49,7 @@ export default function Privacy() {
                governed by the UK GDPR and the Data Protection Act 2018.
             2. It describes cookies, automatic data collection, marketing
                profiles, user accounts and email marketing — none of which the
-               rebuilt site does (CLAUDE.md guardrail 4, PLAN §7).
+               rebuilt site does (CLAUDE.md guardrail 4, SPEC §7).
           It needs a proper legal review before it can be relied on. That review
           is out of scope for the rebuild — not Tom's job and not Barry's.
         */}
@@ -72,7 +72,7 @@ export default function Privacy() {
 
         <Section title="This Privacy Policy covers">
           {/*
-            TODO(PLAN §6): the original's contents list does not match its own
+            TODO(SPEC §6): the original's contents list does not match its own
             body. Items 3 and 4 here are the reverse of body sections 3 and 4,
             and item 7 ("any email alerts that you receive") is worded
             differently from body section 7 ("our emails"). Both preserved as
@@ -113,10 +113,10 @@ export default function Privacy() {
           </p>
 
           {/*
-            TODO(PLAN §6): the rebuilt site does none of this. It logs no IP
+            TODO(SPEC §6): the rebuilt site does none of this. It logs no IP
             addresses, gathers no demographic data or browsing patterns, and
             builds no marketing profiles. The only measurement is Cloudflare Web
-            Analytics (PLAN §9) — cookieless, aggregate, no per-visitor profile.
+            Analytics (SPEC §9) — cookieless, aggregate, no per-visitor profile.
           */}
           <SubHeading>
             Information that we automatically collect (including use of
@@ -135,7 +135,7 @@ export default function Privacy() {
           </p>
 
           {/*
-            TODO(PLAN §6): this whole subsection is inaccurate for the new site.
+            TODO(SPEC §6): this whole subsection is inaccurate for the new site.
             It sets no cookies at all and has no cookie banner (CLAUDE.md
             guardrail 4) — so there is nothing to disable and no service that
             breaks if you do. There are also no registered users, no sign-in and
@@ -162,11 +162,11 @@ export default function Privacy() {
         </Section>
 
         {/*
-          TODO(PLAN §6): the stated legal basis is consent, under the EU GDPR.
+          TODO(SPEC §6): the stated legal basis is consent, under the EU GDPR.
           The rebuilt site itself handles personal data in two relayed flows:
           the /contact enquiry (name, email, message) and the /profile teacher
-          wizard (its placement answers, name, email, CV attachment — PLAN
-          amendment 2 Sep 2026 (profile)). Both are relayed to info@ and never
+          wizard (its placement answers, name, email, CV attachment — SPEC
+          §7.2). Both are relayed to info@ and never
           stored. The profile flow's background-check question is a yes/no
           flag only — deliberately no offence detail is collected. Both the
           basis and the regulation cited need a lawyer's eye. Also note "Your
@@ -215,11 +215,11 @@ export default function Privacy() {
         </Section>
 
         {/*
-          TODO(PLAN §6): check this against what the rebuilt site actually does.
+          TODO(SPEC §6): check this against what the rebuilt site actually does.
           The only automated third-party handling is the two form relays —
           the /contact enquiry and the /profile teacher wizard (CV attachment
-          included), both Cloudflare Worker → Resend → info@ (PLAN §8.3 and
-          PLAN amendment 2 Sep 2026 (profile)) — which transmit and store
+          included), both Cloudflare Worker → Resend → info@ (SPEC §8.3 and
+          SPEC §7.2) — which transmit and store
           nothing. Sharing candidate details with schools still happens by
           email, off-site, exactly as before.
         */}
@@ -247,13 +247,13 @@ export default function Privacy() {
         </Section>
 
         {/*
-          TODO(PLAN §6): several things in this section describe features the
+          TODO(SPEC §6): several things in this section describe features the
           rebuilt site does not have — there is no identity authentication, no
           personalisation, no user account and no registration process. The
-          /profile teacher wizard (PLAN amendment 2 Sep 2026 (profile)) does
+          /profile teacher wizard (SPEC §7.2) does
           accept a CV, which is emailed to info@ as an attachment and never
           stored on the site; candidates can also still apply by plain email
-          (PLAN §7).
+          (SPEC §7).
         */}
         <Section title="4. How we use your personal information">
           <p className="mt-5">
@@ -293,7 +293,7 @@ export default function Privacy() {
         </Section>
 
         {/*
-          TODO(PLAN §6): the EEA framing is pre-Brexit. The United Kingdom has
+          TODO(SPEC §6): the EEA framing is pre-Brexit. The United Kingdom has
           been outside the EEA since 2020, so "transfers outside of the EEA" no
           longer describes the position of a UK data controller, and the
           consent-based transfer mechanism described here is not how UK
@@ -335,10 +335,10 @@ export default function Privacy() {
         </Section>
 
         {/*
-          TODO(PLAN §6): confirm dpo@arunlanguagetraining.com is still a
+          TODO(SPEC §6): confirm dpo@arunlanguagetraining.com is still a
           monitored mailbox — it appears nowhere else in the rebuild, whose
           published addresses are info@arunlanguagetraining.com and
-          barry.shorten@arunlanguagetraining.com (PLAN §6). A rights request
+          barry.shorten@arunlanguagetraining.com (SPEC §6). A rights request
           landing in a dead mailbox is the one failure here with legal teeth.
         */}
         <Section title="6. Your rights">
@@ -386,7 +386,7 @@ export default function Privacy() {
         </Section>
 
         {/*
-          TODO(PLAN §6): there is no mailing list and no marketing email in the
+          TODO(SPEC §6): there is no mailing list and no marketing email in the
           rebuilt system, so there is no unsubscribe link to click. The site
           sends nothing; the only outbound mail is Barry replying to an enquiry.
         */}

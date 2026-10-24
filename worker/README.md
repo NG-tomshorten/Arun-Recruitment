@@ -1,7 +1,6 @@
 # Form relay Worker
 
-Two routes in one Worker (PLAN §8.3; the profile route was added by PLAN
-amendment 2 Sep 2026 (profile)):
+Two routes in one Worker (SPEC §8.3; the profile route was added by SPEC §7.2):
 
 - `POST /api/contact` — relays the `/contact` enquiry form.
 - `POST /api/profile` — relays the `/profile` Teacher Profile wizard,
@@ -104,7 +103,7 @@ There is also a dependency-free unit harness: `node worker/test-worker.mjs`
 runs the fetch handler in Node with Turnstile/Resend stubbed and asserts
 every branch of both routes.
 
-## Deploy (PLAN §13 step 8 — not before)
+## Deploy (SPEC §13, deploy — not before)
 
 1. `npx wrangler deploy` from this directory (Cloudflare account with the zone).
 2. Uncomment both routes in `wrangler.toml` once DNS is in the account.

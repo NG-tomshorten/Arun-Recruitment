@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 export const dynamic = "force-static";
 
 /**
- * sitemap.xml (PLAN §9), generated at build time. Excluded on purpose:
+ * sitemap.xml (SPEC §9), generated at build time. Excluded on purpose:
  * hidden placements (noindexed, like /admin), the dev-only /styleguide,
  * and the deliberately dead /gdpr-consent.
  */

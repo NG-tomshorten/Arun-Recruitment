@@ -3,7 +3,7 @@ import type { Job } from "@/tina/__generated__/types";
 /**
  * Client-safe display formatting shared by the jobs index (a client
  * component) and the server-rendered pages. Type-only imports from Tina's
- * generated types (PLAN §5 — no hand-written parallel Job type); nothing
+ * generated types (SPEC §5 — no hand-written parallel Job type); nothing
  * here may import the Tina client or Node APIs.
  */
 
@@ -11,7 +11,7 @@ export type JobSalary = NonNullable<Job["salary"]>;
 
 /**
  * The serialisable projection of a placement that crosses the server →
- * client boundary for the /jobs index (PLAN §6 as amended 2 Sep 2026: the
+ * client boundary for the /jobs index (SPEC §6 as amended 2 Sep 2026: the
  * page is a record of filled placements, not a job board). Display strings
  * are precomputed server-side: the card is a record — location, the role,
  * then a short fact list (salary with approx-GBP, students, what was
@@ -92,7 +92,7 @@ export function formatMonthYear(iso: string): string {
 /**
  * URL-param value for a filter option ("Taiwan" → "taiwan", "Language school"
  * → "language-school"). Mirrors the slugify in tina/config.ts so shareable
- * filter URLs (PLAN §6, `?country=taiwan`) stay readable.
+ * filter URLs (SPEC §6, `?country=taiwan`) stay readable.
  */
 export function filterParam(value: string): string {
   return value

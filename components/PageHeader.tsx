@@ -7,7 +7,7 @@ import { TideLine } from "./TideLine";
  * and lead over the chart motif, so /jobs, /for-employers, /contact and
  * /profile share the home page's atmosphere instead of opening on flat
  * chalk. The motif sits at 3.5% here — quieter than the home hero's 5%,
- * and only ever behind the heading block (PLAN §11.3: never behind body
+ * and only ever behind the heading block (SPEC §11.3: never behind body
  * text). Page bodies follow in their own container.
  */
 export function PageHeader({

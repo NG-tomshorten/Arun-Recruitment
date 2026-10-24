@@ -1,6 +1,6 @@
 # Site capture — arunlanguagetraining.com
 
-Captured 1 August 2026 by crawling the live site (all 12 resolving URLs downloaded and transcribed; HTML comments inspected to separate live content from retired content). This file is the source of truth for all copy and data in the rebuild. Section numbers are referenced from `PLAN.md` — do not renumber.
+Captured 1 August 2026 by crawling the live site (all 12 resolving URLs downloaded and transcribed; HTML comments inspected to separate live content from retired content). This file is the source of truth for all copy and data in the rebuild. Section numbers are referenced from `docs/SPEC.md` and code comments ("capture §n") — do not renumber.
 
 **Re-verified 18 August 2026** — live site unchanged since capture. All 12 URLs still resolve 200;
 `/gdpr-consent` still 404s. Page copy, all ten listings, salary figures, company details, the four

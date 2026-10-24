@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 /**
- * The button (PLAN §11.4). Both variants carry the same 1.5px border box so
+ * The button (SPEC §11.4). Both variants carry the same 1.5px border box so
  * they sit at one height side by side; hover deepens or washes, pressing
  * nudges down a pixel (taste pass, 6 Sep 2026). Colour and transform only —
  * 150ms ease-out, stilled by the reduced-motion block in globals.css.

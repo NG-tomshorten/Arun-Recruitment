@@ -4,8 +4,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 
 /**
- * /profile — the Teacher Profile wizard (PLAN amendment 2 Sep 2026
- * (profile), with its Taiwan addendum): a few questions — the set depends
+ * /profile — the Teacher Profile wizard (SPEC §7.2,
+ * with its Taiwan route in §7.3): a few questions — the set depends
  * on the China/Taiwan destination — plus contact details and a CV, relayed
  * to Barry's inbox by the Worker (worker/index.ts) and never stored. The
  * <noscript> block is the no-JS path: Turnstile needs JS, so without it

@@ -1,7 +1,7 @@
 import { defineConfig } from 'tinacms'
 
 /**
- * TinaCMS schema — the content model for the whole site (PLAN §5).
+ * TinaCMS schema — the content model for the whole site (SPEC §5).
  *
  * This file is what Barry actually lives in: he logs in at /admin, fills labelled
  * fields and clicks save. Every label and description below is written for him,
@@ -13,7 +13,7 @@ import { defineConfig } from 'tinacms'
 
 /*
  * ── CHECKPOINT B NOTES ──────────────────────────────────────────────────────
- * Places where PLAN §5 and the tinacms 3.12 API don't line up exactly. Each was
+ * Places where SPEC §5 and the tinacms 3.12 API don't line up exactly. Each was
  * implemented as the closest faithful thing; none is a silent deviation.
  *
  * CHECKPOINT B NOTE 1 — `ui.defaultItem` is not in the published `UICollection`
@@ -35,9 +35,9 @@ import { defineConfig } from 'tinacms'
  *
  * CHECKPOINT B NOTE 3 — `ui.filename.readonly` makes the filename read-only
  *   always, not only after creation; 3.12 has no "lock it once saved" option.
- *   That is stricter than PLAN §5 asks and is the right side to err on: the
+ *   That is stricter than SPEC §5 asks and is the right side to err on: the
  *   slugify callback still fills the filename in as Barry types the title, so he
- *   never types or sees a slug either way (PLAN §5), and it can never be edited
+ *   never types or sees a slug either way (SPEC §5), and it can never be edited
  *   afterwards (CLAUDE.md guardrail 8). The one other rename route is the Rename
  *   item in the job-list menu, which 3.12 gates on `allowedActions.delete` — so
  *   `delete: false` closes it and enforces guardrail 10 at the same time.
@@ -54,24 +54,24 @@ import { defineConfig } from 'tinacms'
  *   about an object that is present but only partly filled.
  *
  * CHECKPOINT B NOTE 6 — no `ui.router` here. That switches the admin into
- *   contextual (in-page) editing, which PLAN §10 leaves as a judgement call once
+ *   contextual (in-page) editing, which SPEC §10 leaves as a judgement call once
  *   the job pages exist and can be tried for real. Adding it now would give Barry
  *   a preview pane that looks editable but isn't. Revisit with the job pages.
  * ────────────────────────────────────────────────────────────────────────────
  */
 
-// PLAN §10 — branch comes from the environment so local mode works with nothing set.
+// SPEC §10 — branch comes from the environment so local mode works with nothing set.
 // TinaCloud is wired last, as pure config; no secret is ever written into this file
 // (CLAUDE.md guardrail 6). With all of these unset, `tinacms dev` runs in local mode.
 const branch =
   process.env.NEXT_PUBLIC_TINA_BRANCH || // set explicitly if we ever need to override
-  process.env.CF_PAGES_BRANCH || // Cloudflare Pages, where this site deploys (PLAN §3)
+  process.env.CF_PAGES_BRANCH || // Cloudflare Pages, where this site deploys (SPEC §3)
   process.env.HEAD || // Netlify
   process.env.VERCEL_GIT_COMMIT_REF || // Vercel
   ''
 
 /**
- * PLAN §5 — "Barry never sees or types a slug." The filename is generated from the
+ * SPEC §5 — "Barry never sees or types a slug." The filename is generated from the
  * job title, and the filename IS the URL: content/jobs/<name>.mdx → /jobs/<name>.
  * There is deliberately no `slug` field.
  */
@@ -100,7 +100,7 @@ const jobCollectionUI: CollectionUI & {
   defaultItem?: () => Record<string, unknown>
 } = {
   filename: {
-    // PLAN §5 — generate the slug from the title…
+    // SPEC §5 — generate the slug from the title…
     slugify: (values) =>
       slugifyTitle(typeof values?.title === 'string' ? values.title : ''),
     // …and never let it change afterwards. CLAUDE.md guardrail 8: renaming a job
@@ -119,7 +119,7 @@ const jobCollectionUI: CollectionUI & {
     create: true,
     delete: false,
   },
-  // PLAN §5 — a new job starts half-filled rather than blank.
+  // SPEC §5 — a new job starts half-filled rather than blank.
   defaultItem: () => ({
     active: true,
     postedDate: new Date().toISOString(),
@@ -142,13 +142,13 @@ export default defineConfig({
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID ?? '',
   token: process.env.TINA_TOKEN ?? '',
 
-  // PLAN §10 — the admin builds to static files served at /admin/index.html.
+  // SPEC §10 — the admin builds to static files served at /admin/index.html.
   build: {
     outputFolder: 'admin',
     publicFolder: 'public',
   },
 
-  // PLAN §10 — Tina's git media handler. Uploads land in the repo; no third-party
+  // SPEC §10 — Tina's git media handler. Uploads land in the repo; no third-party
   // asset host, nothing else to pay for or keep secure (CLAUDE.md guardrail 4).
   media: {
     tina: {
@@ -252,7 +252,7 @@ export default defineConfig({
               'For example "20–30 students". Small classes are a real selling point, so it is worth filling in.',
           },
           {
-            // PLAN §5 — one object, not a list: a job has exactly one salary.
+            // SPEC §5 — one object, not a list: a job has exactly one salary.
             // GBP approximations are worked out at build time from lib/rates.ts —
             // never a field Barry fills in.
             type: 'object',
@@ -326,7 +326,7 @@ export default defineConfig({
               'The shape of the week in plain words — for example "Monday to Friday, evenings and weekends free" or "Evenings and weekends, two weekdays off".',
           },
           {
-            // PLAN §5 — one object, not a list.
+            // SPEC §5 — one object, not a list.
             type: 'object',
             name: 'requirements',
             label: 'Requirements',
@@ -366,7 +366,7 @@ export default defineConfig({
                   'For example "Two years\' classroom experience preferred". Leave blank if none is needed.',
               },
               {
-                // PLAN §5 — checkbox group, not free text.
+                // SPEC §5 — checkbox group, not free text.
                 type: 'string',
                 name: 'passports',
                 label: 'Passports accepted',
@@ -411,7 +411,7 @@ export default defineConfig({
               'When the employer wants people to begin — for example "August 2026, or by arrangement".',
           },
           {
-            // PLAN §5 — the structured fields above carry the headline facts; this
+            // SPEC §5 — the structured fields above carry the headline facts; this
             // carries everything else. Rendered through Tina's rich-text renderer,
             // never dangerouslySetInnerHTML (CLAUDE.md guardrail 5).
             type: 'rich-text',

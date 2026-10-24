@@ -1,6 +1,6 @@
-# Cloudflare redirects (PLAN §4).
+# Cloudflare redirects (SPEC §4).
 #
-# The ten 301s below follow the table in PLAN §4, amended 2 Sep 2026: the
+# The ten 301s below follow the table in SPEC §4, amended 2 Sep 2026: the
 # TEFL affiliate page was dropped entirely (stale — Barry), so its legacy
 # path now joins the six retired "English courses in the UK" pages
 # (capture §6) in pointing at /. Sending retired pages to / consolidates
@@ -10,7 +10,7 @@
 # /privacy keeps the old path, so it needs no redirect.
 #
 # /gdpr-consent is deliberately left dead. It already 404s on the live site;
-# PLAN §4 says leave it dead and keep it out of the sitemap, and the custom
+# SPEC §4 says leave it dead and keep it out of the sitemap, and the custom
 # 404 page handles it. Do not add a line for it.
 
 /recruitment                          /for-employers   301
@@ -24,7 +24,7 @@
 /language-course-pricing              /                301
 /things-to-do-in-littlehampton        /                301
 
-# TinaCMS admin directory index (PLAN §10). Tina builds the admin to
+# TinaCMS admin directory index (SPEC §10). Tina builds the admin to
 # /admin/index.html; Cloudflare usually serves the directory index itself,
 # and this 200 rewrite guarantees /admin resolves rather than 404ing.
 /admin  /admin/index.html  200

@@ -5,7 +5,7 @@ import { fetchShownJobs, toCardData } from "@/lib/jobs";
 import { APPLY_EMAIL, SITE_URL } from "@/lib/site";
 
 /**
- * /jobs — the placements record (PLAN §6, amended 2 Sep 2026: the roles on
+ * /jobs — the placements record (SPEC §6, amended 2 Sep 2026: the roles on
  * the old site were already filled, so this page is a showcase of the
  * placements we have made, not a job board). Card grid, client-side filters
  * and sort with shareable URL params, aria-live results count. Hidden

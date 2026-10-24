@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 /**
- * A site-nav link that knows whether it is the current page (PLAN §11.4
+ * A site-nav link that knows whether it is the current page (SPEC §11.4
  * accessibility bar — taste pass, 6 Sep 2026). Sets aria-current="page" on
  * the section it belongs to, including subpages (/jobs/… under /jobs), and
  * styles from that attribute so the marker and the semantics can't drift.
