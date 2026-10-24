@@ -65,7 +65,8 @@ import { defineConfig } from 'tinacms'
 // (CLAUDE.md guardrail 6). With all of these unset, `tinacms dev` runs in local mode.
 const branch =
   process.env.NEXT_PUBLIC_TINA_BRANCH || // set explicitly if we ever need to override
-  process.env.CF_PAGES_BRANCH || // Cloudflare Pages, where this site deploys (SPEC §3)
+  process.env.WORKERS_CI_BRANCH || // Cloudflare Workers Builds, where this site deploys (SPEC §1)
+  process.env.CF_PAGES_BRANCH || // Cloudflare Pages, the accepted fallback (SPEC §1)
   process.env.HEAD || // Netlify
   process.env.VERCEL_GIT_COMMIT_REF || // Vercel
   ''

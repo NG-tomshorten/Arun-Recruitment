@@ -6,6 +6,7 @@
     "dev": "tinacms dev -c \"next dev\"",
     "dev:next": "next dev",
     "build": "npm run check:contrast && rm -rf .next tina/__generated__/.cache && tinacms build --local --port ${TINA_PORT:-4001} --datalayer-port ${TINA_DATALAYER_PORT:-9000} --skip-cloud-checks --no-client-build-cache -c \"NODE_ENV=production next build\"",
+    "build:prod": "npm run check:contrast && rm -rf .next tina/__generated__/.cache && tinacms build --content=local --no-client-build-cache -c \"NODE_ENV=production next build\"",
     "check:contrast": "node scripts/check-contrast.mjs",
     "verify": "bash scripts/verify-build.sh",
     "test": "node worker/test-worker.mjs",
