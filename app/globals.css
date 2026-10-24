@@ -116,56 +116,377 @@
   }
 }
 
-/* The shoal (components/Shoal.tsx) — same ambient licence as the shore.
-   swim: one full crossing of the viewport (the fish starts 6rem off-screen
-   left and exits off-screen right). bob: the vertical waver, run alternate. */
-@keyframes fish-swim {
+/* The shoal (components/Shoal.tsx, silhouettes in components/SeaLife.tsx)
+   — same ambient licence as the shore. Realism pass, 7 Sep 2026.
+
+   Each swimmer runs one path animation on its outer wrapper, animating
+   three things at once: translate() for where it is, scaleX() for which
+   way it faces, and --beat-amp for how hard the tail works. A burst is a
+   segment with the kick-then-drag curve below (fast out of the keyframe,
+   slowing to a coast); the near-flat segments between are the glides,
+   where --beat-amp drops so the tail goes quiet. A turn interpolates
+   scaleX 1 → -1, so the fish narrows to a line and widens facing the
+   other way — a fish turning through the camera line. Horizontal travel
+   is in vw so the paths scale with the viewport; crossing paths start
+   with the wrapper 8rem off-screen left and end 8rem past the right edge,
+   patrol paths loop in place (0% and 100% match), so under
+   prefers-reduced-motion the still shows the patrolling fish and hides
+   the crossings.
+
+   Both custom properties are registered so they interpolate; the tail
+   path multiplies its own fast --beat by the inherited --beat-amp. */
+@property --beat-amp {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --beat {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes tail-beat {
+  from {
+    --beat: -1;
+  }
   to {
-    transform: translateX(calc(100vw + 10rem));
+    --beat: 1;
   }
 }
 
-/* The shark: crosses during the first 15% of a long cycle, then waits
-   off-screen — one slow pass every couple of minutes. */
-@keyframes shark-swim {
-  0% {
-    transform: translateX(0);
-  }
-  15%,
-  100% {
-    transform: translateX(calc(100vw + 16rem));
-  }
-}
-
-/* The shark's catch: a fish on the shark's own 140s timeline. It swims in
-   from the right; at ~9% the shark's nose reaches it and it vanishes
-   (eaten), staying gone until the cycle restarts off-screen. */
-@keyframes fish-victim {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  8.8% {
-    opacity: 1;
-  }
-  9.4% {
-    opacity: 0;
-  }
-  15% {
-    transform: translateX(-40vw);
-  }
-  100% {
-    transform: translateX(-40vw);
-    opacity: 0;
-  }
-}
-
+/* The small drift under every body — a slow waver and a lean, run alternate */
 @keyframes fish-bob {
   from {
-    transform: translateY(-9px) rotate(-4deg);
+    transform: translateY(-3px) rotate(-2.5deg);
   }
   to {
-    transform: translateY(9px) rotate(4deg);
+    transform: translateY(3px) rotate(2.5deg);
+  }
+}
+
+/* A school member's own wobble inside the school's path */
+@keyframes school-jitter {
+  from {
+    transform: translate(-2px, -3px);
+  }
+  to {
+    transform: translate(2px, 3px);
+  }
+}
+
+/* Dart: a crossing in five bursts with pauses between, no turns —
+   the skittish small-fish traverse */
+@keyframes fish-dart {
+  0% {
+    transform: translate(0, 0) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  13% {
+    transform: translate(17vw, -5px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  19% {
+    transform: translate(18vw, -3px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  30% {
+    transform: translate(32vw, 7px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  38% {
+    transform: translate(33vw, 10px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  50% {
+    transform: translate(49vw, 2px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  55% {
+    transform: translate(50vw, 4px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  68% {
+    transform: translate(66vw, -6px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  75% {
+    transform: translate(67vw, -8px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  87% {
+    transform: translate(84vw, -2px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  91% {
+    transform: translate(85vw, -1px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  100% {
+    transform: translate(calc(100vw + 8rem), 3px) scaleX(1);
+    --beat-amp: 0.6;
+  }
+}
+
+/* Wander: a crossing that changes its mind twice — in, a turn back, a
+   turn again, and out */
+@keyframes fish-wander {
+  0% {
+    transform: translate(0, 0) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  9% {
+    transform: translate(16vw, -6px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  13% {
+    transform: translate(17vw, -4px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  23% {
+    transform: translate(36vw, 6px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  28% {
+    transform: translate(37vw, 9px) scaleX(1);
+    --beat-amp: 0.1;
+    animation-timing-function: ease-in-out;
+  }
+  30% {
+    /* the turn */
+    transform: translate(37.4vw, 12px) scaleX(-1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  39% {
+    transform: translate(24vw, 5px) scaleX(-1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  44% {
+    transform: translate(23vw, 3px) scaleX(-1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  52% {
+    transform: translate(14vw, -3px) scaleX(-1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  57% {
+    transform: translate(13.6vw, -1px) scaleX(-1);
+    --beat-amp: 0.1;
+    animation-timing-function: ease-in-out;
+  }
+  59% {
+    /* and back */
+    transform: translate(14vw, 1px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  70% {
+    transform: translate(38vw, -5px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  74% {
+    transform: translate(39vw, -6px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  85% {
+    transform: translate(64vw, -2px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  87% {
+    transform: translate(65vw, -1px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  100% {
+    transform: translate(calc(100vw + 8rem), 2px) scaleX(1);
+    --beat-amp: 0.6;
+  }
+}
+
+/* Patrol: stays in view — out about 28vw in bursts, a turn, back, a turn.
+   Loops seamlessly, so this is the fish still there under reduced motion. */
+@keyframes fish-patrol {
+  0% {
+    transform: translate(0, 0) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  12% {
+    transform: translate(13vw, -5px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  18% {
+    transform: translate(13.6vw, -3px) scaleX(1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  31% {
+    transform: translate(27vw, 5px) scaleX(1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  40% {
+    transform: translate(28vw, 8px) scaleX(1);
+    --beat-amp: 0.1;
+    animation-timing-function: ease-in-out;
+  }
+  43% {
+    transform: translate(28.4vw, 10px) scaleX(-1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  56% {
+    transform: translate(16vw, 3px) scaleX(-1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  62% {
+    transform: translate(15vw, 1px) scaleX(-1);
+    --beat-amp: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  78% {
+    transform: translate(2vw, -6px) scaleX(-1);
+    --beat-amp: 0.15;
+    animation-timing-function: ease-in-out;
+  }
+  90% {
+    transform: translate(0.6vw, -3px) scaleX(-1);
+    --beat-amp: 0.1;
+    animation-timing-function: ease-in-out;
+  }
+  94% {
+    transform: translate(0.2vw, -1px) scaleX(1);
+    --beat-amp: 0.3;
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: translate(0, 0) scaleX(1);
+    --beat-amp: 1;
+  }
+}
+
+/* The reef shark's crossing has a lunge in it: between 6% and 7% it
+   covers twice the distance, at the school waiting in its path. The
+   school's position (Shoal.tsx) is the shark's nose at the 6% keyframe. */
+@keyframes shark-hunt {
+  0% {
+    transform: translateX(0);
+    animation-timing-function: linear;
+  }
+  6% {
+    transform: translateX(37.5vw);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  7% {
+    transform: translateX(50vw);
+    animation-timing-function: linear;
+  }
+  18.5%,
+  100% {
+    transform: translateX(calc(100vw + 26rem));
+  }
+}
+
+/* The school in the reef shark's path, on its timeline. Two bolt as it
+   closes — up and away, down and away — and fade into the murk; the
+   straggler flicks too late and vanishes at the nose. All three fade back
+   in during the first 2%, while the shark is still off-screen. */
+@keyframes fish-scatter-up {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  4.6% {
+    transform: translate(0, 0);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  6.4% {
+    transform: translate(22vw, -54px);
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+  8%,
+  100% {
+    transform: translate(30vw, -70px);
+    opacity: 0;
+  }
+}
+
+@keyframes fish-scatter-down {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  4.9% {
+    transform: translate(0, 0);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  6.6% {
+    transform: translate(18vw, 40px);
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+  8%,
+  100% {
+    transform: translate(24vw, 52px);
+    opacity: 0;
+  }
+}
+
+@keyframes fish-scatter-taken {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  5.85% {
+    transform: translate(0, 0);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.1, 0.7, 0.25, 1);
+  }
+  6.12% {
+    transform: translate(1.4vw, 5px);
+    opacity: 1;
+  }
+  6.15%,
+  100% {
+    transform: translate(1.4vw, 5px);
+    opacity: 0;
   }
 }
 

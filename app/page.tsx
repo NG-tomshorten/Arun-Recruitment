@@ -35,7 +35,7 @@ export default function Home() {
       </section>
       <Shore />
       {/* Shallows deepening into the channel (sea-fade, globals.css), with
-          the shoal cruising through; the fade lands on channel to meet the
+          the shoal living in it; the fade lands on channel to meet the
           footer seamlessly. Any future text: ink above the fade, chalk on
           the deep end. */}
       <section className="sea-fade relative h-80 overflow-hidden">

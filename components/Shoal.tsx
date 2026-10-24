@@ -1,82 +1,98 @@
+import { SeaLife, type SeaLifeKind } from "@/components/SeaLife";
+
 /**
- * The shoal — small fish cruising the sea-fade section on the home page,
- * with a shark passing through every couple of minutes that takes one of
- * them. CSS-only: slow linear traverses (fish-swim / shark-swim /
- * fish-victim) paired with an ease-in-out bob (fish-bob), all in
- * globals.css. Varied speeds, depths, sizes and staggered negative delays
- * make the motion read as random while staying deterministic. The global
- * prefers-reduced-motion rule stills the whole scene.
+ * The shoal — life in the sea-fade section on the home page. Realism
+ * pass, 7 Sep 2026 (Tom), trimmed back the same week: a few fish of each size,
+ * one school, and a reef shark every couple of minutes that lunges at a
+ * small group and takes one.
+ *
+ * All CSS: every creature is a wrapper running one of the path keyframes
+ * in globals.css (fish-dart / fish-wander / fish-patrol / shark-hunt), a
+ * bob wrapper for the small drift, and a SeaLife silhouette whose tail
+ * beats in step with the path's effort. Depth is read from the section:
+ * fish near the surface are dark (channel) against the bright shallows,
+ * fish at depth are pale (chalk) against the channel. Mirrored creatures
+ * swim right-to-left by rendering inside a scaleX(-1) box, so one set of
+ * keyframes serves both directions. Varied cycles and negative delays make
+ * the traffic read as random while staying deterministic; the
+ * reduced-motion rule in globals.css stills the lot (crossings end
+ * off-screen, patrols remain).
  * Decorative only — always aria-hidden, never interactive.
  */
-const FISH = [
-  // top = depth in the section; shallow fish are dark (channel), deep fish
-  // pale (chalk). Negative delays scatter them across the width on load.
-  { top: "12%", size: 30, swim: "42s", delay: "-3s", bob: "4.6s", bobDelay: "0s", color: "text-channel", opacity: 0.4, reverse: false },
-  { top: "22%", size: 20, swim: "30s", delay: "-18s", bob: "3.8s", bobDelay: "-1.3s", color: "text-channel", opacity: 0.35, reverse: true },
-  { top: "34%", size: 40, swim: "55s", delay: "-30s", bob: "5.4s", bobDelay: "-2s", color: "text-channel", opacity: 0.3, reverse: false },
-  { top: "48%", size: 26, swim: "36s", delay: "-10s", bob: "4.2s", bobDelay: "-0.7s", color: "text-chalk", opacity: 0.28, reverse: true },
-  { top: "58%", size: 18, swim: "27s", delay: "-22s", bob: "3.5s", bobDelay: "-2.6s", color: "text-chalk", opacity: 0.3, reverse: false },
-  { top: "68%", size: 34, swim: "48s", delay: "-40s", bob: "5s", bobDelay: "-1s", color: "text-chalk", opacity: 0.25, reverse: false },
-  { top: "78%", size: 24, swim: "33s", delay: "-14s", bob: "4s", bobDelay: "-3s", color: "text-chalk", opacity: 0.22, reverse: true },
+
+type BurstPath = "fish-dart" | "fish-wander" | "fish-patrol";
+
+type Swimmer = {
+  kind: Extract<SeaLifeKind, "bream" | "mackerel" | "bass">;
+  /** depth, as % of the section */
+  top: string;
+  /** start x — "-8rem" for a crossing, a % for a patrol */
+  left: string;
+  /** rendered width in px */
+  size: number;
+  path: BurstPath;
+  cycle: string;
+  delay: string;
+  /** tail half-period */
+  beat: string;
+  bob: string;
+  bobDelay: string;
+  color: "text-channel" | "text-chalk";
+  opacity: number;
+  mirror?: boolean;
+};
+
+// Deep water first, so nearer fish paint over farther ones
+const SWIMMERS: Swimmer[] = [
+  { kind: "bass", top: "66%", left: "28%", size: 58, path: "fish-patrol", cycle: "76s", delay: "-52s", beat: "0.34s", bob: "5.2s", bobDelay: "-3.3s", color: "text-chalk", opacity: 0.22 },
+  { kind: "mackerel", top: "84%", left: "-8rem", size: 24, path: "fish-wander", cycle: "48s", delay: "-30s", beat: "0.2s", bob: "3.3s", bobDelay: "-1.4s", color: "text-chalk", opacity: 0.2, mirror: true },
+  { kind: "mackerel", top: "76%", left: "-8rem", size: 42, path: "fish-dart", cycle: "42s", delay: "-18s", beat: "0.24s", bob: "3.8s", bobDelay: "-2.4s", color: "text-chalk", opacity: 0.22 },
+  { kind: "bream", top: "60%", left: "64%", size: 30, path: "fish-patrol", cycle: "44s", delay: "-9s", beat: "0.22s", bob: "3.7s", bobDelay: "-0.8s", color: "text-chalk", opacity: 0.24, mirror: true },
+  { kind: "mackerel", top: "45%", left: "-8rem", size: 26, path: "fish-dart", cycle: "28s", delay: "-4s", beat: "0.18s", bob: "3.1s", bobDelay: "-2s", color: "text-channel", opacity: 0.26 },
+  { kind: "mackerel", top: "40%", left: "-8rem", size: 44, path: "fish-dart", cycle: "31s", delay: "-12s", beat: "0.2s", bob: "3.4s", bobDelay: "-0.6s", color: "text-channel", opacity: 0.3, mirror: true },
+  { kind: "bream", top: "32%", left: "9%", size: 66, path: "fish-patrol", cycle: "54s", delay: "-14s", beat: "0.3s", bob: "4.4s", bobDelay: "0s", color: "text-channel", opacity: 0.36 },
+  { kind: "mackerel", top: "24%", left: "-8rem", size: 40, path: "fish-dart", cycle: "35s", delay: "-22s", beat: "0.22s", bob: "3.6s", bobDelay: "-2.2s", color: "text-channel", opacity: 0.36, mirror: true },
+  { kind: "mackerel", top: "5%", left: "-8rem", size: 22, path: "fish-dart", cycle: "26s", delay: "-15s", beat: "0.18s", bob: "2.9s", bobDelay: "-0.3s", color: "text-channel", opacity: 0.38, mirror: true },
+];
+
+// One school of small mackerel near the surface that moves as one and
+// turns together; each member wobbles a little in its place
+const SCHOOL = {
+  top: "12%",
+  cycle: "50s",
+  delay: "-21s",
+  size: 26,
+  opacity: 0.4,
+  /** the formation's box, so a turn flips it about its own centre */
+  box: [96, 36],
+  members: [
+    { x: 0, y: 9, jitter: "2.1s", delay: "-0.5s" },
+    { x: 22, y: 0, jitter: "1.8s", delay: "-1.3s" },
+    { x: 24, y: 19, jitter: "2.4s", delay: "-0.1s" },
+    { x: 46, y: 5, jitter: "1.9s", delay: "-1.7s" },
+    { x: 50, y: 23, jitter: "2.2s", delay: "-0.9s" },
+  ],
+} as const;
+
+// The reef shark: one crossing per 150s cycle, the first ~10s after load
+const SHARK = { top: "52%", size: 160, cycle: "150s", delay: "-140s", beat: "0.95s", bob: "7s", opacity: 0.3 } as const;
+
+/* Where the shark's nose is at shark-hunt's 6% keyframe: the wrapper's
+   -14rem start plus 37.5vw of travel plus the 160px (10rem) silhouette */
+const HUNT_SCHOOL_LEFT = "calc(37.5vw - 4rem)";
+const HUNT_SCHOOL = [
+  { path: "fish-scatter-up", top: "50%", dx: 0, bob: "3.1s", bobDelay: "-0.7s" },
+  { path: "fish-scatter-down", top: "53.5%", dx: 16, bob: "3.5s", bobDelay: "-1.9s" },
+  { path: "fish-scatter-taken", top: "51.5%", dx: 34, bob: "3.3s", bobDelay: "-1.2s" },
 ] as const;
 
-/* Faces right. Body, dorsal, forked tail and anal fin are one outline;
-   evenodd punches the eye. The pectoral fin overlaps the body, so it is a
-   second path (group opacity on the <svg> keeps the overlap from doubling). */
-function FishShape({
-  size,
-  color,
-  opacity,
-  flip,
-}: {
-  size: number;
-  color: string;
-  opacity: number;
-  flip: boolean;
-}) {
+/* Swim the other way: the same keyframes inside a mirrored box */
+function Mirror({ on, children }: { on?: boolean; children: React.ReactNode }) {
+  if (!on) return children;
   return (
-    <svg
-      viewBox="0 0 32 16"
-      width={size}
-      height={size / 2}
-      className={color}
-      style={{ opacity, transform: flip ? "scaleX(-1)" : undefined }}
-    >
-      <path
-        fillRule="evenodd"
-        d="M1 3.4 Q4.8 5.6 8 6 Q10 4.8 12.6 4.3 L13.2 4.2 Q14 1.5 17.6 1.1 Q18 3 16.9 4.3 Q22.5 4 27.5 5.9 Q30.4 7.1 31 8 Q28 10.6 23.5 11.5 Q20.5 12.1 18.4 12.2 L17.8 12.3 Q16.8 14.7 13.9 15 Q14.5 13.2 15.2 12.1 Q11 11.5 8 10 Q4.8 10.4 1 12.6 Q3.4 8 1 3.4 Z M28.6 7.2 a1 1 0 1 1 -2 0 a1 1 0 1 1 2 0 Z"
-        fill="currentColor"
-      />
-      <path
-        d="M20 9 Q19.2 12 16.6 13.2 Q19.6 12.9 22 10.2 Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-/* Faces right. One continuous outline — tail lobes, dorsal, snout, jaw —
-   with the eye and two gill slits punched out by evenodd; the swept-back
-   pectoral fin is a second path for the same overlap reason as the fish. */
-function SharkShape() {
-  return (
-    <svg
-      viewBox="0 0 64 24"
-      width={112}
-      height={42}
-      className="text-chalk"
-      style={{ opacity: 0.28 }}
-    >
-      <path
-        fillRule="evenodd"
-        d="M2.5 3 Q7 6 12 8.8 Q18 7.2 26.5 6.6 L32 0.8 Q35.2 4.2 36 6.2 Q45 5.9 52 8 Q58.5 9.8 62.5 12.4 Q58.5 14.4 53.5 14.8 L52.2 13.9 L50.8 15.1 Q46 15.9 41.8 16.1 Q26 15.6 17 14.4 Q12.5 13.9 10.2 13.5 L1.8 18.8 Q4.8 14.8 5.1 12.1 Q4.9 8 2.5 3 Z M57.45 11.3 a0.95 0.95 0 1 1 -1.9 0 a0.95 0.95 0 1 1 1.9 0 Z M47.5 9.8 q1 2.4 0 4.8 l-0.8 0.1 q0.9 -2.5 0 -4.9 Z M45.4 9.9 q1 2.3 0 4.6 l-0.8 0.1 q0.9 -2.4 0 -4.7 Z"
-        fill="currentColor"
-      />
-      <path
-        d="M41.8 16.1 L32.5 22.6 Q36 19.5 37.6 15.9 Z"
-        fill="currentColor"
-      />
-    </svg>
+    <div className="absolute inset-0" style={{ transform: "scaleX(-1)" }}>
+      {children}
+    </div>
   );
 }
 
@@ -86,64 +102,78 @@ export function Shoal({ className }: { className?: string }) {
       aria-hidden="true"
       className={`pointer-events-none absolute inset-0 overflow-hidden ${className ?? ""}`}
     >
-      {FISH.map((f, i) => (
+      {SWIMMERS.map((f, i) => (
+        <Mirror key={i} on={f.mirror}>
+          <div
+            className="absolute"
+            style={{
+              top: f.top,
+              left: f.left,
+              animation: `${f.path} ${f.cycle} linear ${f.delay} infinite`,
+            }}
+          >
+            <div style={{ animation: `fish-bob ${f.bob} ease-in-out ${f.bobDelay} infinite alternate` }}>
+              <SeaLife kind={f.kind} size={f.size} className={f.color} opacity={f.opacity} beat={f.beat} />
+            </div>
+          </div>
+        </Mirror>
+      ))}
+
+      <div
+        className="absolute"
+        style={{
+          top: SCHOOL.top,
+          left: "-8rem",
+          width: SCHOOL.box[0],
+          height: SCHOOL.box[1],
+          animation: `fish-wander ${SCHOOL.cycle} linear ${SCHOOL.delay} infinite`,
+        }}
+      >
+        {SCHOOL.members.map((m, j) => (
+          <div
+            key={j}
+            className="absolute"
+            style={{
+              left: m.x,
+              top: m.y,
+              animation: `school-jitter ${m.jitter} ease-in-out ${m.delay} infinite alternate`,
+            }}
+          >
+            <SeaLife kind="mackerel" size={SCHOOL.size} className="text-channel" opacity={SCHOOL.opacity} />
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="absolute"
+        style={{
+          top: SHARK.top,
+          left: "-14rem",
+          animation: `shark-hunt ${SHARK.cycle} linear ${SHARK.delay} infinite`,
+        }}
+      >
+        <div style={{ animation: `fish-bob ${SHARK.bob} ease-in-out infinite alternate` }}>
+          <SeaLife kind="reef-shark" size={SHARK.size} className="text-chalk" opacity={SHARK.opacity} beat={SHARK.beat} />
+        </div>
+      </div>
+
+      {/* The three in the shark's path — they scatter as it lunges, and
+          the last one is taken (fish-scatter-*, on the shark's clock) */}
+      {HUNT_SCHOOL.map((m, i) => (
         <div
           key={i}
           className="absolute"
           style={{
-            top: f.top,
-            left: "-6rem",
-            animation: `fish-swim ${f.swim} linear ${f.delay} infinite${
-              f.reverse ? " reverse" : ""
-            }`,
+            top: m.top,
+            left: `calc(${HUNT_SCHOOL_LEFT} + ${m.dx}px)`,
+            animation: `${m.path} ${SHARK.cycle} linear ${SHARK.delay} infinite`,
           }}
         >
-          <div
-            style={{
-              animation: `fish-bob ${f.bob} ease-in-out ${f.bobDelay} infinite alternate`,
-            }}
-          >
-            <FishShape
-              size={f.size}
-              color={f.color}
-              opacity={f.opacity}
-              flip={f.reverse}
-            />
+          <div style={{ animation: `fish-bob ${m.bob} ease-in-out ${m.bobDelay} infinite alternate` }}>
+            <SeaLife kind="mackerel" size={28} className="text-chalk" opacity={0.28} />
           </div>
         </div>
       ))}
-      {/* The very occasional shark — one 21s crossing per 140s cycle
-          (shark-swim holds it off-screen the rest of the time). The -125s
-          delay lands the first sighting ~15s after load. */}
-      <div
-        className="absolute"
-        style={{
-          top: "55%",
-          left: "-9rem",
-          animation: "shark-swim 140s linear -125s infinite",
-        }}
-      >
-        <div style={{ animation: "fish-bob 7s ease-in-out infinite alternate" }}>
-          <SharkShape />
-        </div>
-      </div>
-      {/* The shark's catch — swims in from the right on the shark's own
-          140s timeline (same delay), meets it about a third of the way
-          across, and vanishes at the moment their paths cross. */}
-      <div
-        className="absolute"
-        style={{
-          top: "57%",
-          right: "-3rem",
-          animation: "fish-victim 140s linear -125s infinite",
-        }}
-      >
-        <div
-          style={{ animation: "fish-bob 3.6s ease-in-out -1s infinite alternate" }}
-        >
-          <FishShape size={22} color="text-chalk" opacity={0.3} flip />
-        </div>
-      </div>
     </div>
   );
 }
