@@ -147,3 +147,10 @@ records are a separate list (`tina/config.ts`) and keep South Africa, because fo
 employers accepted it.
 
 - **Cost:** a South African candidate now picks "Other". That's Barry's call to make.
+
+## 2026-10-24 — `suppressHydrationWarning` on `<html>`
+
+A browser extension on Tom's machine stamps a `data-*` attribute on `<html>` before React
+hydrates, which raised a hydration-mismatch overlay in dev. The flag on `<html>` in
+`app/layout.tsx` silences attribute mismatches on that one element only; mismatches in its
+children still report. Nothing visitors see changes.

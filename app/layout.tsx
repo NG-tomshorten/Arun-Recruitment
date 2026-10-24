@@ -52,9 +52,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // suppressHydrationWarning: browser extensions stamp attributes on
+    // <html> before React hydrates. One level deep only, so real mismatches
+    // further down still surface.
     <html
       lang="en-GB"
       className={`${montserrat.variable} ${inter.variable} h-full`}
+      suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
         <a
