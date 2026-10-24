@@ -182,3 +182,24 @@ instead, which drops both flags and adds `--content=local` (GitHub #1).
 - **Cost:** two scripts to keep in step. Both keep the contrast gate, `NODE_ENV=production` and
   the cache clearing from the 2026-09-01 entry. `build:prod` fails without `NEXT_PUBLIC_TINA_CLIENT_ID`,
   `TINA_TOKEN` and a branch, which is the point.
+
+## 2026-10-24 — A root `wrangler.jsonc` for the site, and `new.` as the staging hostname
+
+Workers Builds runs `npx wrangler deploy` at the repo root. With no config there, Wrangler spots
+Next.js and offers to set the project up as a server app (OpenNext), which guardrail 7 rules
+out. The root `wrangler.jsonc` pins the site as a static-assets Worker with no `main`: it serves
+`out/`, sends unknown paths to `out/404.html` with a 404 (`not_found_handling: "404-page"`), and
+states the default trailing-slash handling. Cloudflare reads `_headers` and `_redirects` from
+`out/`, and Wrangler 4 leaves both out of the asset upload by itself, so there's no
+`.assetsignore`. `.nvmrc` pins Node 24, the Workers Builds default. The `next start` script is
+gone. The form Worker keeps its own `worker/wrangler.toml` and deploys separately (SPEC §1).
+
+`new.arunlanguagetraining.com` is the staging hostname. The forms post to relative `/api/*`
+paths, so a `*.workers.dev` preview has no form endpoint. The form Worker's `ALLOWED_ORIGINS`
+now includes `new.`, and its routes for `new.` sit commented next to the `www` ones until the
+zone is on Cloudflare. That lets the real form sends and Checkpoint C happen before cutover.
+
+- **Cost:** one more origin the Worker accepts. Take `new.` out of `ALLOWED_ORIGINS` and its
+  routes after cutover, or keep it as a standing staging host on purpose.
+- **Not yet proven:** that a route Worker on `/api/*` takes precedence over the site's Custom
+  Domain. Cloudflare's docs imply it but don't say it outright, so check it on `new.` first.

@@ -24,6 +24,26 @@
 /language-course-pricing              /                301
 /things-to-do-in-littlehampton        /                301
 
+# The old site also answers on .php forms of its paths. Each line below was
+# checked on the live site on 24 Oct 2026 and returned 200 (an unknown .php
+# path returns 404 there), so these may be indexed or linked. They go
+# straight to the final destination, not via the extensionless path.
+# /contact.php, /gdpr-consent.php and the new site's own paths with .php
+# returned 404, so they have no line.
+
+/index.php                                /                301
+/recruitment.php                          /for-employers   301
+/teaching-jobs.php                        /jobs            301
+/contact-alt.php                          /contact         301
+/privacy.php                              /privacy         301
+/tefl-tesol-courses.php                   /                301
+/accommodation.php                        /                301
+/agents.php                               /                301
+/english-language-courses-in-the-uk.php   /                301
+/faq.php                                  /                301
+/language-course-pricing.php              /                301
+/things-to-do-in-littlehampton.php        /                301
+
 # TinaCMS admin directory index (SPEC §10). Tina builds the admin to
 # /admin/index.html; Cloudflare usually serves the directory index itself,
 # and this 200 rewrite guarantees /admin resolves rather than 404ing.

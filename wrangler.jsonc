@@ -1,0 +1,23 @@
+// Cloudflare config for the static site (SPEC §1): a Worker with static
+// assets and no script. There is deliberately no `main`, so nothing runs per
+// request and there is no server runtime (CLAUDE.md guardrail 7). Workers
+// Builds runs `npx wrangler deploy` at the repo root; without this file
+// Wrangler detects Next.js and offers to set it up as a server app (OpenNext).
+//
+// The form relays are a separate Worker (worker/wrangler.toml, SPEC §8.3) on
+// /api/* routes in front of this one.
+{
+  "name": "arun-site",
+  "compatibility_date": "2026-10-24",
+  "assets": {
+    // The static export (next.config.ts, output: "export"). public/_headers
+    // and public/_redirects are copied in and Cloudflare reads both from here.
+    "directory": "./out",
+    // Unknown paths get out/404.html (app/not-found.tsx) with a 404 status,
+    // not Cloudflare's bare one.
+    "not_found_handling": "404-page",
+    // The default, stated so it isn't changed by accident: /contact serves
+    // out/contact.html and /contact/ redirects to /contact.
+    "html_handling": "auto-trailing-slash"
+  }
+}

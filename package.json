@@ -10,7 +10,6 @@
     "check:contrast": "node scripts/check-contrast.mjs",
     "verify": "bash scripts/verify-build.sh",
     "test": "node worker/test-worker.mjs",
-    "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
